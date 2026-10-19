@@ -23,9 +23,30 @@ npm test           # unit + simulation tests
 npm run build      # type-check and build a static site into dist/
 npm run preview    # serve the built site
 npm run balance    # headless bot plays many games; prints scores per reward tier
+npm run release    # tests + build + release checks (run before every push that changes the app)
 ```
 
 `dist/` is a plain static site with relative paths, so it can be hosted from any folder (GitHub Pages, Netlify, itch.io and so on).
+
+## Installing and offline play
+
+Fish Fight is a Progressive Web App. In Chrome/Edge use "Install app"; on iPhone/iPad use Share → Add to Home Screen. After the first visit the whole game works offline. Progress (points, fish, best score, settings) lives in `localStorage`, separate from the app caches, so updates never touch it.
+
+## Releasing
+
+The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](CHANGELOG.md).
+
+1. Bump `version` in `package.json` (the only version source: the menu, Settings, `sw.js` and its cache name all come from it). Patch for fixes and tuning, minor for new features. A major bump needs the owner's approval.
+2. Add a `## [X.Y.Z] - YYYY-MM-DD` entry to `CHANGELOG.md`.
+3. `npm run release`. A major bump also needs `ALLOW_MAJOR=1 npm run release`.
+4. Commit as `vX.Y.Z: summary`, tag `vX.Y.Z`, push with `--tags`. CI repeats the checks.
+5. Deploy `dist/`, then verify the live site (docs/PWA.md §9).
+
+**How updates reach players.** The build writes `dist/sw.js` with the version and the full list of files to precache, so every release changes the service worker and browsers notice. The new version downloads in the background and waits. On the main menu it applies at once. On the game-over screen players get an "Update now" button. During a match they are only told to finish first, so a match is never interrupted. After the reload they see "Fish Fight updated successfully." If a download fails, the old version keeps running and the browser retries later. The game checks for updates on launch, when the player returns to it, and at most once an hour.
+
+**Hosting.** Serve `sw.js`, `index.html` and `manifest.webmanifest` with `Cache-Control: no-cache`. Files in `assets/` are content-hashed and can be cached forever. `public/_headers` does this on Netlify and Cloudflare Pages; other hosts need the same rules. (GitHub Pages can't set headers, but its 10-minute cache plus the service worker's `updateViaCache: 'none'` is still fine.)
+
+**Rollback.** Never redeploy an older build under its old version: browsers that already have the newer worker will not go back. Instead revert the change, bump the patch version (e.g. 1.0.4 → 1.0.5), and release that. Players' saves are unaffected. Before migrating, a save from an older format is copied to `fishfight.save.backup-v<N>`, and a corrupt save to `fishfight.save.backup-corrupt`.
 
 ## How to play
 
@@ -107,7 +128,7 @@ src/
     growth.ts          eat rule, size ↔ radius, stages, speed curve
     score.ts           points and run stats
     rewards.ts         tier evaluation, start conditions, RewardLedger
-    save.ts            versioned, validated localStorage save (points bank, owned fish)
+    save.ts            versioned, validated localStorage save (points bank, owned fish, backups)
     shop.ts            Upgrade Fish shop: buy and select fish with points
   render/
     Renderer.ts        camera, draw order, gameplay cues (outlines, arrows, vignette)
@@ -116,11 +137,17 @@ src/
     decor.ts           seabed scenery: rocks, kelp, sea grass, corals, sponges, anemones…
     textures.ts        procedural caustic / sand / light-shaft textures (no image files)
     fishArt.ts, effects.ts
-  ui/UI.ts             DOM menus, HUD, game-over and reward screens
+  ui/UI.ts             DOM menus, HUD, game-over and reward screens, update toast
+  pwa/
+    sw.template.js     service worker source (the build fills in version + precache list)
+    updates.ts         registration, update checks, safe-moment update flow
+  version.ts           APP_VERSION, injected from package.json
   audio/AudioManager.ts
   input/Input.ts
 tests/                 eat rule, growth, rewards lifecycle, save, world simulation
 tools/balance.test.ts  greedy-bot balance simulation (npm run balance)
+tools/sw-plugin.ts     Vite plugin that generates dist/sw.js
+tools/release-check.mjs  release gate (npm run release:check)
 ```
 
 The underwater look comes from layering, back to front: water colour by depth → hazy distant ridges and far-off fish schools (parallax) → slanted sun shafts → fine drifting particles → back-row reef (kelp, rocks, coral, softened by water haze) → textured sand → front-row details (anemones, starfish, shells, urchins, sea grass) → moving caustic light on the seabed → gameplay → big out-of-focus specks in front → vignette. Every texture is generated in code at startup.

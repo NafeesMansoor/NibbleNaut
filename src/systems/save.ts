@@ -111,11 +111,27 @@ export class SaveSystem {
   }
 
   private load(): SaveData {
+    let text: string | null = null;
     try {
-      const text = this.storage.getItem(SAVE_KEY);
-      return text ? migrate(JSON.parse(text)) : defaultSave();
+      text = this.storage.getItem(SAVE_KEY);
+      if (!text) return defaultSave();
+      const raw: unknown = JSON.parse(text);
+      const version = raw && typeof raw === 'object' ? (raw as { version?: unknown }).version : undefined;
+      // Keep the pre-migration save so an upgrade can never silently destroy progress.
+      if (version !== SAVE_VERSION) this.backup(`v${String(version ?? 'unknown')}`, text);
+      return migrate(raw);
     } catch {
+      if (text) this.backup('corrupt', text);
       return defaultSave();
+    }
+  }
+
+  private backup(tag: string, text: string): void {
+    try {
+      const key = `${SAVE_KEY}.backup-${tag}`;
+      if (this.storage.getItem(key) === null) this.storage.setItem(key, text);
+    } catch {
+      // Storage full or blocked: nothing more we can do.
     }
   }
 

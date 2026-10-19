@@ -5,6 +5,7 @@ import type { World } from '../game/World';
 import { stageInfo } from '../systems/growth';
 import { nextTierGoal, rewardText } from '../systems/rewards';
 import type { Settings } from '../systems/save';
+import { APP_VERSION } from '../version';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
@@ -95,6 +96,9 @@ export class UI {
   private howModal = $('screen-how');
   private shopModal = $('screen-shop');
   private previewLook: FishLook | null = null;
+  private toastEl = $('toast');
+  private toastTimer = 0;
+  private toastAction: (() => void) | null = null;
   private previewRaf = 0;
   private last = { score: -1, time: -1, size: -1, stage: '', growth: -1, chip: '', dash: -1 };
   readonly touchMode: boolean;
@@ -103,6 +107,8 @@ export class UI {
     this.settings = { ...settings };
     this.touchMode = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     $('dash-hint').hidden = this.touchMode;
+    $('menu-version').textContent = `v${APP_VERSION}`;
+    $('settings-version').textContent = `v${APP_VERSION}`;
 
     const click = (id: string, fn: () => void): void =>
       $(id).addEventListener('click', () => {
@@ -121,6 +127,12 @@ export class UI {
     click('btn-pause-settings', () => this.openSettings());
     click('btn-settings-close', () => (this.settingsModal.hidden = true));
     click('btn-shop', () => cb.onOpenShop());
+    click('toast-close', () => this.hideToast());
+    click('toast-action', () => {
+      const run = this.toastAction;
+      this.hideToast();
+      run?.();
+    });
     click('btn-shop-close', () => (this.shopModal.hidden = true));
     $('shop-list').addEventListener('click', (e) => {
       const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-fish]');
@@ -375,6 +387,25 @@ export class UI {
     this.banner.classList.add('show');
     window.clearTimeout(this.bannerTimer);
     this.bannerTimer = window.setTimeout(() => this.banner.classList.remove('show'), seconds * 1000);
+  }
+
+  /** Small unobtrusive notice (update ready / updated). `seconds` 0 keeps it until dismissed. */
+  toast(title: string, body: string, action: { label: string; run: () => void } | null = null, seconds = 0): void {
+    $('toast-title').textContent = title;
+    $('toast-body').textContent = body;
+    const btn = $('toast-action');
+    btn.hidden = !action;
+    btn.textContent = action?.label ?? '';
+    this.toastAction = action?.run ?? null;
+    this.toastEl.hidden = false;
+    window.clearTimeout(this.toastTimer);
+    if (seconds > 0) this.toastTimer = window.setTimeout(() => this.hideToast(), seconds * 1000);
+  }
+
+  hideToast(): void {
+    window.clearTimeout(this.toastTimer);
+    this.toastEl.hidden = true;
+    this.toastAction = null;
   }
 
   hideBanner(): void {

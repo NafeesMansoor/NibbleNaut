@@ -7,6 +7,12 @@
     <meta name="description" content="Fish Fight — Eat. Grow. Survive. Rule the Ocean. Story, game design and code by Nabeeha Mansoor." />
     <meta name="author" content="Nabeeha Mansoor" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Fish Fight" />
     <title>Fish Fight</title>
   </head>
   <body>
@@ -41,6 +47,12 @@
 
       <div id="banner" class="banner" aria-live="polite"></div>
 
+      <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+        <div class="toast-text"><b id="toast-title"></b><span id="toast-body"></span></div>
+        <button class="btn primary toast-btn" id="toast-action" hidden></button>
+        <button class="icon-btn toast-close" id="toast-close" aria-label="Dismiss">×</button>
+      </div>
+
       <section id="screen-menu" class="screen">
         <div class="panel menu-panel">
           <h1 class="logo"><span class="logo-fish">Fish</span> <span class="logo-fight">Fight</span></h1>
@@ -66,6 +78,7 @@
           </div>
           <div class="menu-best">Best score <b id="menu-best">0</b></div>
           <p class="credit">Story, game design &amp; code by <b>Nabeeha Mansoor</b></p>
+          <p class="version" id="menu-version"></p>
         </div>
       </section>
 
@@ -113,6 +126,7 @@
           <label class="setting check"><input type="checkbox" id="set-mute" /> <span>Mute all sound</span></label>
           <label class="setting check"><input type="checkbox" id="set-outlines" /> <span>Red outlines on dangerous fish</span></label>
           <button class="btn primary" id="btn-settings-close">Done</button>
+          <p class="hint">Fish Fight <span id="settings-version"></span></p>
         </div>
       </section>
 

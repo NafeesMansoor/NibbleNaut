@@ -30,4 +30,20 @@ describe('save system', () => {
     new SaveSystem(s).update((d) => (d.pendingReward = 'good'));
     expect(JSON.parse(s.getItem(SAVE_KEY)!).pendingReward).toBe('good');
   });
+
+  it('backs up a corrupt save before it can be overwritten', () => {
+    const s = new MemoryStorage();
+    s.setItem(SAVE_KEY, '{not json');
+    new SaveSystem(s).update((d) => (d.bestScore = 1));
+    expect(s.getItem(`${SAVE_KEY}.backup-corrupt`)).toBe('{not json');
+  });
+
+  it('backs up an older-version save before migrating it', () => {
+    const s = new MemoryStorage();
+    const v1 = JSON.stringify({ version: 1, bestScore: 777 });
+    s.setItem(SAVE_KEY, v1);
+    const save = new SaveSystem(s);
+    expect(save.get().bestScore).toBe(777);
+    expect(s.getItem(`${SAVE_KEY}.backup-v1`)).toBe(v1);
+  });
 });

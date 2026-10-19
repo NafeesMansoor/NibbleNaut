@@ -1,6 +1,7 @@
 import { CONFIG, type RewardTier } from '../config';
 import { AudioManager } from '../audio/AudioManager';
 import { Input } from '../input/Input';
+import { UpdateManager } from '../pwa/updates';
 import { Effects } from '../render/effects';
 import { Renderer } from '../render/Renderer';
 import { RewardLedger, rewardText, startConditionsFor } from '../systems/rewards';
@@ -30,6 +31,7 @@ export class Game {
   private ui: UI;
   private ledger: RewardLedger;
   private shop: FishShop;
+  private updates: UpdateManager;
   private activeReward: RewardTier | null = null;
   private dyingTime = 0;
   private summary: GameOverSummary | null = null;
@@ -77,6 +79,12 @@ export class Game {
     this.ui.showMenu(this.ledger.peekPending(), save.get().bestScore);
     this.ui.setBank(this.shop.points, this.shop.selected());
 
+    this.updates = new UpdateManager({
+      onUpdateReady: () => this.offerUpdate(),
+      onUpdated: (_from, to) => this.ui.toast('Fish Fight updated successfully.', `Now running v${to}.`, null, 5),
+    });
+    void this.updates.start();
+
     window.addEventListener('resize', () => this.renderer.resize());
     window.addEventListener('orientationchange', () => setTimeout(() => this.renderer.resize(), 200));
     document.addEventListener('visibilitychange', () => {
@@ -103,6 +111,22 @@ export class Game {
   private applySettings(s: Settings): void {
     this.save.update((d) => (d.settings = { ...s }));
     this.audio.setVolume(s.volume, s.muted);
+  }
+
+  /**
+   * Applies a waiting update only where nothing can be lost: the main menu with no dialog open.
+   * Game over offers an "Update now" button (the run is already saved); during a match the player
+   * is only told, and the offer comes back when the match ends.
+   */
+  private offerUpdate(): void {
+    if (!this.updates.ready) return;
+    if (this.state === 'menu' && !this.ui.modalOpen) {
+      this.updates.apply();
+    } else if (this.state === 'menu' || this.state === 'over') {
+      this.ui.toast('Fish Fight update ready', 'A new version is available.', { label: 'Update now', run: () => this.updates.apply() });
+    } else {
+      this.ui.toast('Fish Fight update ready', 'A new version is available. Finish your current match to update.', null, 6);
+    }
   }
 
   private shopView(): ShopView {
@@ -135,6 +159,7 @@ export class Game {
     this.summary = null;
     this.input.reset();
     this.ui.closeModals();
+    this.ui.hideToast();
     this.ui.resetHudCache();
     this.ui.setPlaying(true);
     this.state = 'playing';
@@ -194,6 +219,7 @@ export class Game {
     this.ui.hideBanner();
     this.ui.showMenu(this.ledger.peekPending(), this.save.get().bestScore);
     this.ui.setBank(this.shop.points, this.shop.selected());
+    this.offerUpdate();
   }
 
   /** Records the result and next-game reward exactly once per run. */
@@ -224,6 +250,7 @@ export class Game {
     this.ui.hideBanner();
     this.ui.showGameOver(this.summary);
     if (this.summary.tier !== 'normal') this.audio.reward(this.summary.tier === 'plenty');
+    this.offerUpdate();
   }
 
   private syncView(): void {

@@ -1,8 +1,8 @@
 {
   "name": "fish-fight",
   "private": true,
-  "version": "0.1.0",
-  "description": "Fish Fight \u2014 Eat. Grow. Survive. Rule the Ocean. A 2D underwater survival and growth game.",
+  "version": "1.0.3",
+  "description": "Fish Fight — Eat. Grow. Survive. Rule the Ocean. A 2D underwater survival and growth game.",
   "author": "Nabeeha Mansoor",
   "contributors": [
     "Nabeeha Mansoor (story, game design and code)"
@@ -15,12 +15,15 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "balance": "vitest run --config tools/vitest.balance.config.ts --silent=false"
+    "balance": "vitest run --config tools/vitest.balance.config.ts --silent=false",
+    "release:check": "node tools/release-check.mjs",
+    "release": "npm test && npm run build && npm run release:check"
   },
   "dependencies": {
     "@fontsource/fredoka": "^5.2.0"
   },
   "devDependencies": {
+    "@types/node": "^22.20.5",
     "typescript": "~5.9.0",
     "vite": "^8.3.4",
     "vitest": "^5.0.5"
