@@ -2,7 +2,7 @@ import { CONFIG, type RewardTier } from '../config';
 import { STARTER_FISH, type PlayerFishDef } from '../game/playerFish';
 import { drawFish, type FishLook } from '../render/fishArt';
 import type { Species } from '../game/species';
-import { TriviaDeck, type Trivia } from '../game/trivia';
+import { TriviaCollection, TriviaDeck, type Trivia } from '../game/trivia';
 import type { World } from '../game/World';
 import { stageInfo } from '../systems/growth';
 import { nextTierGoal, rewardText } from '../systems/rewards';
@@ -109,7 +109,10 @@ export class UI {
   private last = { score: -1, time: -1, size: -1, stage: '', growth: -1, chip: '', dash: -1 };
   readonly touchMode: boolean;
 
-  private trivia = new TriviaDeck();
+  private triviaSeen = new TriviaCollection();
+  private trivia = new TriviaDeck(undefined, undefined, this.triviaSeen.seen);
+  /** The fish that "tells" trivia: whichever fish the player swims as. */
+  private mascot: FishLook = STARTER_FISH.look;
   private readonly cb: UICallbacks;
 
   constructor(cb: UICallbacks, settings: Settings) {
@@ -202,6 +205,7 @@ export class UI {
 
   /** Home-screen points bank and the fish currently selected. */
   setBank(points: number, fish: PlayerFishDef): void {
+    this.mascot = fish.look;
     $('menu-points').textContent = Math.floor(points).toLocaleString();
     $('menu-fish-name').textContent = fish.name;
     $('menu-fish-mul').textContent = `${formatMul(fish.feedMul)} feeding points`;
@@ -251,6 +255,7 @@ export class UI {
 
   /** Sets the HUD name tag for the fish being played. */
   setPlayerFish(fish: PlayerFishDef): void {
+    this.mascot = fish.look;
     $('hud-name').innerHTML = fish.feedMul > 1 ? `${fish.name} <span class="hud-mul">${formatMul(fish.feedMul)}</span>` : fish.name;
   }
 
@@ -322,24 +327,57 @@ export class UI {
     queueMicrotask(() => $('btn-again').focus({ preventScroll: true }));
   }
 
-  /** A "Did you know?" Bay of Bengal fact. `cycle` adds a button that shows the next fact. */
+  /**
+   * A kid-friendly "Fun fact!" card: the player's own fish tells a Bay of Bengal fact in a speech
+   * bubble, themed by topic, with a "facts discovered" collection bar. `cycle` adds a button that
+   * deals the next fact.
+   */
   private fillTrivia(box: HTMLElement, t: Trivia, cycle = false): void {
-    box.innerHTML = '';
-    const el = (tag: string, cls: string, text: string, parent: HTMLElement = box): HTMLElement => {
+    this.triviaSeen.mark(t);
+    const el = (tag: string, cls: string, text = '', parent: HTMLElement = box): HTMLElement => {
       const e = document.createElement(tag);
       e.className = cls;
-      e.textContent = text;
+      if (text) e.textContent = text;
       parent.appendChild(e);
       return e;
     };
-    const head = el('div', 'tv-head', '');
-    el('span', 'tv-kicker', 'Did you know? · Bay of Bengal', head);
-    el('span', 'tv-tag', t.tag, head);
-    el('div', 'tv-figure', t.figure);
-    el('div', 'tv-label', t.label);
-    el('p', 'tv-text', t.text);
+    box.innerHTML = '';
+    box.className = `trivia theme-${t.tag.toLowerCase().replace(/\s+/g, '-')}`;
+
+    const bubbles = el('div', 'tv-bubbles');
+    bubbles.setAttribute('aria-hidden', 'true');
+    for (let i = 0; i < 7; i++) el('i', '', '', bubbles);
+
+    const ribbon = el('div', 'tv-ribbon');
+    el('span', 'tv-ribbon-text', 'Fun fact!', ribbon);
+    el('span', 'tv-tag', t.tag, ribbon);
+
+    const body = el('div', 'tv-body');
+    const mascot = el('canvas', 'tv-mascot', '', body) as HTMLCanvasElement;
+    mascot.setAttribute('aria-hidden', 'true');
+    const bubble = el('div', 'tv-bubble', '', body);
+    const top = el('div', 'tv-top', '', bubble);
+    const emoji = el('span', 'tv-emoji', t.emoji, top);
+    emoji.setAttribute('aria-hidden', 'true');
+    const head = el('div', 'tv-headline', '', top);
+    el('div', 'tv-figure', t.figure, head);
+    el('div', 'tv-label', t.label, head);
+    el('p', 'tv-text', t.text, bubble);
+
+    const foot = el('div', 'tv-foot');
+    const found = this.triviaSeen.seen.size;
+    const total = this.triviaSeen.total;
+    const progress = el('div', 'tv-progress', '', foot);
+    el('div', 'tv-count', found >= total ? `🏆 All ${total} facts discovered!` : `⭐ ${found} / ${total} facts discovered`, progress);
+    const bar = el('div', 'tv-bar', '', progress);
+    bar.setAttribute('role', 'progressbar');
+    bar.setAttribute('aria-label', 'Facts discovered');
+    bar.setAttribute('aria-valuemin', '0');
+    bar.setAttribute('aria-valuemax', String(total));
+    bar.setAttribute('aria-valuenow', String(found));
+    (el('i', '', '', bar) as HTMLElement).style.width = `${(found / total) * 100}%`;
     if (cycle) {
-      const next = el('button', 'tv-next', 'Next fact ›') as HTMLButtonElement;
+      const next = el('button', 'tv-next', '🎲 Tell me another!', foot) as HTMLButtonElement;
       next.type = 'button';
       next.addEventListener('click', () => {
         this.cb.onClick();
@@ -347,8 +385,10 @@ export class UI {
         (box.querySelector('.tv-next') as HTMLElement | null)?.focus({ preventScroll: true });
       });
     }
+
+    drawThumb(mascot, this.mascot, 112, 62);
     box.classList.remove('tv-in');
-    void box.offsetWidth; // restart the fade-in
+    void box.offsetWidth; // restart the pop-in animation
     box.classList.add('tv-in');
   }
 

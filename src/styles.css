@@ -435,28 +435,42 @@ h2 {
   color: var(--ink-soft);
 }
 
-/* ---------- Bay of Bengal trivia ---------- */
+/* ---------- Bay of Bengal trivia: kid-friendly "Fun fact!" cards ---------- */
 .trivia {
+  --tv-a: #ff9f43;
+  --tv-b: #ff6b6b;
+  --tv-ink: #c0392b;
   position: relative;
-  border-radius: 16px;
-  padding: 12px 14px;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 12px 12px 12px;
   text-align: left;
-  background: linear-gradient(135deg, rgba(90, 209, 236, 0.16), rgba(124, 240, 160, 0.08));
-  border: 1px solid rgba(90, 209, 236, 0.35);
+  background: linear-gradient(135deg, var(--tv-a), var(--tv-b));
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.18), 0 12px 24px rgba(0, 0, 0, 0.25);
+  container-type: inline-size;
 }
 
 .trivia:empty {
   display: none;
 }
 
+/* One bright theme per topic. --tv-ink colours the big number inside the white bubble. */
+.trivia.theme-geography { --tv-a: #ffb43a; --tv-b: #ff6b6b; --tv-ink: #e8590c; }
+.trivia.theme-wildlife { --tv-a: #3ddc84; --tv-b: #14b8a6; --tv-ink: #0f9d58; }
+.trivia.theme-ocean-floor { --tv-a: #a66cff; --tv-b: #5b5bf0; --tv-ink: #6f3ad8; }
+.trivia.theme-weather { --tv-a: #4fd1ff; --tv-b: #3b82f6; --tv-ink: #1f6fd1; }
+.trivia.theme-people { --tv-a: #ff8ac5; --tv-b: #e5487a; --tv-ink: #d6336c; }
+.trivia.theme-fishing { --tv-a: #ffd84d; --tv-b: #ff9f1c; --tv-ink: #d9480f; }
+
 .trivia.tv-in {
-  animation: tv-in 0.35s ease-out;
+  animation: tv-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes tv-in {
+@keyframes tv-pop {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: scale(0.88) rotate(-1.5deg);
   }
   to {
     opacity: 1;
@@ -464,70 +478,282 @@ h2 {
   }
 }
 
-.trivia .tv-head {
+/* Bubbles drifting up behind the card's content. */
+.tv-bubbles i {
+  position: absolute;
+  bottom: -20px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.15);
+  animation: tv-rise 6s linear infinite;
+  pointer-events: none;
+}
+.tv-bubbles i:nth-child(1) { left: 6%; animation-delay: 0s; }
+.tv-bubbles i:nth-child(2) { left: 22%; width: 8px; height: 8px; animation-delay: 1.4s; animation-duration: 5s; }
+.tv-bubbles i:nth-child(3) { left: 41%; width: 16px; height: 16px; animation-delay: 2.6s; animation-duration: 7s; }
+.tv-bubbles i:nth-child(4) { left: 58%; animation-delay: 0.8s; }
+.tv-bubbles i:nth-child(5) { left: 74%; width: 9px; height: 9px; animation-delay: 3.4s; animation-duration: 5.5s; }
+.tv-bubbles i:nth-child(6) { left: 88%; width: 14px; height: 14px; animation-delay: 2s; animation-duration: 6.5s; }
+.tv-bubbles i:nth-child(7) { left: 95%; width: 7px; height: 7px; animation-delay: 4.2s; }
+
+@keyframes tv-rise {
+  from {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-260px) translateX(10px);
+    opacity: 0;
+  }
+}
+
+.tv-ribbon {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  color: #8fe6f7;
+  margin-bottom: 8px;
 }
 
-.trivia .tv-tag {
-  flex: none;
-  padding: 2px 8px;
+.tv-ribbon-text {
+  display: inline-block;
+  padding: 3px 14px 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--ink-soft);
-  letter-spacing: 0.6px;
-}
-
-.trivia .tv-figure {
-  margin-top: 6px;
-  font-size: 28px;
+  background: #fff3a8;
+  color: #3a2a00;
+  font-size: 17px;
   font-weight: 700;
-  line-height: 1.05;
-  color: var(--gold);
+  letter-spacing: 0.5px;
+  transform: rotate(-3deg);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
 }
 
-.trivia .tv-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  opacity: 0.85;
-}
-
-.trivia .tv-text {
-  margin: 6px 0 0;
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--ink-soft);
-}
-
-.trivia .tv-next {
-  margin-top: 8px;
-  padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+.tv-tag {
+  padding: 3px 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--ink);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
-.trivia .tv-next:hover,
-.trivia .tv-next:focus-visible {
-  background: rgba(255, 255, 255, 0.16);
+.tv-body {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* The player's fish, bobbing as it "talks". */
+.tv-mascot {
+  flex: none;
+  margin-top: 6px;
+  background: none !important;
+  animation: tv-bob 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.18));
+}
+
+@keyframes tv-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(3deg);
+  }
+}
+
+.tv-bubble {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px 11px;
+  border-radius: 18px;
+  background: #fff;
+  color: #24324a;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+/* Speech-bubble tail pointing at the fish. */
+.tv-bubble::before {
+  content: '';
+  position: absolute;
+  left: -9px;
+  top: 22px;
+  border-width: 8px 12px 8px 0;
+  border-style: solid;
+  border-color: transparent #fff transparent transparent;
+}
+
+.tv-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tv-emoji {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tv-a) 22%, #fff);
+  font-size: 30px;
+  line-height: 1;
+  animation: tv-wiggle 3s ease-in-out infinite;
+}
+
+@keyframes tv-wiggle {
+  0%,
+  80%,
+  100% {
+    transform: rotate(0);
+  }
+  85% {
+    transform: rotate(-12deg) scale(1.08);
+  }
+  90% {
+    transform: rotate(10deg) scale(1.08);
+  }
+  95% {
+    transform: rotate(-6deg);
+  }
+}
+
+.tv-headline {
+  min-width: 0;
+}
+
+.tv-figure {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.02;
+  color: var(--tv-ink);
+  overflow-wrap: anywhere;
+}
+
+.tv-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #5b6b82;
+}
+
+.tv-text {
+  margin: 8px 0 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #24324a;
+}
+
+.tv-foot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 10px;
+}
+
+.tv-progress {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.tv-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.tv-bar {
+  height: 10px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.tv-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #fff3a8, #ffffff);
+  transition: width 0.4s ease;
+}
+
+.tv-next {
+  flex: none;
+  padding: 9px 16px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--tv-ink);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.tv-next:hover {
+  transform: translateY(-2px) scale(1.04);
+}
+
+.tv-next:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.tv-next:focus-visible {
+  outline: 3px solid #fff3a8;
+  outline-offset: 2px;
+}
+
+@container (max-width: 400px) {
+  /* Narrow cards: fish on top, bubble below with its tail pointing up at the fish. */
+  .tv-body {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .tv-mascot {
+    margin: 0 0 0 10px;
+  }
+  .tv-bubble::before {
+    left: 52px;
+    top: -10px;
+    border-width: 0 9px 12px 9px;
+    border-color: transparent transparent #fff transparent;
+  }
+  .tv-figure {
+    font-size: 26px;
+  }
+  .tv-next {
+    width: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .trivia.tv-in {
+  .trivia.tv-in,
+  .tv-mascot,
+  .tv-emoji,
+  .tv-bubbles i {
     animation: none;
+  }
+  .tv-bubbles {
+    display: none;
   }
 }
 
@@ -967,8 +1193,18 @@ h2 {
 }
 
 @media (max-width: 420px) {
-  .shop-card .fish-thumb {
-    display: none;
+  /* Phones: picture and name on top, the buy/select button full width underneath. */
+  .shop-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 10px;
+  }
+  .shop-card .shop-btn {
+    grid-column: 1 / -1;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
   }
 }
 
