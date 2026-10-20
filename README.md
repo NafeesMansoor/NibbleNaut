@@ -40,7 +40,7 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 2. Add a `## [X.Y.Z] - YYYY-MM-DD` entry to `CHANGELOG.md`.
 3. `npm run release`. A major bump also needs `ALLOW_MAJOR=1 npm run release`.
 4. Commit as `vX.Y.Z: summary`, tag `vX.Y.Z`, push with `--tags`. CI repeats the checks.
-5. Deploy `dist/`, then verify the live site (docs/PWA.md §9).
+5. Pushing to `main` deploys the game from this repo to GitHub Pages (`.github/workflows/pages.yml`): **https://nafeesmansoor.github.io/fish-fight/**. The service worker (update checker) and the install manifest are served from there, so every Fish Fight release reaches players without any other site having to redeploy. `https://www.nafees.info/apps/pwa/FishFight/` forwards to it. Then verify the live site (docs/PWA.md §9).
 
 **How updates reach players.** The build writes `dist/sw.js` with the version and the full list of files to precache, so every release changes the service worker and browsers notice. The new version downloads in the background and waits. On the main menu it applies at once. On the game-over screen players get an "Update now" button. During a match they are only told to finish first, so a match is never interrupted. After the reload they see "Fish Fight updated successfully." If a download fails, the old version keeps running and the browser retries later. The game checks for updates on launch, when the player returns to it, and at most once an hour.
 
