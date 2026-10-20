@@ -8,7 +8,8 @@
   --gold: #ffd23f;
   --danger: #ff4d6d;
   --deep: #0b3d66;
-  --font: 'Fredoka', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Fredoka has no Bengali glyphs; the browser takes those from Hind Siliguri. */
+  --font: 'Fredoka', 'Hind Siliguri', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -1260,4 +1261,39 @@ h2 {
   .confetti {
     display: none;
   }
+}
+
+/* ---------- Language switch (Settings) ---------- */
+.lang-setting {
+  justify-content: space-between;
+}
+
+.lang-toggle {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--panel-edge);
+}
+
+.lang-toggle button {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 16px;
+  background: none;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lang-toggle button[aria-pressed='true'] {
+  background: var(--gold);
+  color: #3a2a00;
+}
+
+.lang-toggle button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
 }

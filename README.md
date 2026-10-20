@@ -48,6 +48,10 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 
 **Rollback.** Never redeploy an older build under its old version: browsers that already have the newer worker will not go back. Instead revert the change, bump the patch version (e.g. 1.0.4 → 1.0.5), and release that. Players' saves are unaffected. Before migrating, a save from an older format is copied to `fishfight.save.backup-v<N>`, and a corrupt save to `fishfight.save.backup-corrupt`.
 
+## Languages
+
+English and Bangla (বাংলা), switched in **Settings** and saved with the other settings. UI text lives in `src/i18n/en.ts` and `src/i18n/bn.ts` (TypeScript checks both have every key; static HTML uses `data-i18n` attributes). Fish and fun facts carry their own `bn` fields in `src/game/species.ts`, `src/game/playerFish.ts` and `src/game/trivia.ts`. Bangla uses the bundled Hind Siliguri font and Bangla digits.
+
 ## How to play
 
 | | Desktop | Touch |

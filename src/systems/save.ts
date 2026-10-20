@@ -1,5 +1,6 @@
 import { SAVE_KEY, SAVE_VERSION, type RewardTier } from '../config';
 import { fishById, STARTER_FISH } from '../game/playerFish';
+import type { Lang } from '../i18n/i18n';
 
 export interface StorageLike {
   getItem(key: string): string | null;
@@ -12,7 +13,13 @@ export interface Settings {
   dangerOutlines: boolean;
   /** Show the Bay of Bengal fun-fact cards on the menu, pause and game-over screens. */
   trivia: boolean;
+  /** Interface language, switched from the home screen. */
+  lang: Lang;
 }
+
+/** First-run language: Bangla when the device is set to Bangla, otherwise English. */
+const deviceLang = (): Lang =>
+  typeof navigator !== 'undefined' && /^bn\b/i.test(navigator.language ?? '') ? 'bn' : 'en';
 
 export interface SaveData {
   version: number;
@@ -43,7 +50,7 @@ export const defaultSave = (): SaveData => ({
   lifetimePoints: 0,
   ownedFish: [STARTER_FISH.id],
   selectedFish: STARTER_FISH.id,
-  settings: { volume: 0.7, muted: false, dangerOutlines: true, trivia: true },
+  settings: { volume: 0.7, muted: false, dangerOutlines: true, trivia: true, lang: deviceLang() },
 });
 
 const TIERS: RewardTier[] = ['normal', 'good', 'great', 'amazing', 'plenty'];
@@ -79,6 +86,7 @@ export function migrate(raw: unknown): SaveData {
       muted: typeof s.muted === 'boolean' ? s.muted : base.settings.muted,
       dangerOutlines: typeof s.dangerOutlines === 'boolean' ? s.dangerOutlines : base.settings.dangerOutlines,
       trivia: typeof s.trivia === 'boolean' ? s.trivia : base.settings.trivia,
+      lang: s.lang === 'en' || s.lang === 'bn' ? s.lang : base.settings.lang,
     },
   };
 }

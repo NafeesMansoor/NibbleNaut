@@ -1,4 +1,5 @@
 import { CONFIG, type OceanKind, type RewardTier } from '../config';
+import { num, t } from '../i18n/i18n';
 import type { SaveSystem } from './save';
 
 /**
@@ -53,49 +54,23 @@ export function startConditionsFor(tier: RewardTier | null): StartConditions {
 export interface RewardText {
   label: string;
   title: string;
+  /** "Your next game starts …" (game over, menu). */
   description: string;
+  /** "You start …" (banner when the rewarded game begins). */
+  now: string;
   chip: string;
 }
 
+/** Reward wording in the current language. */
 export function rewardText(tier: RewardTier): RewardText {
-  switch (tier) {
-    case 'good':
-      return {
-        label: 'Good',
-        title: 'Head Start',
-        description: 'Your next game starts with a slightly larger fish.',
-        chip: 'Good reward: bigger start',
-      };
-    case 'great':
-      return {
-        label: 'Great',
-        title: 'Medium Start',
-        description: 'Your next game starts as a medium-sized fish.',
-        chip: 'Great reward: medium start',
-      };
-    case 'amazing':
-      return {
-        label: 'Amazing',
-        title: 'Medium Start + Speed Boost',
-        description: `Your next game starts as a medium-sized fish with a ${CONFIG.rewards.speedBoostSeconds}-second speed boost.`,
-        chip: 'Amazing reward: medium start + boost',
-      };
-    case 'plenty':
-      return {
-        label: 'Unbelievably Amazing',
-        title: 'The Ocean of Plenty',
-        description:
-          'Your next game starts with a medium-sized fish and an ocean full of food. Eat, grow, and make the most of your advantage!',
-        chip: 'Ocean of Plenty',
-      };
-    default:
-      return {
-        label: 'Normal',
-        title: 'Normal Start',
-        description: 'Your next game starts as a small fish in a normal ocean.',
-        chip: '',
-      };
-  }
+  const s = num(CONFIG.rewards.speedBoostSeconds);
+  return {
+    label: t(`reward.${tier}.label`),
+    title: t(`reward.${tier}.title`),
+    description: t(`reward.${tier}.desc`, { s }),
+    now: t(`reward.${tier}.now`, { s }),
+    chip: t(`reward.${tier}.chip`),
+  };
 }
 
 export class RewardLedger {

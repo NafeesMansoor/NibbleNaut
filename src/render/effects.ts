@@ -1,3 +1,4 @@
+import { num, t } from '../i18n/i18n';
 import type { Player } from '../game/entities';
 import type { GameEvent } from '../game/World';
 
@@ -82,17 +83,17 @@ export class Effects {
     switch (e.type) {
       case 'eatFood':
         this.burst(e.x, e.y, e.zone ? 8 : 5, 60, 3, e.zone ? '#ffd76a' : '#d8ffb0', 0.45);
-        if (e.zone) this.text(e.x, e.y - r * 0.5, `+${e.points}`, '#ffe28a', 14, 0.7);
+        if (e.zone) this.text(e.x, e.y - r * 0.5, `+${num(e.points)}`, '#ffe28a', 14, 0.7);
         break;
       case 'eatFish':
         this.burst(e.x, e.y, e.golden ? 30 : 12, 90 + r * 2, Math.max(3, r * 0.15), e.golden ? '#ffd23f' : e.color, 0.7);
         this.spawn(e.x, e.y, 0, 0, 0.4, r * 1.2, '#ffffff', 2);
-        this.text(e.x, e.y - r * 0.8, e.golden ? `GOLDEN! +${e.points}` : `+${e.points}`, e.golden ? '#ffd23f' : '#ffffff', e.golden ? 24 : 18, e.golden ? 1.6 : 1);
+        this.text(e.x, e.y - r * 0.8, e.golden ? t('fx.golden', { n: num(e.points) }) : `+${num(e.points)}`, e.golden ? '#ffd23f' : '#ffffff', e.golden ? 24 : 18, e.golden ? 1.6 : 1);
         break;
       case 'stage':
         this.spawn(player.x, player.y, 0, 0, 0.9, r * 3, '#ffe28a', 2);
         this.burst(player.x, player.y, 40, 200 + r * 3, Math.max(4, r * 0.15), '#ffe28a', 1);
-        this.text(player.x, player.y - r * 1.6, `${e.name.toUpperCase()}! +${e.points}`, '#ffe28a', 26, 1.8);
+        this.text(player.x, player.y - r * 1.6, t('fx.stage', { name: t(`stage.${e.index}` as 'stage.0').toUpperCase(), n: num(e.points) }), '#ffe28a', 26, 1.8);
         break;
       case 'playerEaten':
         this.burst(e.x, e.y, 50, 160 + r * 3, Math.max(4, r * 0.2), '#ff8a1f', 1.2);
@@ -180,7 +181,7 @@ export class Effects {
     for (const t of this.texts) {
       const a = Math.min(1, (t.life / t.max) * 2);
       ctx.globalAlpha = a;
-      ctx.font = `700 ${t.px / zoom}px Fredoka, system-ui, sans-serif`;
+      ctx.font = `700 ${t.px / zoom}px Fredoka, 'Hind Siliguri', system-ui, sans-serif`;
       ctx.lineWidth = 4 / zoom;
       ctx.strokeStyle = 'rgba(4,30,60,0.75)';
       ctx.strokeText(t.text, t.x, t.y);

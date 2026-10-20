@@ -8,6 +8,7 @@ import { RewardLedger, rewardText, startConditionsFor } from '../systems/rewards
 import { FishShop } from '../systems/shop';
 import type { SaveSystem, Settings } from '../systems/save';
 import { UI, type GameOverSummary, type ShopView } from '../ui/UI';
+import { applyStatic, digits, loc, num, setLang, t } from '../i18n/i18n';
 import { speciesById, type Species } from './species';
 import { World, type Controls } from './World';
 
@@ -50,6 +51,8 @@ export class Game {
 
     const settings = save.get().settings;
     this.audio.setVolume(settings.volume, settings.muted);
+    setLang(settings.lang);
+    applyStatic();
     this.ui = new UI(
       {
         onPlay: () => this.start(),
@@ -82,7 +85,7 @@ export class Game {
 
     this.updates = new UpdateManager({
       onUpdateReady: () => this.offerUpdate(),
-      onUpdated: (_from, to) => this.ui.toast('Fish Fight updated successfully.', `Now running v${to}.`, null, 5),
+      onUpdated: (_from, to) => this.ui.toast(t('toast.updatedTitle'), t('toast.updatedBody', { v: digits(to) }), null, 5),
     });
     void this.updates.start();
 
@@ -110,8 +113,28 @@ export class Game {
   }
 
   private applySettings(s: Settings): void {
+    const langChanged = s.lang !== this.save.get().settings.lang;
     this.save.update((d) => (d.settings = { ...s }));
     this.audio.setVolume(s.volume, s.muted);
+    if (langChanged) this.relocalize(s);
+  }
+
+  /**
+   * Language switched in Settings (from the menu or the pause screen): re-translate the page and
+   * redraw the dynamic text on whichever screen is behind the dialog.
+   */
+  private relocalize(s: Settings): void {
+    setLang(s.lang);
+    applyStatic();
+    this.ui.setBank(this.shop.points, this.shop.selected());
+    if (this.state === 'menu') {
+      this.ui.showMenu(this.ledger.peekPending(), this.save.get().bestScore);
+    } else if (this.state === 'paused' || this.state === 'playing') {
+      this.ui.setPlayerFish(this.shop.selected());
+      this.ui.resetHudCache();
+      this.ui.updateHud(this.world, this.activeReward);
+      if (this.state === 'paused') this.ui.refreshPauseTrivia();
+    }
   }
 
   /**
@@ -124,9 +147,9 @@ export class Game {
     if (this.state === 'menu' && !this.ui.modalOpen) {
       this.updates.apply();
     } else if (this.state === 'menu' || this.state === 'over') {
-      this.ui.toast('Fish Fight update ready', 'A new version is available.', { label: 'Update now', run: () => this.updates.apply() });
+      this.ui.toast(t('toast.readyTitle'), t('toast.readyBody'), { label: t('toast.updateNow'), run: () => this.updates.apply() });
     } else {
-      this.ui.toast('Fish Fight update ready', 'A new version is available. Finish your current match to update.', null, 6);
+      this.ui.toast(t('toast.readyTitle'), t('toast.readyBodyMatch'), null, 6);
     }
   }
 
@@ -167,14 +190,14 @@ export class Game {
     this.audio.startAmbient();
 
     if (tier === 'plenty') {
-      this.ui.flash('THE OCEAN OF PLENTY<small>Food everywhere and golden feeding zones. Eat, grow, and make the most of it!</small>', 4.5, true);
+      this.ui.flash(t('flash.plenty'), 4.5, true);
       this.audio.reward(true);
     } else if (tier && tier !== 'normal') {
       const r = rewardText(tier);
-      this.ui.flash(`${r.label.toUpperCase()} REWARD<small>${r.description.replace('Your next game starts', 'You start')}</small>`, 3.5, true);
+      this.ui.flash(t('flash.reward', { label: r.label.toUpperCase(), desc: r.now }), 3.5, true);
       this.audio.reward(false);
     } else if (this.save.get().gamesPlayed === 0) {
-      this.ui.flash('Eat smaller fish. Avoid bigger ones!<small>Red outline = danger · Space / DASH to dash</small>', 4);
+      this.ui.flash(t('flash.tutorial'), 4);
     }
   }
 
@@ -206,7 +229,7 @@ export class Game {
 
   endRun(): void {
     if (this.state !== 'playing' && this.state !== 'paused') return;
-    this.finalize('Run ended');
+    this.finalize(t('over.titleEnded'));
     this.ui.closeModals();
     this.showOver();
   }
@@ -324,14 +347,14 @@ export class Game {
         break;
       case 'stage':
         this.audio.grow();
-        this.ui.flash(`${e.name.toUpperCase()}!<small>+${e.points} growth bonus</small>`, 2.2, true);
+        this.ui.flash(t('flash.stage', { name: t(`stage.${e.index}` as 'stage.0').toUpperCase(), points: num(e.points) }), 2.2, true);
         break;
       case 'dash':
         this.audio.dash();
         break;
       case 'playerEaten':
         if (this.state !== 'playing') break;
-        this.finalize(`Eaten by a ${e.by.species.name}!`, e.by.species);
+        this.finalize(t('over.titleEaten', { name: loc(e.by.species, e.by.species.bn).name }), e.by.species);
         this.state = 'dying';
         this.dyingTime = DYING_SECONDS;
         this.audio.gameOver();

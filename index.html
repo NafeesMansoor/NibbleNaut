@@ -17,13 +17,13 @@
   </head>
   <body>
     <div id="app">
-      <canvas id="game" aria-label="Fish Fight game area"></canvas>
+      <canvas id="game" aria-label="Fish Fight game area" data-i18n-aria="app.gameArea"></canvas>
 
       <div id="hud" class="hud" hidden>
         <div class="hud-left card">
           <div class="hud-name" id="hud-name">Clark's Anemonefish</div>
-          <div class="hud-stage"><span id="hud-stage">Small Fish</span> · size <b id="hud-size">10</b></div>
-          <div class="growth" role="progressbar" aria-label="Growth to next stage"><div class="growth-fill" id="hud-growth"></div></div>
+          <div class="hud-stage"><span id="hud-stage">Small Fish</span> · <span data-i18n="hud.size">size</span> <b id="hud-size">10</b></div>
+          <div class="growth" role="progressbar" aria-label="Growth to next stage" data-i18n-aria="hud.growthAria"><div class="growth-fill" id="hud-growth"></div></div>
           <div class="hud-next" id="hud-next"></div>
         </div>
         <div class="hud-center">
@@ -32,17 +32,17 @@
           <div class="reward-chip" id="hud-reward" hidden></div>
         </div>
         <div class="hud-right">
-          <button class="icon-btn" id="btn-mute" aria-label="Toggle sound"></button>
-          <button class="icon-btn" id="btn-pause" aria-label="Pause">
+          <button class="icon-btn" id="btn-mute" aria-label="Toggle sound" data-i18n-aria="hud.toggleSound"></button>
+          <button class="icon-btn" id="btn-pause" aria-label="Pause" data-i18n-aria="hud.pause">
             <svg viewBox="0 0 24 24" width="22" height="22"><rect x="6" y="5" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1.5" fill="currentColor"/></svg>
           </button>
         </div>
-        <div class="dash-hint" id="dash-hint"><kbd>Space</kbd> Dash <span class="dash-meter"><i id="dash-meter"></i></span></div>
+        <div class="dash-hint" id="dash-hint"><kbd>Space</kbd> <span data-i18n="hud.dash">Dash</span> <span class="dash-meter"><i id="dash-meter"></i></span></div>
       </div>
 
       <div id="touch" class="touch" hidden>
         <div id="joy-base" class="joy-base"><div id="joy-knob" class="joy-knob"></div></div>
-        <button id="btn-dash" class="dash-btn" aria-label="Dash">DASH</button>
+        <button id="btn-dash" class="dash-btn" aria-label="Dash" data-i18n-aria="hud.dash" data-i18n="hud.dashBtn">DASH</button>
       </div>
 
       <div id="banner" class="banner" aria-live="polite"></div>
@@ -50,16 +50,16 @@
       <div id="toast" class="toast" role="status" aria-live="polite" hidden>
         <div class="toast-text"><b id="toast-title"></b><span id="toast-body"></span></div>
         <button class="btn primary toast-btn" id="toast-action" hidden></button>
-        <button class="icon-btn toast-close" id="toast-close" aria-label="Dismiss">×</button>
+        <button class="icon-btn toast-close" id="toast-close" aria-label="Dismiss" data-i18n-aria="toast.dismiss">×</button>
       </div>
 
       <section id="screen-menu" class="screen">
         <div class="panel menu-panel">
-          <h1 class="logo"><span class="logo-fish">Fish</span> <span class="logo-fight">Fight</span></h1>
-          <p class="tagline">Eat. Grow. Survive. Rule the Ocean.</p>
-          <div class="bank" aria-label="Your points">
+          <h1 class="logo"><span class="logo-fish" data-i18n="logo.fish">Fish</span> <span class="logo-fight" data-i18n="logo.fight">Fight</span></h1>
+          <p class="tagline" data-i18n="menu.tagline">Eat. Grow. Survive. Rule the Ocean.</p>
+          <div class="bank" aria-label="Your points" data-i18n-aria="menu.pointsAria">
             <span class="bank-coin" aria-hidden="true">★</span>
-            <span class="bank-label">Points</span>
+            <span class="bank-label" data-i18n="menu.points">Points</span>
             <b id="menu-points">0</b>
           </div>
           <div id="menu-reward" class="reward-card" hidden></div>
@@ -70,26 +70,26 @@
               <b id="menu-fish-name">Clark's Anemonefish</b>
               <small id="menu-fish-mul">×1 feeding points</small>
             </span>
-            <span class="fish-btn-cta">Upgrade fish ›</span>
+            <span class="fish-btn-cta" data-i18n="menu.upgrade">Upgrade fish ›</span>
           </button>
           <div class="menu-row">
-            <button class="btn ghost" id="btn-how">How to play</button>
-            <button class="btn ghost" id="btn-settings">Settings</button>
+            <button class="btn ghost" id="btn-how" data-i18n="menu.how">How to play</button>
+            <button class="btn ghost" id="btn-settings" data-i18n="menu.settings">Settings</button>
           </div>
-          <div class="menu-best">Best score <b id="menu-best">0</b></div>
+          <div class="menu-best"><span data-i18n="menu.best">Best score</span> <b id="menu-best">0</b></div>
           <div class="trivia" id="menu-trivia" aria-live="polite"></div>
-          <p class="credit">Story, game design &amp; code by <b>Nabeeha Mansoor</b></p>
+          <p class="credit" data-i18n-html="menu.credit">Story, game design &amp; code by <b>Nabeeha Mansoor</b></p>
           <p class="version" id="menu-version"></p>
         </div>
       </section>
 
       <section id="screen-pause" class="screen" hidden>
         <div class="panel small-panel">
-          <h2>Paused</h2>
-          <button class="btn primary" id="btn-resume">Resume</button>
-          <button class="btn ghost" id="btn-pause-settings">Settings</button>
-          <button class="btn ghost danger" id="btn-end">End run</button>
-          <p class="hint">End run counts as a game over: your score still earns a reward.</p>
+          <h2 data-i18n="pause.title">Paused</h2>
+          <button class="btn primary" id="btn-resume" data-i18n="pause.resume">Resume</button>
+          <button class="btn ghost" id="btn-pause-settings" data-i18n="menu.settings">Settings</button>
+          <button class="btn ghost danger" id="btn-end" data-i18n="pause.end">End run</button>
+          <p class="hint" data-i18n="pause.hint">End run counts as a game over: your score still earns a reward.</p>
           <div class="trivia" id="pause-trivia"></div>
         </div>
       </section>
@@ -97,17 +97,17 @@
       <section id="screen-over" class="screen" hidden>
         <div id="confetti" class="confetti" aria-hidden="true"></div>
         <div class="panel over-panel">
-          <h2 id="over-title">Eaten!</h2>
+          <h2 id="over-title" data-i18n="over.eaten">Eaten!</h2>
           <div class="final-score">
-            <span>Score</span>
+            <span data-i18n="over.score">Score</span>
             <b id="over-score">0</b>
-            <em id="over-best" hidden>New personal best!</em>
+            <em id="over-best" hidden data-i18n="over.newBest">New personal best!</em>
           </div>
           <div class="stats">
-            <div><span>Fish eaten</span><b id="over-fish">0</b></div>
-            <div><span>Max size</span><b id="over-size">0</b></div>
-            <div><span>Survived</span><b id="over-time">0:00</b></div>
-            <div><span>Best score</span><b id="over-bestscore">0</b></div>
+            <div><span data-i18n="over.fishEaten">Fish eaten</span><b id="over-fish">0</b></div>
+            <div><span data-i18n="over.maxSize">Max size</span><b id="over-size">0</b></div>
+            <div><span data-i18n="over.survived">Survived</span><b id="over-time">0:00</b></div>
+            <div><span data-i18n="over.bestScore">Best score</span><b id="over-bestscore">0</b></div>
           </div>
           <div id="over-facts" class="fact-cards"></div>
           <div class="trivia" id="over-trivia"></div>
@@ -116,50 +116,57 @@
           <canvas id="plenty-preview" class="plenty-preview" width="560" height="200" hidden></canvas>
           <p class="next-goal" id="over-next"></p>
           <button class="btn primary big" id="btn-again">Play Next Game</button>
-          <button class="btn ghost" id="btn-menu">Main menu</button>
+          <button class="btn ghost" id="btn-menu" data-i18n="over.menu">Main menu</button>
         </div>
       </section>
 
       <section id="screen-settings" class="screen modal" hidden>
         <div class="panel small-panel">
-          <h2>Settings</h2>
+          <h2 data-i18n="settings.title">Settings</h2>
+          <div class="setting lang-setting">
+            <span data-i18n="lang.label">Language</span>
+            <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Language" data-i18n-aria="lang.label">
+              <button type="button" data-lang="en" lang="en">English</button>
+              <button type="button" data-lang="bn" lang="bn">বাংলা</button>
+            </div>
+          </div>
           <label class="setting">
-            <span>Volume</span>
+            <span data-i18n="settings.volume">Volume</span>
             <input type="range" id="set-volume" min="0" max="1" step="0.05" />
           </label>
-          <label class="setting check"><input type="checkbox" id="set-mute" /> <span>Mute all sound</span></label>
-          <label class="setting check"><input type="checkbox" id="set-outlines" /> <span>Red outlines on dangerous fish</span></label>
-          <label class="setting check"><input type="checkbox" id="set-trivia" /> <span>Show Bay of Bengal fun facts</span></label>
-          <button class="btn primary" id="btn-settings-close">Done</button>
+          <label class="setting check"><input type="checkbox" id="set-mute" /> <span data-i18n="settings.mute">Mute all sound</span></label>
+          <label class="setting check"><input type="checkbox" id="set-outlines" /> <span data-i18n="settings.outlines">Red outlines on dangerous fish</span></label>
+          <label class="setting check"><input type="checkbox" id="set-trivia" /> <span data-i18n="settings.trivia">Show Bay of Bengal fun facts</span></label>
+          <button class="btn primary" id="btn-settings-close" data-i18n="common.done">Done</button>
           <p class="hint">Fish Fight <span id="settings-version"></span></p>
         </div>
       </section>
 
       <section id="screen-shop" class="screen modal" hidden>
         <div class="panel shop-panel">
-          <h2>Upgrade Fish</h2>
-          <div class="bank"><span class="bank-coin" aria-hidden="true">★</span><span class="bank-label">Your points</span><b id="shop-points">0</b></div>
-          <p class="hint">Every game's score is added to your points. Exchange them for new fish: advanced fish earn more points for everything they eat.</p>
+          <h2 data-i18n="shop.title">Upgrade Fish</h2>
+          <div class="bank"><span class="bank-coin" aria-hidden="true">★</span><span class="bank-label" data-i18n="shop.yourPoints">Your points</span><b id="shop-points">0</b></div>
+          <p class="hint" data-i18n="shop.hint">Every game's score is added to your points. Exchange them for new fish: advanced fish earn more points for everything they eat.</p>
           <div id="shop-list" class="shop-list"></div>
-          <button class="btn primary" id="btn-shop-close">Done</button>
+          <button class="btn primary" id="btn-shop-close" data-i18n="common.done">Done</button>
         </div>
       </section>
 
       <section id="screen-how" class="screen modal" hidden>
         <div class="panel small-panel how">
-          <h2>How to play</h2>
+          <h2 data-i18n="how.title">How to play</h2>
           <ul>
-            <li><b>Eat smaller fish</b> and food to grow. You can eat fish that are clearly smaller than you.</li>
-            <li><b>Avoid bigger fish.</b> Dangerous fish have a <span class="red">red outline</span>; hunters chasing you show a <span class="red">!</span> and edge arrows.</li>
-            <li><b>Dash</b> to escape or snatch prey. It recharges in a couple of seconds.</li>
-            <li><b>Your score becomes points.</b> Spend them in <span class="gold">Upgrade fish</span> on advanced fish that earn more points per bite.</li>
-            <li><b>Score well to earn a next-game reward</b>: a bigger start, a speed boost, or the legendary <span class="gold">Ocean of Plenty</span>.</li>
+            <li data-i18n-html="how.eat"><b>Eat smaller fish</b> and food to grow. You can eat fish that are clearly smaller than you.</li>
+            <li data-i18n-html="how.avoid"><b>Avoid bigger fish.</b> Dangerous fish have a <span class="red">red outline</span>; hunters chasing you show a <span class="red">!</span> and edge arrows.</li>
+            <li data-i18n-html="how.dash"><b>Dash</b> to escape or snatch prey. It recharges in a couple of seconds.</li>
+            <li data-i18n-html="how.points"><b>Your score becomes points.</b> Spend them in <span class="gold">Upgrade fish</span> on advanced fish that earn more points per bite.</li>
+            <li data-i18n-html="how.reward"><b>Score well to earn a next-game reward</b>: a bigger start, a speed boost, or the legendary <span class="gold">Ocean of Plenty</span>.</li>
           </ul>
           <div class="controls">
-            <div><b>Desktop</b> WASD / arrow keys to swim (or hold the mouse) · Space to dash · Esc to pause</div>
-            <div><b>Touch</b> drag on the left to swim · tap DASH on the right</div>
+            <div data-i18n-html="how.desktop"><b>Desktop</b> WASD / arrow keys to swim (or hold the mouse) · Space to dash · Esc to pause</div>
+            <div data-i18n-html="how.touch"><b>Touch</b> drag on the left to swim · tap DASH on the right</div>
           </div>
-          <button class="btn primary" id="btn-how-close">Got it</button>
+          <button class="btn primary" id="btn-how-close" data-i18n="how.gotIt">Got it</button>
         </div>
       </section>
     </div>

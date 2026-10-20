@@ -7,6 +7,7 @@ import type { World } from '../game/World';
 import { stageInfo } from '../systems/growth';
 import { nextTierGoal, rewardText } from '../systems/rewards';
 import type { Settings } from '../systems/save';
+import { digits, getLang, loc, num, t, type Lang } from '../i18n/i18n';
 import { APP_VERSION } from '../version';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
@@ -18,7 +19,7 @@ const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
 export const formatTime = (s: number): string => {
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60);
-  return `${m}:${sec.toString().padStart(2, '0')}`;
+  return digits(`${m}:${sec.toString().padStart(2, '0')}`);
 };
 
 export interface GameOverSummary {
@@ -64,7 +65,11 @@ export interface UICallbacks {
   onSelectFish(id: string): void;
 }
 
-const formatMul = (m: number): string => `×${m}`;
+const formatMul = (m: number): string => `×${num(m)}`;
+
+/** Player fish / species text in the current language. */
+const fishText = (f: PlayerFishDef) => loc({ name: f.name, description: f.description, about: f.about }, f.bn);
+const speciesText = (s: Species) => loc({ name: s.name, about: s.about }, s.bn);
 
 /** Draws a still fish centred in a small canvas, sharp on high-DPI screens. */
 function drawThumb(canvas: HTMLCanvasElement, look: FishLook, cssW: number, cssH: number): void {
@@ -122,6 +127,14 @@ export class UI {
     $('dash-hint').hidden = this.touchMode;
     $('menu-version').textContent = `v${APP_VERSION}`;
     $('settings-version').textContent = `v${APP_VERSION}`;
+    $('lang-toggle').addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-lang]');
+      if (!btn || btn.dataset.lang === this.settings.lang) return;
+      cb.onClick();
+      this.settings.lang = btn.dataset.lang as Lang;
+      cb.onSettings({ ...this.settings });
+      this.syncSettingsInputs();
+    });
 
     const click = (id: string, fn: () => void): void =>
       $(id).addEventListener('click', () => {
@@ -202,6 +215,7 @@ export class UI {
     $<HTMLInputElement>('set-mute').checked = this.settings.muted;
     $<HTMLInputElement>('set-outlines').checked = this.settings.dangerOutlines;
     $<HTMLInputElement>('set-trivia').checked = this.settings.trivia;
+    for (const b of $('lang-toggle').querySelectorAll<HTMLButtonElement>('button[data-lang]')) b.setAttribute('aria-pressed', String(b.dataset.lang === getLang()));
     $('btn-mute').innerHTML = this.settings.muted ? SOUND_OFF : SOUND_ON;
   }
 
@@ -218,15 +232,15 @@ export class UI {
   /** Home-screen points bank and the fish currently selected. */
   setBank(points: number, fish: PlayerFishDef): void {
     this.mascot = fish.look;
-    $('menu-points').textContent = Math.floor(points).toLocaleString();
-    $('menu-fish-name').textContent = fish.name;
-    $('menu-fish-mul').textContent = `${formatMul(fish.feedMul)} feeding points`;
+    $('menu-points').textContent = num(Math.floor(points));
+    $('menu-fish-name').textContent = fishText(fish).name;
+    $('menu-fish-mul').textContent = t('menu.feedMul', { mul: formatMul(fish.feedMul) });
     drawThumb($<HTMLCanvasElement>('menu-fish'), fish.look, 64, 40);
   }
 
   /** Opens (or refreshes) the Upgrade Fish shop. */
   showShop(view: ShopView): void {
-    $('shop-points').textContent = Math.floor(view.points).toLocaleString();
+    $('shop-points').textContent = num(Math.floor(view.points));
     const list = $('shop-list');
     list.innerHTML = '';
     for (const { fish, owned, selected } of view.entries) {
@@ -237,25 +251,26 @@ export class UI {
       canvas.setAttribute('aria-hidden', 'true');
       const info = document.createElement('div');
       info.className = 'shop-info';
-      info.innerHTML = `<div class="shop-name">${fish.name} <span class="shop-mul">${formatMul(fish.feedMul)} points</span></div><div class="shop-desc">${fish.description}</div>`;
+      const text = fishText(fish);
+      info.innerHTML = `<div class="shop-name">${text.name} <span class="shop-mul">${t('shop.mul', { mul: formatMul(fish.feedMul) })}</span></div><div class="shop-desc">${text.description}</div>`;
       const btn = document.createElement('button');
       btn.className = 'btn shop-btn';
       btn.dataset.fish = fish.id;
       if (selected) {
-        btn.textContent = 'Swimming';
+        btn.textContent = t('shop.swimming');
         btn.disabled = true;
       } else if (owned) {
-        btn.textContent = 'Select';
+        btn.textContent = t('shop.select');
         btn.dataset.action = 'select';
       } else {
         const short = fish.cost - view.points;
         btn.dataset.action = 'buy';
         btn.classList.add('primary');
-        btn.innerHTML = `★ ${fish.cost.toLocaleString()}`;
+        btn.innerHTML = `★ ${num(fish.cost)}`;
         if (short > 0) {
           btn.disabled = true;
-          btn.title = `${short.toLocaleString()} more points needed`;
-          btn.innerHTML += `<small>need ${short.toLocaleString()} more</small>`;
+          btn.title = t('shop.needTitle', { n: num(short) });
+          btn.innerHTML += `<small>${t('shop.need', { n: num(short) })}</small>`;
         }
       }
       card.append(canvas, info, btn);
@@ -268,7 +283,8 @@ export class UI {
   /** Sets the HUD name tag for the fish being played. */
   setPlayerFish(fish: PlayerFishDef): void {
     this.mascot = fish.look;
-    $('hud-name').innerHTML = fish.feedMul > 1 ? `${fish.name} <span class="hud-mul">${formatMul(fish.feedMul)}</span>` : fish.name;
+    const name = fishText(fish).name;
+    $('hud-name').innerHTML = fish.feedMul > 1 ? `${name} <span class="hud-mul">${formatMul(fish.feedMul)}</span>` : name;
   }
 
   private show(id: ScreenId): void {
@@ -285,18 +301,23 @@ export class UI {
   showMenu(pending: RewardTier | null, best: number): void {
     this.setPlaying(false);
     this.show('menu');
-    $('menu-best').textContent = Math.floor(best).toLocaleString();
+    $('menu-best').textContent = num(Math.floor(best));
     this.fillTrivia($('menu-trivia'), this.trivia.next(), true);
     const card = $('menu-reward');
     if (pending) {
       card.hidden = false;
-      this.fillRewardCard(card, pending, 'Next game reward');
-      $('btn-play').textContent = 'Play with reward';
+      this.fillRewardCard(card, pending, t('menu.nextReward'));
+      $('btn-play').textContent = t('menu.playReward');
     } else {
       card.hidden = true;
-      $('btn-play').textContent = 'Play';
+      $('btn-play').textContent = t('menu.play');
     }
     queueMicrotask(() => $('btn-play').focus({ preventScroll: true }));
+  }
+
+  /** New fun fact on the pause screen (after a language switch). */
+  refreshPauseTrivia(): void {
+    this.fillTrivia($('pause-trivia'), this.trivia.next());
   }
 
   showPause(): void {
@@ -313,29 +334,29 @@ export class UI {
     this.setPlaying(false);
     this.show('over');
     $('over-title').textContent = s.title;
-    $('over-score').textContent = Math.floor(s.score).toLocaleString();
+    $('over-score').textContent = num(Math.floor(s.score));
     $('over-best').hidden = !s.newBest;
-    $('over-fish').textContent = String(s.fishEaten);
-    $('over-size').textContent = String(Math.round(s.maxSize));
+    $('over-fish').textContent = num(s.fishEaten);
+    $('over-size').textContent = num(Math.round(s.maxSize));
     $('over-time').textContent = formatTime(s.time);
-    $('over-bestscore').textContent = Math.floor(s.bestScore).toLocaleString();
-    $('over-points').innerHTML = `<b>+${Math.floor(s.pointsEarned).toLocaleString()}</b> points banked · total <b>${Math.floor(s.pointsBank).toLocaleString()}</b>`;
+    $('over-bestscore').textContent = num(Math.floor(s.bestScore));
+    $('over-points').innerHTML = t('over.points', { earned: num(Math.floor(s.pointsEarned)), total: num(Math.floor(s.pointsBank)) });
     this.previewLook = s.fish.look;
     this.fillFactCards(s);
     this.fillTrivia($('over-trivia'), this.trivia.next());
 
     const card = $('over-reward');
-    this.fillRewardCard(card, s.tier, s.tier === 'normal' ? 'Next game' : `${rewardText(s.tier).label} score · Reward unlocked`);
+    this.fillRewardCard(card, s.tier, s.tier === 'normal' ? t('over.nextGame') : t('over.rewardUnlocked', { label: rewardText(s.tier).label }));
     const goal = nextTierGoal(s.tier);
     $('over-next').textContent = goal
-      ? `Score ${goal.score.toLocaleString()} for the ${rewardText(goal.tier).label} reward: ${rewardText(goal.tier).title}.`
-      : 'You reached the highest reward tier!';
+      ? t('over.goal', { score: num(goal.score), label: rewardText(goal.tier).label, title: rewardText(goal.tier).title })
+      : t('over.topTier');
 
     const preview = $<HTMLCanvasElement>('plenty-preview');
     preview.hidden = s.tier !== 'plenty';
     if (s.tier === 'plenty') this.startPreview(preview);
     if (s.tier !== 'normal') this.confetti(s.tier === 'plenty' ? 140 : 60);
-    $('btn-again').textContent = s.tier === 'normal' ? 'Play Again' : 'Play Next Game';
+    $('btn-again').textContent = s.tier === 'normal' ? t('over.again') : t('over.playNext');
     queueMicrotask(() => $('btn-again').focus({ preventScroll: true }));
   }
 
@@ -343,10 +364,11 @@ export class UI {
    * A kid-friendly "Fun fact!" card: the player's own fish tells a Bay of Bengal fact in a speech
    * bubble, themed by topic. `cycle` adds a button that deals the next fact.
    */
-  private fillTrivia(box: HTMLElement, t: Trivia, cycle = false): void {
+  private fillTrivia(box: HTMLElement, fact: Trivia, cycle = false): void {
     box.hidden = !this.settings.trivia;
     if (box.hidden) return;
-    this.triviaSeen.mark(t);
+    this.triviaSeen.mark(fact);
+    const f = loc({ figure: fact.figure, label: fact.label, text: fact.text }, fact.bn);
     const el = (tag: string, cls: string, text = '', parent: HTMLElement = box): HTMLElement => {
       const e = document.createElement(tag);
       e.className = cls;
@@ -355,7 +377,7 @@ export class UI {
       return e;
     };
     box.innerHTML = '';
-    box.className = `trivia theme-${t.tag.toLowerCase().replace(/\s+/g, '-')}`;
+    box.className = `trivia theme-${fact.tag.toLowerCase().replace(/\s+/g, '-')}`;
 
     const bubbles = el('div', 'tv-bubbles');
     bubbles.setAttribute('aria-hidden', 'true');
@@ -365,21 +387,21 @@ export class UI {
     const head = el('div', 'tv-head');
     const mascot = el('canvas', 'tv-mascot', '', head) as HTMLCanvasElement;
     mascot.setAttribute('aria-hidden', 'true');
-    el('span', 'tv-ribbon-text', 'Fun fact!', head);
-    el('span', 'tv-tag', t.tag, head);
+    el('span', 'tv-ribbon-text', t('trivia.funFact'), head);
+    el('span', 'tv-tag', t(`trivia.tag.${fact.tag}`), head);
 
     const bubble = el('div', 'tv-bubble');
     const top = el('div', 'tv-top', '', bubble);
-    const emoji = el('span', 'tv-emoji', t.emoji, top);
+    const emoji = el('span', 'tv-emoji', fact.emoji, top);
     emoji.setAttribute('aria-hidden', 'true');
     const headline = el('div', 'tv-headline', '', top);
-    el('div', 'tv-figure', t.figure, headline);
-    el('div', 'tv-label', t.label, headline);
-    el('p', 'tv-text', t.text, bubble);
+    el('div', 'tv-figure', f.figure, headline);
+    el('div', 'tv-label', f.label, headline);
+    el('p', 'tv-text', f.text, bubble);
 
     if (cycle) {
       const foot = el('div', 'tv-foot');
-      const next = el('button', 'tv-next', '🎲 Tell me another!', foot) as HTMLButtonElement;
+      const next = el('button', 'tv-next', t('trivia.next'), foot) as HTMLButtonElement;
       next.type = 'button';
       next.addEventListener('click', () => {
         this.cb.onClick();
@@ -419,20 +441,23 @@ export class UI {
       box.appendChild(card);
       drawThumb(canvas, look, 92, 60);
     };
-    add('Your fish', s.fish.look, s.fish.name, s.fish.sci, s.fish.about, 'mine');
+    const mine = fishText(s.fish);
+    add(t('over.yourFish'), s.fish.look, mine.name, s.fish.sci, mine.about, 'mine');
     if (s.predator) {
-      add('Eaten by', s.predator, s.predator.name, s.predator.sci, s.predator.about, 'predator');
+      const p = speciesText(s.predator);
+      add(t('over.eatenBy'), s.predator, p.name, s.predator.sci, p.about, 'predator');
     } else if (s.topMeal) {
       const m = s.topMeal;
-      add(`Favourite meal · ate ${m.count}`, m.species, m.species.name, m.species.sci, m.species.about, 'meal');
+      const meal = speciesText(m.species);
+      add(t('over.favMeal', { n: num(m.count) }), m.species, meal.name, m.species.sci, meal.about, 'meal');
     }
   }
 
   private fillRewardCard(card: HTMLElement, tier: RewardTier, label: string): void {
     const r = rewardText(tier);
     card.className = 'reward-card' + (tier === 'plenty' ? ' earned plenty' : tier !== 'normal' ? ' earned' : '');
-    const title = tier === 'plenty' ? 'REWARD UNLOCKED: THE OCEAN OF PLENTY' : r.title;
-    const extra = tier === 'plenty' ? '<div class="rc-desc" style="margin-top:6px">A special bonus for your next game only.</div>' : '';
+    const title = tier === 'plenty' ? t('over.plentyTitle') : r.title;
+    const extra = tier === 'plenty' ? `<div class="rc-desc" style="margin-top:6px">${t('over.plentyExtra')}</div>` : '';
     card.innerHTML = `<div class="rc-label">${label}</div><div class="rc-title">${title}</div><div class="rc-desc">${r.description}</div>${extra}`;
   }
 
@@ -463,7 +488,7 @@ export class UI {
     const food = Array.from({ length: 70 }, () => ({ x: Math.random() * W, y: Math.random() * H, p: Math.random() * 6, k: Math.random() }));
     const t0 = performance.now();
     const frame = (now: number): void => {
-      const t = (now - t0) / 1000;
+      const time = (now - t0) / 1000;
       const g = ctx.createLinearGradient(0, 0, 0, H);
       g.addColorStop(0, '#8eeadb');
       g.addColorStop(1, '#2a7f86');
@@ -475,22 +500,22 @@ export class UI {
       ctx.fillStyle = zg;
       ctx.fillRect(0, 0, W, H);
       for (const f of food) {
-        const x = (f.x + Math.sin(t + f.p) * 8 + W) % W;
-        const y = f.y + Math.cos(t * 0.8 + f.p) * 5;
+        const x = (f.x + Math.sin(time + f.p) * 8 + W) % W;
+        const y = f.y + Math.cos(time * 0.8 + f.p) * 5;
         ctx.fillStyle = f.k < 0.5 ? '#b6f27a' : f.k < 0.8 ? '#ff8fa3' : '#ffb347';
         ctx.beginPath();
         ctx.arc(x, y, f.k < 0.5 ? 3 : 5, 0, Math.PI * 2);
         ctx.fill();
       }
-      const fx = ((t * 70) % (W + 120)) - 60;
-      drawFish(ctx, fx, H * 0.5 + Math.sin(t * 2) * 14, 26, 1, Math.cos(t * 2) * 0.2, t * 9, this.previewLook ?? STARTER_FISH.look, {
+      const fx = ((time * 70) % (W + 120)) - 60;
+      drawFish(ctx, fx, H * 0.5 + Math.sin(time * 2) * 14, 26, 1, Math.cos(time * 2) * 0.2, time * 9, this.previewLook ?? STARTER_FISH.look, {
         outline: 'rgba(255,255,255,0.9)',
         outlineWidth: 2,
         screenRadius: 26,
       });
       ctx.fillStyle = 'rgba(58,38,0,0.75)';
-      ctx.font = '600 15px Fredoka, system-ui, sans-serif';
-      ctx.fillText('Preview: medium fish · food everywhere · golden feeding zones', 12, H - 12);
+      ctx.font = "600 15px Fredoka, 'Hind Siliguri', system-ui, sans-serif";
+      ctx.fillText(t('over.preview'), 12, H - 12);
       this.previewRaf = requestAnimationFrame(frame);
     };
     this.previewRaf = requestAnimationFrame(frame);
@@ -540,7 +565,7 @@ export class UI {
     const score = Math.floor(world.stats.score);
     if (score !== L.score) {
       L.score = score;
-      $('hud-score').textContent = score.toLocaleString();
+      $('hud-score').textContent = num(score);
     }
     const time = Math.floor(world.stats.time);
     if (time !== L.time) {
@@ -551,13 +576,14 @@ export class UI {
     const size = Math.round(p.size * 10) / 10;
     if (size !== L.size) {
       L.size = size;
-      $('hud-size').textContent = size.toFixed(1);
+      $('hud-size').textContent = num(size, 1);
     }
     const info = stageInfo(p.size);
-    if (info.name !== L.stage) {
-      L.stage = info.name;
-      $('hud-stage').textContent = info.name;
-      $('hud-next').textContent = info.nextName ? `Next: ${info.nextName}` : 'Max stage reached';
+    const stageName = t(`stage.${info.index}` as 'stage.0');
+    if (stageName !== L.stage) {
+      L.stage = stageName;
+      $('hud-stage').textContent = stageName;
+      $('hud-next').textContent = info.nextName ? t('hud.next', { name: t(`stage.${info.index + 1}` as 'stage.0') }) : t('hud.maxStage');
     }
     const growth = Math.round(info.progress * 100);
     if (growth !== L.growth) {
@@ -567,7 +593,7 @@ export class UI {
     let chip = '';
     if (activeReward && activeReward !== 'normal') {
       chip = rewardText(activeReward).chip;
-      if (p.boostTime > 0) chip = `Speed boost ${Math.ceil(p.boostTime)}s`;
+      if (p.boostTime > 0) chip = t('hud.speedBoost', { s: num(Math.ceil(p.boostTime)) });
     }
     if (chip !== L.chip) {
       L.chip = chip;

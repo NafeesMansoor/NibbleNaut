@@ -2,6 +2,13 @@
 
 All notable changes to Fish Fight. Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [1.3.0] - 2026-10-20
+
+### Added
+- Bangla language (বাংলা). Switch between English and বাংলা in Settings (reachable from the home and pause screens); the choice is saved, and first-time players whose device is set to Bangla start in Bangla.
+- Everything is translated: menus, HUD, banners, floating points, rewards, size stages, settings, How to play, the shop, game-over screen, update notices, every fish name and description, and all 30 Bay of Bengal fun facts. Numbers and times use Bangla digits. Scientific names stay in Latin.
+- Bundled Hind Siliguri font (Bengali subset) so Bangla renders the same everywhere, including offline.
+
 ## [1.2.0] - 2026-10-20
 
 ### Added

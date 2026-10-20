@@ -313,7 +313,7 @@ export class Renderer {
     if (chasing && opts.dangerOutlines) {
       const s = 1 / zoom;
       ctx.fillStyle = '#ff3355';
-      ctx.font = `800 ${22 * s}px Fredoka, system-ui, sans-serif`;
+      ctx.font = `800 ${22 * s}px Fredoka, 'Hind Siliguri', system-ui, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'bottom';
       ctx.fillText('!', f.x, f.y - r * 1.1 - 4 * s);

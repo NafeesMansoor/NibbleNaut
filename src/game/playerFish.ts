@@ -18,6 +18,8 @@ export interface PlayerFishDef {
   description: string;
   /** A real-life fact about the species, shown on the game-over screen. */
   about: string;
+  /** Bangla name, shop blurb and fact. */
+  bn?: { name: string; description: string; about: string };
   look: FishLook;
 }
 
@@ -25,6 +27,11 @@ export interface PlayerFishDef {
 export const PLAYER_FISH: PlayerFishDef[] = [
   {
     id: 'nemo',
+    bn: {
+      name: 'ক্লার্কের ক্লাউন মাছ',
+      description: 'সাহসী ছোট্ট ক্লাউন মাছ। সব কিংবদন্তির শুরু এখান থেকেই।',
+      about: 'সামুদ্রিক অ্যানিমোনের হুল-ভরা শুঁড়ের মাঝে নিরাপদে থাকে, গায়ের বিশেষ পিচ্ছিল আবরণ তাকে বাঁচায়। বাড়ি ছেড়ে কখনো বেশি দূরে যায় না।',
+    },
     name: "Clark's Anemonefish",
     sci: 'Amphiprion clarkii',
     cost: 0,
@@ -35,6 +42,11 @@ export const PLAYER_FISH: PlayerFishDef[] = [
   },
   {
     id: 'sunny',
+    bn: {
+      name: 'তিন-ফোঁটা এঞ্জেল মাছ',
+      description: 'রোদের মতো হলুদ এঞ্জেল মাছ, খাবারের দারুণ ভক্ত।',
+      about: 'উজ্জ্বল হলুদ শরীর আর নীল ঠোঁট। প্রাচীরের দেয়ালে স্পঞ্জ আর সি-স্কুয়ার্ট খুঁটে খায়।',
+    },
     name: 'Threespot Angelfish',
     sci: 'Apolemichthys trimaculatus',
     cost: 3000,
@@ -45,6 +57,11 @@ export const PLAYER_FISH: PlayerFishDef[] = [
   },
   {
     id: 'lion',
+    bn: {
+      name: 'লাল-নীল গ্রুপার',
+      description: 'চুনির মতো লাল, গায়ে নীল ফুটকি, আর ভীষণ ক্ষুধার্ত।',
+      about: 'একে প্রবাল হাইন্ডও বলে। প্রবালের পাশে ওত পেতে থাকে, পাশ দিয়ে মাছ গেলেই ঝট করে ধরে ফেলে।',
+    },
     name: 'Miniatus Grouper',
     sci: 'Cephalopholis miniata',
     cost: 8000,
@@ -55,6 +72,11 @@ export const PLAYER_FISH: PlayerFishDef[] = [
   },
   {
     id: 'blade',
+    bn: {
+      name: 'দৈত্য ট্রেভালি',
+      description: 'রুপালি চকচকে শিকারি, প্রতিটা খাবারে বড় পয়েন্ট।',
+      about: 'প্রবালপ্রাচীরের সবচেয়ে শক্তিশালী মাছদের একটা। দল বেঁধে শিকার করে, লম্বায় ১.৭ মিটার পর্যন্ত হয়।',
+    },
     name: 'Giant Trevally',
     sci: 'Caranx ignobilis',
     cost: 20000,
@@ -65,6 +87,11 @@ export const PLAYER_FISH: PlayerFishDef[] = [
   },
   {
     id: 'hammer',
+    bn: {
+      name: 'ধূসর রিফ হাঙর',
+      description: 'একটা কিশোর হাঙর। প্রাচীর এবার সতর্ক।',
+      about: 'প্রাচীরের বাইরের দিকের দ্রুতগামী, কৌতূহলী হাঙর। এরা বিপন্ন, তাই টিকে থাকতে সুরক্ষা দরকার।',
+    },
     name: 'Grey Reef Shark',
     sci: 'Carcharhinus amblyrhynchos',
     cost: 50000,
@@ -75,6 +102,11 @@ export const PLAYER_FISH: PlayerFishDef[] = [
   },
   {
     id: 'dragon',
+    bn: {
+      name: 'কুঁজমাথা র‍্যাস',
+      description: 'প্রাচীরের কিংবদন্তি দানব। প্রতি কামড়ে তিনগুণ পয়েন্ট।',
+      about: 'পৃথিবীর সবচেয়ে বড় র‍্যাস মাছ: ২ মিটারের বেশি লম্বা, বাঁচে ৩০ বছরেরও বেশি। এমনকি বিষাক্ত ক্রাউন-অব-থর্নস তারামাছও খায়।',
+    },
     name: 'Humphead Wrasse',
     sci: 'Cheilinus undulatus',
     cost: 120000,
