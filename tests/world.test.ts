@@ -16,8 +16,8 @@ function emptyWorld(size = 10, ocean: 'normal' | 'plenty' = 'normal'): World {
   return w;
 }
 
-const minnow = SPECIES.find((s) => s.id === 'minnow')!;
-const shark = SPECIES.find((s) => s.id === 'shark')!;
+const minnow = SPECIES.find((s) => s.id === 'fusilier')!;
+const shark = SPECIES.find((s) => s.id === 'blacktip')!;
 
 describe('world', () => {
   it('player eats a smaller fish on contact, grows and scores', () => {

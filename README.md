@@ -86,14 +86,14 @@ Every game's final score is added to a points bank saved on this device (`localS
 
 | Fish | Cost | Feeding points |
 |---|---:|---:|
-| Nemo Jr. | free | ×1 |
-| Sunny Tang | 3,000 | ×1.25 |
-| Lionfish | 8,000 | ×1.5 |
-| Silver Blade | 20,000 | ×2 |
-| Hammerhead | 50,000 | ×2.5 |
-| Golden Dragon | 120,000 | ×3 |
+| Clark's Anemonefish | free | ×1 |
+| Threespot Angelfish | 3,000 | ×1.25 |
+| Miniatus Grouper | 8,000 | ×1.5 |
+| Giant Trevally | 20,000 | ×2 |
+| Grey Reef Shark | 50,000 | ×2.5 |
+| Humphead Wrasse | 120,000 | ×3 |
 
-The catalog and prices live in `src/game/playerFish.ts`. Purchases are saved immediately. Saves from the previous version migrate with 0 points and Nemo Jr.
+The catalog and prices live in `src/game/playerFish.ts`. Purchases are saved immediately. Saves from the previous version migrate with 0 points and the starter fish. Every fish in the game, player and AI, is a real Bay of Bengal reef species (from Fishipedia's Bay of Bengal list); the game-over screen shows a short fact card for your fish and for the fish that ate you (or your favourite meal if you ended the run).
 
 ## What's implemented
 

@@ -25,8 +25,8 @@ interface LayerSpec {
 
 const LAYERS: Record<OceanKind, LayerSpec[]> = {
   normal: [
-    { seed: 11, fx: 0.18, fy: 0.45, tileW: 1800, tileH: 520, top: [70, 140, 170, 0.32], bottom: [20, 75, 115, 0.55], kelp: 10, ridge: { base: 0.62, amp: 0.16, pinnacles: 4 } },
-    { seed: 23, fx: 0.4, fy: 0.68, tileW: 1500, tileH: 440, top: [45, 105, 130, 0.55], bottom: [12, 50, 80, 0.8], kelp: 14, ridge: { base: 0.7, amp: 0.13, pinnacles: 3 } },
+    { seed: 11, fx: 0.18, fy: 0.45, tileW: 1800, tileH: 520, top: [70, 160, 225, 0.34], bottom: [30, 100, 185, 0.55], kelp: 12, ridge: { base: 0.62, amp: 0.16, pinnacles: 4 } },
+    { seed: 23, fx: 0.4, fy: 0.68, tileW: 1500, tileH: 440, top: [50, 125, 205, 0.55], bottom: [22, 75, 160, 0.8], kelp: 16, ridge: { base: 0.7, amp: 0.13, pinnacles: 3 } },
   ],
   plenty: [
     { seed: 11, fx: 0.18, fy: 0.45, tileW: 1800, tileH: 520, top: [140, 175, 140, 0.3], bottom: [50, 110, 110, 0.5], kelp: 10, ridge: { base: 0.62, amp: 0.16, pinnacles: 4 } },
@@ -45,12 +45,31 @@ interface School {
 const TAU = Math.PI * 2;
 const rgba = (c: [number, number, number, number]): string => `rgba(${c[0]},${c[1]},${c[2]},${c[3]})`;
 
+interface Jelly {
+  x: number;
+  y: number;
+  s: number;
+  ph: number;
+  bell: string;
+  stripe: string;
+}
+
 export class Backdrop {
   private tiles = new Map<string, HTMLCanvasElement>();
   private schools: School[] = [];
+  private jellies: Jelly[] = [];
 
   constructor() {
     const rng = seededRng(41);
+    const tones: [string, string][] = [
+      ['255,214,150', '232,120,60'],
+      ['255,190,210', '220,90,150'],
+      ['220,200,255', '150,100,230'],
+    ];
+    for (let i = 0; i < 6; i++) {
+      const [bell, stripe] = tones[i % tones.length];
+      this.jellies.push({ x: rng() * 2400, y: 0.12 + rng() * 0.45, s: 0.7 + rng() * 0.6, ph: rng() * TAU, bell, stripe });
+    }
     for (let i = 0; i < 5; i++) {
       const n = 10 + Math.floor(rng() * 16);
       const fish = [];
@@ -93,11 +112,67 @@ export class Backdrop {
         ctx.fillRect(0, base - 1, w, h - base + 1);
       }
     }
+    this.drawJellies(ctx, w, h, camX, zoom, t);
+  }
+
+  /** Translucent jellyfish pulsing slowly upward in the middle distance. */
+  private drawJellies(ctx: CanvasRenderingContext2D, w: number, h: number, camX: number, zoom: number, t: number): void {
+    const span = w + 300;
+    const scale = h / 720;
+    ctx.save();
+    ctx.lineCap = 'round';
+    for (const j of this.jellies) {
+      const px = ((((j.x - camX * zoom * 0.25 + Math.sin(t * 0.1 + j.ph) * 30) % span) + span) % span) - 150;
+      const rise = ((j.y * h - t * 6 * j.s) % (h * 0.8) + h * 0.8) % (h * 0.8);
+      const py = rise + h * 0.05;
+      const pulse = 1 + Math.sin(t * 1.8 + j.ph) * 0.12;
+      const r = 26 * j.s * scale;
+      const bw = r * pulse;
+      const bh = r * 0.8 / pulse;
+      // Trailing tentacles, swaying.
+      ctx.strokeStyle = `rgba(${j.bell},0.4)`;
+      ctx.lineWidth = Math.max(1, 1.6 * scale);
+      for (let k = -3; k <= 3; k++) {
+        const tx = px + k * bw * 0.22;
+        ctx.beginPath();
+        ctx.moveTo(tx, py);
+        ctx.bezierCurveTo(tx + Math.sin(t * 1.4 + k + j.ph) * r * 0.5, py + r * 1.2, tx - Math.sin(t * 1.1 + k) * r * 0.5, py + r * 2.2, tx + Math.sin(t + k * 0.7) * r * 0.4, py + r * (2.8 + (k & 1) * 0.6));
+        ctx.stroke();
+      }
+      // Frilly oral arms.
+      ctx.strokeStyle = `rgba(${j.stripe},0.55)`;
+      ctx.lineWidth = Math.max(1.5, 4 * scale);
+      for (const k of [-1, 1]) {
+        ctx.beginPath();
+        ctx.moveTo(px + k * bw * 0.15, py);
+        ctx.quadraticCurveTo(px + k * bw * 0.4 + Math.sin(t * 1.3 + j.ph) * r * 0.2, py + r * 0.9, px + k * bw * 0.1, py + r * 1.6);
+        ctx.stroke();
+      }
+      // Bell with a glossy top and radial stripes.
+      const g = ctx.createRadialGradient(px - bw * 0.3, py - bh * 0.7, 0, px, py - bh * 0.3, bw * 1.2);
+      g.addColorStop(0, `rgba(255,255,255,0.85)`);
+      g.addColorStop(0.35, `rgba(${j.bell},0.75)`);
+      g.addColorStop(1, `rgba(${j.bell},0.35)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.ellipse(px, py, bw, bh, 0, Math.PI, TAU);
+      ctx.quadraticCurveTo(px, py + bh * 0.35, px - bw, py);
+      ctx.fill();
+      ctx.strokeStyle = `rgba(${j.stripe},0.6)`;
+      ctx.lineWidth = Math.max(1, 2 * scale);
+      for (let k = -2; k <= 2; k++) {
+        ctx.beginPath();
+        ctx.moveTo(px + k * bw * 0.12, py - bh * 0.92);
+        ctx.quadraticCurveTo(px + k * bw * 0.32, py - bh * 0.5, px + k * bw * 0.42, py);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
   }
 
   private drawSchools(ctx: CanvasRenderingContext2D, w: number, h: number, camX: number, zoom: number, t: number, layer: number, kind: OceanKind): void {
     const span = w + 400;
-    ctx.fillStyle = kind === 'plenty' ? 'rgba(40,80,70,0.28)' : layer === 0 ? 'rgba(15,60,95,0.3)' : 'rgba(8,40,70,0.38)';
+    ctx.fillStyle = kind === 'plenty' ? 'rgba(40,80,70,0.28)' : layer === 0 ? 'rgba(20,80,160,0.3)' : 'rgba(14,60,130,0.38)';
     const size = (layer === 0 ? 3.2 : 4.6) * (h / 720);
     for (const sc of this.schools) {
       if (sc.layer !== layer) continue;

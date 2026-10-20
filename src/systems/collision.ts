@@ -45,6 +45,7 @@ export function resolveCollisions(w: World): void {
       w.addScore(points);
       w.stats.fishEaten++;
       if (f.golden) w.stats.goldenEaten++;
+      w.stats.eaten[f.species.id] = (w.stats.eaten[f.species.id] ?? 0) + 1;
       w.events.push({ type: 'eatFish', x: f.x, y: f.y, size: f.size, points, golden: f.golden, color: f.species.body });
     }
 

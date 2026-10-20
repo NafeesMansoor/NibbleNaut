@@ -15,7 +15,20 @@ export interface FishLook {
   stripes?: number;
   /** Optional dark edge drawn under each stripe (the player's clownfish bands). */
   stripeEdge?: string;
+  /** Tail colour when it differs from the other fins. */
+  tail?: string;
+  /** Colour of a scatter of small spots over the body. */
+  spots?: string;
+  /** Colour of a horizontal band from snout to tail (fusiliers, wrasses). */
+  band?: string;
 }
+
+/** Fixed spot layout in body-relative units, so every fish of a kind has the same pattern. */
+const SPOTS: [number, number, number][] = Array.from({ length: 22 }, (_, i) => {
+  const a = i * 2.39996;
+  const d = Math.sqrt((i + 0.5) / 22);
+  return [Math.cos(a) * d * 0.85, Math.sin(a) * d * 0.8, 0.07 + ((i * 7) % 4) * 0.012];
+});
 
 export interface FishDrawOpts {
   outline?: string | null;
@@ -61,7 +74,7 @@ export function drawFish(
   if (opts.alpha !== undefined && opts.alpha < 1) ctx.globalAlpha *= opts.alpha;
 
   // Tail
-  ctx.fillStyle = look.fin;
+  ctx.fillStyle = look.tail ?? look.fin;
   ctx.beginPath();
   if (look.shape === 'shark') {
     ctx.moveTo(-rx * 0.8, 0);
@@ -76,6 +89,7 @@ export function drawFish(
   ctx.fill();
 
   // Dorsal fin (and anal fin for tall fish)
+  ctx.fillStyle = look.fin;
   ctx.beginPath();
   if (look.shape === 'shark') {
     ctx.moveTo(-rx * 0.3, -ry * 0.8);
@@ -106,6 +120,20 @@ export function drawFish(
     ctx.beginPath();
     ctx.ellipse(rx * 0.05, ry * 0.62, rx * 0.95, ry * 0.55, 0, 0, TAU);
     ctx.fill();
+    if (look.band) {
+      ctx.fillStyle = look.band;
+      ctx.beginPath();
+      ctx.ellipse(-rx * 0.1, -ry * 0.22, rx * 1.05, ry * 0.16, 0, 0, TAU);
+      ctx.fill();
+    }
+    if (look.spots) {
+      ctx.fillStyle = look.spots;
+      for (const [sx, sy, sr] of SPOTS) {
+        ctx.beginPath();
+        ctx.arc(sx * rx, sy * ry, sr * Math.min(rx, ry * 1.6), 0, TAU);
+        ctx.fill();
+      }
+    }
     if (look.stripe && look.stripes) {
       const n = look.stripes;
       for (let i = 0; i < n; i++) {

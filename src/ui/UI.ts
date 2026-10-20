@@ -1,6 +1,7 @@
 import { CONFIG, type RewardTier } from '../config';
 import { STARTER_FISH, type PlayerFishDef } from '../game/playerFish';
 import { drawFish, type FishLook } from '../render/fishArt';
+import type { Species } from '../game/species';
 import type { World } from '../game/World';
 import { stageInfo } from '../systems/growth';
 import { nextTierGoal, rewardText } from '../systems/rewards';
@@ -32,6 +33,10 @@ export interface GameOverSummary {
   pointsEarned: number;
   pointsBank: number;
   fish: PlayerFishDef;
+  /** The fish that ate the player, or null when the run was ended by hand. */
+  predator: Species | null;
+  /** The species the player ate most this run. */
+  topMeal: { species: Species; count: number } | null;
 }
 
 export interface ShopEntry {
@@ -292,6 +297,7 @@ export class UI {
     $('over-bestscore').textContent = Math.floor(s.bestScore).toLocaleString();
     $('over-points').innerHTML = `<b>+${Math.floor(s.pointsEarned).toLocaleString()}</b> points banked · total <b>${Math.floor(s.pointsBank).toLocaleString()}</b>`;
     this.previewLook = s.fish.look;
+    this.fillFactCards(s);
 
     const card = $('over-reward');
     this.fillRewardCard(card, s.tier, s.tier === 'normal' ? 'Next game' : `${rewardText(s.tier).label} score · Reward unlocked`);
@@ -306,6 +312,40 @@ export class UI {
     if (s.tier !== 'normal') this.confetti(s.tier === 'plenty' ? 140 : 60);
     $('btn-again').textContent = s.tier === 'normal' ? 'Play Again' : 'Play Next Game';
     queueMicrotask(() => $('btn-again').focus({ preventScroll: true }));
+  }
+
+  /** "Meet your fish" cards: the player's species, then its predator (or favourite meal). */
+  private fillFactCards(s: GameOverSummary): void {
+    const box = $('over-facts');
+    box.innerHTML = '';
+    const add = (label: string, look: FishLook, name: string, sci: string, about: string, kind: string): void => {
+      const card = document.createElement('div');
+      card.className = `fact-card ${kind}`;
+      const canvas = document.createElement('canvas');
+      canvas.className = 'fc-fish';
+      const text = document.createElement('div');
+      text.className = 'fc-text';
+      const el = (cls: string, content: string, tag = 'div'): void => {
+        const e = document.createElement(tag);
+        e.className = cls;
+        e.textContent = content;
+        text.appendChild(e);
+      };
+      el('fc-label', label);
+      el('fc-name', name);
+      el('fc-sci', sci, 'i');
+      el('fc-about', about, 'p');
+      card.append(canvas, text);
+      box.appendChild(card);
+      drawThumb(canvas, look, 92, 60);
+    };
+    add('Your fish', s.fish.look, s.fish.name, s.fish.sci, s.fish.about, 'mine');
+    if (s.predator) {
+      add('Eaten by', s.predator, s.predator.name, s.predator.sci, s.predator.about, 'predator');
+    } else if (s.topMeal) {
+      const m = s.topMeal;
+      add(`Favourite meal · ate ${m.count}`, m.species, m.species.name, m.species.sci, m.species.about, 'meal');
+    }
   }
 
   private fillRewardCard(card: HTMLElement, tier: RewardTier, label: string): void {

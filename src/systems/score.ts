@@ -9,6 +9,8 @@ export interface RunStats {
   time: number;
   /** Highest size stage reached this run. */
   stage: number;
+  /** Fish eaten this run, counted per species id. */
+  eaten: Record<string, number>;
 }
 
 export const newRunStats = (startSize: number, startStage: number): RunStats => ({
@@ -19,6 +21,7 @@ export const newRunStats = (startSize: number, startStage: number): RunStats => 
   maxSize: startSize,
   time: 0,
   stage: startStage,
+  eaten: {},
 });
 
 export const pointsForFish = (preySize: number, golden: boolean): number =>

@@ -8,6 +8,7 @@ import { RewardLedger, rewardText, startConditionsFor } from '../systems/rewards
 import { FishShop } from '../systems/shop';
 import type { SaveSystem, Settings } from '../systems/save';
 import { UI, type GameOverSummary, type ShopView } from '../ui/UI';
+import { speciesById, type Species } from './species';
 import { World, type Controls } from './World';
 
 type State = 'menu' | 'playing' | 'paused' | 'dying' | 'over';
@@ -223,10 +224,15 @@ export class Game {
   }
 
   /** Records the result and next-game reward exactly once per run. */
-  private finalize(title: string): void {
+  private finalize(title: string, predator: Species | null = null): void {
     if (this.finalized) return;
     this.finalized = true;
     const s = this.world.stats;
+    let topMeal: GameOverSummary['topMeal'] = null;
+    for (const [id, count] of Object.entries(s.eaten)) {
+      const species = speciesById(id);
+      if (species && (!topMeal || count > topMeal.count)) topMeal = { species, count };
+    }
     const { tier, newBest, pointsEarned } = this.ledger.recordGameOver(s.score, s.maxSize);
     this.summary = {
       title,
@@ -240,6 +246,8 @@ export class Game {
       pointsEarned,
       pointsBank: this.shop.points,
       fish: this.shop.selected(),
+      predator,
+      topMeal,
     };
   }
 
@@ -323,7 +331,7 @@ export class Game {
         break;
       case 'playerEaten':
         if (this.state !== 'playing') break;
-        this.finalize(`Eaten by a ${e.by.species.name}!`);
+        this.finalize(`Eaten by a ${e.by.species.name}!`, e.by.species);
         this.state = 'dying';
         this.dyingTime = DYING_SECONDS;
         this.audio.gameOver();

@@ -2,6 +2,17 @@
 
 All notable changes to Fish Fight. Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [1.1.0] - 2026-10-20
+
+### Changed
+- Bay of Bengal cast: all AI fish are now real Bay of Bengal reef species (Blue-and-gold Fusilier, Blue Demoiselle, Splitlevel Hogfish, Raccoon and Copperband Butterflyfish, Vermiculated Angelfish, Humpback Grouper, Common Dolphinfish, Blacktip Reef Shark, Bull Shark). The rare golden fish is now the Golden Ilish.
+- Player fish renamed to real species (Clark's Anemonefish, Threespot Angelfish, Miniatus Grouper, Giant Trevally, Grey Reef Shark, Humphead Wrasse). Ids, prices and multipliers are unchanged, so saves and purchases carry over.
+- Brighter cartoon-reef scenery: cyan-to-royal-blue water, stronger sun rays, white sand, violet/amber branching corals, golden brain corals, pink anemones, green and purple seaweed, grey rocks, and drifting jellyfish.
+- Fish art supports separate tail colours, spots and horizontal bands.
+
+### Added
+- Game-over fact cards: your fish and the fish that ate you (or your most-eaten fish when you end the run), each with a picture, scientific name and a short description.
+
 ## [1.0.3] - 2026-10-19
 
 Version jumps from 0.1.0 to 1.0.3 at the project owner's request (major bump approved).

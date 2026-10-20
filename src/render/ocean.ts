@@ -19,7 +19,7 @@ interface Mote {
 const NEAR_Z = 0.82;
 
 const TINT: Record<OceanKind, { caustic: [number, number, number]; ray: [number, number, number]; sand: [number, number, number]; mote: string }> = {
-  normal: { caustic: [215, 250, 255], ray: [200, 240, 255], sand: [212, 190, 146], mote: '225,245,255' },
+  normal: { caustic: [215, 250, 255], ray: [210, 248, 255], sand: [228, 233, 240], mote: '225,245,255' },
   plenty: { caustic: [255, 232, 150], ray: [255, 226, 140], sand: [226, 200, 130], mote: '255,240,195' },
 };
 
@@ -75,7 +75,7 @@ export class OceanFx {
 
   /** Slanted sun shafts from the surface; strongest near the top, never fully gone. */
   rays(ctx: CanvasRenderingContext2D, w: number, h: number, camX: number, zoom: number, viewTop: number, t: number, k: OceanKind): void {
-    const strength = clamp(1 - viewTop / 3800, 0.3, 1) * (k === 'plenty' ? 0.3 : 0.22);
+    const strength = clamp(1 - viewTop / 3800, 0.3, 1) * (k === 'plenty' ? 0.3 : 0.32);
     const sprite = this.kind(k).ray;
     const span = w * 1.5;
     ctx.save();

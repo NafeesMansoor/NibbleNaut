@@ -25,34 +25,44 @@ type Item =
 
 const pick = <T,>(rng: Rng, list: T[]): T => list[Math.floor(rng() * list.length)];
 
+// Bright cartoon-reef palette: grey rocks, violet and amber branching corals, golden brain
+// corals, pink anemones and green/purple seaweed over pale sand.
 const ROCK_TONES: [string, string][] = [
-  ['#8d969b', '#2c363e'],
-  ['#7f8c8a', '#27322f'],
-  ['#9a9186', '#352f2a'],
-  ['#78838e', '#232c36'],
+  ['#a3a9b8', '#3a3f4f'],
+  ['#9097a8', '#30364a'],
+  ['#a99fb8', '#3d3550'],
+  ['#8e9aa6', '#2c3644'],
 ];
-const KELP_BLADES = ['#7d8a2e', '#8a7a2c', '#6f8a34', '#94862f'];
-const GRASS = ['#4c8f45', '#5fa04e', '#3f7d3e', '#7aa851'];
+const KELP: [string, string][] = [
+  ['#3fbf4f', '#237a34'],
+  ['#2fae5e', '#1d7040'],
+  ['#9a45e0', '#5e2496'],
+  ['#b25cf0', '#6a2aa6'],
+  ['#5fd05a', '#2f8a34'],
+];
+const GRASS = ['#3fbf4f', '#5fd05a', '#2fa04a', '#a04fe0'];
 const STAGHORN: [string, string, string][] = [
-  ['#c99a6b', '#8d6544', '#f0d2ad'],
-  ['#b88a8f', '#7c5459', '#e8c6cb'],
-  ['#9c7bb0', '#664a7a', '#d4bde2'],
-  ['#d98f5f', '#9a5a35', '#f6c9a5'],
+  ['#a63fe0', '#6a1fa0', '#e2a8ff'],
+  ['#c04fd8', '#7a2696', '#f0b8ff'],
+  ['#f2a024', '#b8650c', '#ffd98a'],
+  ['#ff8a3a', '#c0501a', '#ffc79a'],
+  ['#ff6fae', '#b83a74', '#ffc2de'],
 ];
 const BRAIN: [string, string][] = [
-  ['#cdbb7a', '#7d6b36'],
-  ['#a9bb7c', '#5b6a3a'],
-  ['#c9a58a', '#7a5a45'],
+  ['#ffd45a', '#c8861a'],
+  ['#ffc94a', '#b8741c'],
+  ['#f5d36e', '#b48a2a'],
+  ['#8fdc5a', '#3f8a2a'],
 ];
-const FANS = ['#b0305a', '#8a3fa8', '#d4772a', '#c2405a'];
-const SPONGES = ['#c8752d', '#b7a03a', '#8a4f9e', '#c6584a'];
+const FANS = ['#c23ad8', '#8a3fe0', '#ff8a2a', '#ff4f8a'];
+const SPONGES = ['#ff8a2a', '#ffcf3a', '#a04fe0', '#ff5a7a'];
 const ANEMONES: [string, string][] = [
-  ['#e7a1c4', '#fff0f7'],
-  ['#a7d36d', '#f0ffd4'],
-  ['#f0b86a', '#fff3d6'],
+  ['#ff8fc4', '#fff0f7'],
+  ['#ff6fae', '#ffe0ef'],
   ['#c58ae0', '#f6e6ff'],
+  ['#ffb35a', '#fff3d6'],
 ];
-const STARS = ['#e0602a', '#d9475f', '#e8a33a', '#7b4fb0'];
+const STARS = ['#c23ad8', '#ff5a3a', '#ffb02a', '#ff4f8a'];
 const SHELLS = ['#efe2cc', '#f2c9b0', '#e9d7e8'];
 const PEBBLES = ['#b9b2a6', '#9a9389', '#c7bfb2'];
 
@@ -74,13 +84,13 @@ export class Decor {
     let x = 20;
     while (x < W) {
       const y = this.sandAt(x) + 6;
-      const kind = pickWeighted(rng, { kelp: 0.13, rock: 0.22, staghorn: 0.14, brain: 0.12, fan: 0.12, sponge: 0.12, grass: 0.15 });
+      const kind = pickWeighted(rng, { kelp: 0.16, rock: 0.16, staghorn: 0.2, brain: 0.14, fan: 0.1, sponge: 0.1, grass: 0.14 });
       if (kind === 'kelp') {
         // Kelp grows in groves.
         const n = 1 + Math.floor(rng() * 3);
         for (let i = 0; i < n; i++) this.back.push(makeKelp(rng, x + i * randRange(rng, 25, 70), this.sandAt(x) + 6));
       } else if (kind === 'rock') this.back.push(makeRock(rng, x, y, randRange(rng, 90, 280), randRange(rng, 60, 170)));
-      else if (kind === 'staghorn') this.back.push(makeStaghorn(rng, x, y, randRange(rng, 70, 160)));
+      else if (kind === 'staghorn') this.back.push(makeStaghorn(rng, x, y, randRange(rng, 90, 220)));
       else if (kind === 'brain') this.back.push(makeBrain(rng, x, y + 4, randRange(rng, 30, 80)));
       else if (kind === 'fan') this.back.push(makeFan(rng, x, y, randRange(rng, 90, 200)));
       else if (kind === 'sponge') this.back.push(makeSponge(rng, x, y));
@@ -91,7 +101,7 @@ export class Decor {
     x = 10;
     while (x < W) {
       const y = this.sandAt(x) + randRange(rng, 28, 88);
-      const kind = pickWeighted(rng, { grass: 0.3, anemone: 0.12, star: 0.1, shell: 0.12, urchin: 0.08, pebbles: 0.15, rock: 0.08, brain: 0.05 });
+      const kind = pickWeighted(rng, { grass: 0.26, anemone: 0.18, star: 0.12, shell: 0.12, urchin: 0.05, pebbles: 0.12, rock: 0.07, brain: 0.08 });
       if (kind === 'grass') this.front.push(makeGrass(rng, x, y, 30, 90));
       else if (kind === 'anemone') this.front.push(makeAnemone(rng, x, y));
       else if (kind === 'star') this.front.push({ k: 'star', x, y, ext: 30, top: 30, r: randRange(rng, 10, 20), rot: rng() * TAU, color: pick(rng, STARS) });
@@ -137,9 +147,9 @@ export class Decor {
     ctx.fill();
     const top = H - CONFIG.world.seabedHeight;
     const shade = ctx.createLinearGradient(0, top, 0, top + 160);
-    shade.addColorStop(0, plenty ? 'rgba(40,110,110,0.32)' : 'rgba(20,90,130,0.38)');
-    shade.addColorStop(0.25, plenty ? 'rgba(40,110,110,0.12)' : 'rgba(20,90,130,0.14)');
-    shade.addColorStop(1, 'rgba(10,30,50,0.28)');
+    shade.addColorStop(0, plenty ? 'rgba(40,110,110,0.32)' : 'rgba(40,110,190,0.3)');
+    shade.addColorStop(0.25, plenty ? 'rgba(40,110,110,0.12)' : 'rgba(60,130,200,0.08)');
+    shade.addColorStop(1, plenty ? 'rgba(10,30,50,0.28)' : 'rgba(30,60,120,0.18)');
     ctx.fillStyle = shade;
     ctx.fill();
   }
@@ -221,7 +231,8 @@ function makeRock(rng: Rng, x: number, y: number, w: number, h: number): Item {
 
 function makeKelp(rng: Rng, x: number, y: number): Item {
   const h = randRange(rng, 380, 1050);
-  return { k: 'kelp', x, y, ext: 160, top: h + 60, h, phase: rng() * TAU, lean: (rng() - 0.5) * 120, blade: pick(rng, KELP_BLADES), stipe: '#5f5a26', spacing: randRange(rng, 30, 44) };
+  const [blade, stipe] = pick(rng, KELP);
+  return { k: 'kelp', x, y, ext: 160, top: h + 60, h, phase: rng() * TAU, lean: (rng() - 0.5) * 120, blade, stipe, spacing: randRange(rng, 30, 44) };
 }
 
 function makeGrass(rng: Rng, x: number, y: number, hMin: number, hMax: number): Item {
@@ -293,7 +304,7 @@ function makeSponge(rng: Rng, x: number, y: number): Item {
 }
 
 function makeAnemone(rng: Rng, x: number, y: number): Item {
-  const r = randRange(rng, 12, 26);
+  const r = randRange(rng, 16, 34);
   const [color, tip] = pick(rng, ANEMONES);
   return { k: 'anemone', x, y, ext: r * 2, top: r * 2, r, n: 18 + Math.floor(rng() * 10), color, tip, phase: rng() * TAU };
 }
@@ -396,14 +407,14 @@ function drawKelp(ctx: CanvasRenderingContext2D, k: Of<'kelp'>, t: number, hair:
     ctx.quadraticCurveTo(mx + sa * W * 1.6, my - ca * W * 1.6, bx, by);
     ctx.fill();
     ctx.globalAlpha = 0.5;
-    ctx.strokeStyle = '#4e4a1e';
+    ctx.strokeStyle = k.stipe;
     ctx.lineWidth = Math.max(1, hair);
     ctx.beginPath();
     ctx.moveTo(bx, by);
     ctx.lineTo(tx, ty);
     ctx.stroke();
     ctx.globalAlpha = 1;
-    ctx.fillStyle = '#9d9440';
+    ctx.fillStyle = k.stipe;
     ctx.beginPath();
     ctx.arc(bx + ca * 4, by + sa * 4, 2.8, 0, TAU);
     ctx.fill();
@@ -462,7 +473,7 @@ function drawBrain(ctx: CanvasRenderingContext2D, b: Of<'brain'>): void {
   ctx.fill();
   ctx.save();
   ctx.clip();
-  ctx.strokeStyle = 'rgba(55,40,20,0.42)';
+  ctx.strokeStyle = 'rgba(120,70,10,0.45)';
   ctx.lineWidth = Math.max(1, b.rx * 0.045);
   for (const line of b.grooves) {
     ctx.beginPath();

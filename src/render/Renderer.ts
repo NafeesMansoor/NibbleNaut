@@ -16,7 +16,7 @@ const hex = (h: string): RGB => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3
 
 /** Water colour by depth (0 = surface, 1 = seabed). */
 const PALETTES: Record<'normal' | 'plenty', RGB[]> = {
-  normal: ['#58bfd2', '#2496b9', '#15729f', '#0e5884', '#0c4c74'].map(hex),
+  normal: ['#74e0f4', '#33bdec', '#1c96dc', '#1874c6', '#1660b0'].map(hex),
   plenty: ['#8fe0c9', '#45b3a2', '#2d8a8a', '#21696f', '#1d5a62'].map(hex),
 };
 
@@ -153,7 +153,7 @@ export class Renderer {
     if (y1 > world.seabedY - 1300) {
       this.decor.drawBack(ctx, x0, x1, y0, y1, t, cam.zoom);
       this.drawHaze(pal, x0, x1, world.seabedY);
-      this.decor.drawSand(ctx, x0, x1, this.ocean.sandPattern(ctx, kind), plenty ? '#e2c882' : '#d4be92', plenty);
+      this.decor.drawSand(ctx, x0, x1, this.ocean.sandPattern(ctx, kind), plenty ? '#e2c882' : '#e6eaf0', plenty);
       this.decor.drawFront(ctx, x0, x1, y0, y1, t, cam.zoom);
     }
     this.ocean.caustics(ctx, { w, h, dpr: this.dpr, camX: cam.x, camY: cam.y, zoom: cam.zoom }, world.seabedY, t, kind);
@@ -180,8 +180,8 @@ export class Renderer {
     const bottom = seabedY + 40;
     const g = ctx.createLinearGradient(0, top, 0, bottom);
     g.addColorStop(0, waterAt(pal, top / seabedY, 0));
-    g.addColorStop(0.35, waterAt(pal, (top + 400) / seabedY, 0.2));
-    g.addColorStop(1, waterAt(pal, 1, 0.3));
+    g.addColorStop(0.35, waterAt(pal, (top + 400) / seabedY, 0.1));
+    g.addColorStop(1, waterAt(pal, 1, 0.16));
     ctx.fillStyle = g;
     ctx.fillRect(x0, top, x1 - x0, bottom - top);
   }

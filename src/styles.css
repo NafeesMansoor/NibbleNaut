@@ -435,6 +435,73 @@ h2 {
   color: var(--ink-soft);
 }
 
+/* ---------- Game-over fish facts ---------- */
+.fact-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fact-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px 8px 6px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--panel-edge);
+  border-left: 4px solid #5ad1ec;
+  text-align: left;
+}
+
+.fact-card.predator {
+  border-left-color: #ff4d6a;
+}
+
+.fact-card.meal {
+  border-left-color: #7cf0a0;
+}
+
+.fact-card .fc-fish {
+  flex: none;
+}
+
+.fact-card .fc-text {
+  min-width: 0;
+}
+
+.fact-card .fc-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.fact-card.predator .fc-label {
+  color: #ff8fa0;
+}
+
+.fact-card .fc-name {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.fact-card .fc-sci {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-soft);
+  opacity: 0.85;
+}
+
+.fact-card .fc-about {
+  margin: 3px 0 0;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
 /* ---------- Reward card ---------- */
 .reward-card {
   border-radius: 16px;
