@@ -2,7 +2,9 @@
 
 All notable changes to Fish Fight. Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
-## [1.3.0] - 2026-10-20
+## [2.1.0] - 2026-10-20
+
+Major version bump approved by the project owner (from 1.2.0; 1.3.0 was never released).
 
 ### Added
 - Bangla language (বাংলা). Switch between English and বাংলা in Settings (reachable from the home and pause screens); the choice is saved, and first-time players whose device is set to Bangla start in Bangla.
