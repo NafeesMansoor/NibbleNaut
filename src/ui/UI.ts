@@ -343,7 +343,9 @@ export class UI {
     $('over-points').innerHTML = t('over.points', { earned: num(Math.floor(s.pointsEarned)), total: num(Math.floor(s.pointsBank)) });
     this.previewLook = s.fish.look;
     this.fillFactCards(s);
-    this.fillTrivia($('over-trivia'), this.trivia.next());
+    // Being eaten already shows the predator's card; a fun fact there would be one card too many.
+    if (s.predator) $('over-trivia').hidden = true;
+    else this.fillTrivia($('over-trivia'), this.trivia.next());
 
     const card = $('over-reward');
     this.fillRewardCard(card, s.tier, s.tier === 'normal' ? t('over.nextGame') : t('over.rewardUnlocked', { label: rewardText(s.tier).label }));

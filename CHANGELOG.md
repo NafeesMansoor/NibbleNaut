@@ -9,6 +9,9 @@ All notable changes to Fish Fight. Versions follow [semantic versioning](https:/
 - Everything is translated: menus, HUD, banners, floating points, rewards, size stages, settings, How to play, the shop, game-over screen, update notices, every fish name and description, and all 30 Bay of Bengal fun facts. Numbers and times use Bangla digits. Scientific names stay in Latin.
 - Bundled Hind Siliguri font (Bengali subset) so Bangla renders the same everywhere, including offline.
 
+### Changed
+- The game-over screen no longer shows a fun fact when your fish was eaten (the predator's card is shown instead). Ending a run yourself still shows one.
+
 ## [1.2.0] - 2026-10-20
 
 ### Added
