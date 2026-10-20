@@ -512,13 +512,12 @@ h2 {
   }
 }
 
-.tv-ribbon {
+.tv-head {
   position: relative;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  gap: 6px;
+  margin: -2px 0 6px;
 }
 
 .tv-ribbon-text {
@@ -532,9 +531,11 @@ h2 {
   letter-spacing: 0.5px;
   transform: rotate(-3deg);
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+  white-space: nowrap;
 }
 
 .tv-tag {
+  margin-left: auto;
   padding: 3px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.28);
@@ -543,20 +544,13 @@ h2 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-}
-
-.tv-body {
-  position: relative;
-  display: flex;
-  align-items: flex-start;
-  gap: 4px;
+  white-space: nowrap;
 }
 
 /* The player's fish, bobbing as it "talks". */
 .tv-mascot {
   flex: none;
-  margin-top: 6px;
-  background: none !important;
+  margin-left: -6px;
   animation: tv-bob 2.4s ease-in-out infinite;
   filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.18));
 }
@@ -567,14 +561,12 @@ h2 {
     transform: translateY(0) rotate(-3deg);
   }
   50% {
-    transform: translateY(-6px) rotate(3deg);
+    transform: translateY(-4px) rotate(3deg);
   }
 }
 
 .tv-bubble {
   position: relative;
-  flex: 1;
-  min-width: 0;
   padding: 10px 12px 11px;
   border-radius: 18px;
   background: #fff;
@@ -582,15 +574,15 @@ h2 {
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* Speech-bubble tail pointing at the fish. */
+/* Speech-bubble tail pointing up at the fish in the header. */
 .tv-bubble::before {
   content: '';
   position: absolute;
-  left: -9px;
-  top: 22px;
-  border-width: 8px 12px 8px 0;
+  left: 30px;
+  top: -11px;
+  border-width: 0 9px 12px 9px;
   border-style: solid;
-  border-color: transparent #fff transparent transparent;
+  border-color: transparent transparent #fff transparent;
 }
 
 .tv-top {
@@ -664,36 +656,8 @@ h2 {
   margin-top: 10px;
 }
 
-.tv-progress {
-  flex: 1 1 160px;
-  min-width: 0;
-}
-
-.tv-count {
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-}
-
-.tv-bar {
-  height: 10px;
-  margin-top: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.3);
-  overflow: hidden;
-}
-
-.tv-bar i {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #fff3a8, #ffffff);
-  transition: width 0.4s ease;
-}
-
 .tv-next {
-  flex: none;
+  flex: 1;
   padding: 9px 16px 10px;
   border: 0;
   border-radius: 999px;
@@ -722,21 +686,6 @@ h2 {
 }
 
 @container (max-width: 400px) {
-  /* Narrow cards: fish on top, bubble below with its tail pointing up at the fish. */
-  .tv-body {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
-  }
-  .tv-mascot {
-    margin: 0 0 0 10px;
-  }
-  .tv-bubble::before {
-    left: 52px;
-    top: -10px;
-    border-width: 0 9px 12px 9px;
-    border-color: transparent transparent #fff transparent;
-  }
   .tv-figure {
     font-size: 26px;
   }

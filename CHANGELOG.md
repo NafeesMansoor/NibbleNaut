@@ -5,8 +5,9 @@ All notable changes to Fish Fight. Versions follow [semantic versioning](https:/
 ## [1.2.0] - 2026-10-20
 
 ### Added
-- Bay of Bengal "Fun fact!" cards: 30 facts, each with a headline figure and an emoji (area, depth, the Sundarbans, the Bengal Fan, hilsa, cyclones, dolphins, turtles and more). Designed for young players: the player's own fish tells the fact in a speech bubble, each topic has its own bright colour theme, and bubbles drift behind the card. Shown on the home menu (with a "Tell me another!" button), the pause screen and the game-over screen.
-- "Facts discovered" collection: a progress bar counts the facts each player has seen, remembered on the device. New facts are shown before ones already seen, and no fact repeats until all have appeared.
+- Bay of Bengal "Fun fact!" cards: 30 facts, each with a headline figure and an emoji (area, depth, the Sundarbans, the Bengal Fan, hilsa, cyclones, dolphins, turtles and more). Designed for young players: the player's own fish sits in the card's header and tells the fact in a speech bubble, each topic has its own bright colour theme, and bubbles drift behind the card. Shown on the home menu (with a "Tell me another!" button), the pause screen and the game-over screen.
+- Settings → "Show Bay of Bengal fun facts" turns the cards on or off (on by default; older saves get the default).
+- Facts not yet seen on this device are shown first, and no fact repeats until all have appeared.
 
 ### Fixed
 - Upgrade Fish shop on phones now shows each fish's picture (it was hidden on screens narrower than 420 px). On phones the buy/select button moves under the fish.

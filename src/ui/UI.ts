@@ -178,6 +178,17 @@ export class UI {
       this.settings.dangerOutlines = outlines.checked;
       cb.onSettings({ ...this.settings });
     });
+    const trivia = $<HTMLInputElement>('set-trivia');
+    trivia.addEventListener('change', () => {
+      this.settings.trivia = trivia.checked;
+      cb.onSettings({ ...this.settings });
+      // Apply at once to whichever screen is behind the settings dialog.
+      for (const id of ['menu-trivia', 'pause-trivia', 'over-trivia']) {
+        const box = $(id);
+        if (!trivia.checked) box.hidden = true;
+        else if (!box.closest('.screen')?.hasAttribute('hidden')) this.fillTrivia(box, this.trivia.next(), id === 'menu-trivia');
+      }
+    });
     this.syncSettingsInputs();
   }
 
@@ -190,6 +201,7 @@ export class UI {
     $<HTMLInputElement>('set-volume').value = String(this.settings.volume);
     $<HTMLInputElement>('set-mute').checked = this.settings.muted;
     $<HTMLInputElement>('set-outlines').checked = this.settings.dangerOutlines;
+    $<HTMLInputElement>('set-trivia').checked = this.settings.trivia;
     $('btn-mute').innerHTML = this.settings.muted ? SOUND_OFF : SOUND_ON;
   }
 
@@ -329,10 +341,11 @@ export class UI {
 
   /**
    * A kid-friendly "Fun fact!" card: the player's own fish tells a Bay of Bengal fact in a speech
-   * bubble, themed by topic, with a "facts discovered" collection bar. `cycle` adds a button that
-   * deals the next fact.
+   * bubble, themed by topic. `cycle` adds a button that deals the next fact.
    */
   private fillTrivia(box: HTMLElement, t: Trivia, cycle = false): void {
+    box.hidden = !this.settings.trivia;
+    if (box.hidden) return;
     this.triviaSeen.mark(t);
     const el = (tag: string, cls: string, text = '', parent: HTMLElement = box): HTMLElement => {
       const e = document.createElement(tag);
@@ -348,35 +361,24 @@ export class UI {
     bubbles.setAttribute('aria-hidden', 'true');
     for (let i = 0; i < 7; i++) el('i', '', '', bubbles);
 
-    const ribbon = el('div', 'tv-ribbon');
-    el('span', 'tv-ribbon-text', 'Fun fact!', ribbon);
-    el('span', 'tv-tag', t.tag, ribbon);
-
-    const body = el('div', 'tv-body');
-    const mascot = el('canvas', 'tv-mascot', '', body) as HTMLCanvasElement;
+    // Header: the player's fish, the "Fun fact!" sticker and the topic. The bubble below points at the fish.
+    const head = el('div', 'tv-head');
+    const mascot = el('canvas', 'tv-mascot', '', head) as HTMLCanvasElement;
     mascot.setAttribute('aria-hidden', 'true');
-    const bubble = el('div', 'tv-bubble', '', body);
+    el('span', 'tv-ribbon-text', 'Fun fact!', head);
+    el('span', 'tv-tag', t.tag, head);
+
+    const bubble = el('div', 'tv-bubble');
     const top = el('div', 'tv-top', '', bubble);
     const emoji = el('span', 'tv-emoji', t.emoji, top);
     emoji.setAttribute('aria-hidden', 'true');
-    const head = el('div', 'tv-headline', '', top);
-    el('div', 'tv-figure', t.figure, head);
-    el('div', 'tv-label', t.label, head);
+    const headline = el('div', 'tv-headline', '', top);
+    el('div', 'tv-figure', t.figure, headline);
+    el('div', 'tv-label', t.label, headline);
     el('p', 'tv-text', t.text, bubble);
 
-    const foot = el('div', 'tv-foot');
-    const found = this.triviaSeen.seen.size;
-    const total = this.triviaSeen.total;
-    const progress = el('div', 'tv-progress', '', foot);
-    el('div', 'tv-count', found >= total ? `🏆 All ${total} facts discovered!` : `⭐ ${found} / ${total} facts discovered`, progress);
-    const bar = el('div', 'tv-bar', '', progress);
-    bar.setAttribute('role', 'progressbar');
-    bar.setAttribute('aria-label', 'Facts discovered');
-    bar.setAttribute('aria-valuemin', '0');
-    bar.setAttribute('aria-valuemax', String(total));
-    bar.setAttribute('aria-valuenow', String(found));
-    (el('i', '', '', bar) as HTMLElement).style.width = `${(found / total) * 100}%`;
     if (cycle) {
+      const foot = el('div', 'tv-foot');
       const next = el('button', 'tv-next', '🎲 Tell me another!', foot) as HTMLButtonElement;
       next.type = 'button';
       next.addEventListener('click', () => {
@@ -386,7 +388,7 @@ export class UI {
       });
     }
 
-    drawThumb(mascot, this.mascot, 112, 62);
+    drawThumb(mascot, this.mascot, 78, 44);
     box.classList.remove('tv-in');
     void box.offsetWidth; // restart the pop-in animation
     box.classList.add('tv-in');

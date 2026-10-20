@@ -10,6 +10,8 @@ export interface Settings {
   volume: number;
   muted: boolean;
   dangerOutlines: boolean;
+  /** Show the Bay of Bengal fun-fact cards on the menu, pause and game-over screens. */
+  trivia: boolean;
 }
 
 export interface SaveData {
@@ -41,7 +43,7 @@ export const defaultSave = (): SaveData => ({
   lifetimePoints: 0,
   ownedFish: [STARTER_FISH.id],
   selectedFish: STARTER_FISH.id,
-  settings: { volume: 0.7, muted: false, dangerOutlines: true },
+  settings: { volume: 0.7, muted: false, dangerOutlines: true, trivia: true },
 });
 
 const TIERS: RewardTier[] = ['normal', 'good', 'great', 'amazing', 'plenty'];
@@ -76,6 +78,7 @@ export function migrate(raw: unknown): SaveData {
       volume: Math.min(1, Math.max(0, num(s.volume, base.settings.volume))),
       muted: typeof s.muted === 'boolean' ? s.muted : base.settings.muted,
       dangerOutlines: typeof s.dangerOutlines === 'boolean' ? s.dangerOutlines : base.settings.dangerOutlines,
+      trivia: typeof s.trivia === 'boolean' ? s.trivia : base.settings.trivia,
     },
   };
 }

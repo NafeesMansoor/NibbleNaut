@@ -18,6 +18,12 @@ describe('save system', () => {
     expect(d.settings.muted).toBe(false);
   });
 
+  it('fun facts are on by default, and older saves without the setting get the default', () => {
+    expect(defaultSave().settings.trivia).toBe(true);
+    expect(migrate({ settings: { volume: 0.5 } }).settings.trivia).toBe(true);
+    expect(migrate({ settings: { trivia: false } }).settings.trivia).toBe(false);
+  });
+
   it('keeps working when storage throws', () => {
     const broken = { getItem: () => { throw new Error('blocked'); }, setItem: () => { throw new Error('full'); } };
     const save = new SaveSystem(broken);
