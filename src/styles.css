@@ -1059,9 +1059,6 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: min(52vh, 460px);
-  overflow-y: auto;
-  padding-right: 2px;
 }
 
 .shop-card {
@@ -1319,4 +1316,160 @@ h2 {
 .lang-toggle button:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 1px;
+}
+
+/* ---------- Fit every screen without scrolling ----------
+ * Panels are grouped (menu-main, over-side, …). In portrait the groups are invisible to layout
+ * (display: contents) and `order` keeps the original top-to-bottom sequence. On short landscape
+ * screens they become two columns. Whatever still doesn't fit is scaled down by UI.fitPanels().
+ */
+.menu-main,
+.menu-foot,
+.pause-main,
+.over-main,
+.over-side {
+  display: contents;
+}
+
+#over-facts,
+#over-trivia {
+  order: 1;
+}
+
+#over-points,
+#over-reward,
+#plenty-preview,
+#over-next,
+#btn-again,
+#btn-menu {
+  order: 2;
+}
+
+.screen > .panel {
+  transform-origin: center center;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .menu-panel,
+  .pause-panel,
+  .over-panel {
+    width: min(880px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 18px;
+    row-gap: 8px;
+    align-items: center;
+  }
+
+  .menu-main,
+  .pause-main,
+  .over-main,
+  .over-side {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .menu-panel {
+    grid-template-areas: 'main side' 'foot side';
+  }
+  .menu-main {
+    grid-area: main;
+  }
+  #menu-trivia {
+    grid-area: side;
+  }
+  .menu-foot {
+    grid-area: foot;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .menu-foot .version {
+    margin: 0;
+  }
+
+  /* Fun facts switched off: back to a single column. */
+  .menu-panel:has(> #menu-trivia[hidden]),
+  .pause-panel:has(> #pause-trivia[hidden]) {
+    width: min(460px, 100%);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'main' 'foot';
+  }
+
+  .shop-panel {
+    width: min(860px, 100%);
+  }
+  .shop-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .how {
+    width: min(820px, 100%);
+  }
+  .how ul {
+    display: block;
+    columns: 2;
+    column-gap: 24px;
+  }
+  .how ul li {
+    break-inside: avoid;
+    margin-bottom: 8px;
+  }
+}
+
+/* Short screens (landscape phones, small portrait phones): compact vertical shop cards in a grid.
+ * The long blurbs are left out; tall screens still show them. */
+@media (orientation: landscape) and (max-height: 600px), (orientation: portrait) and (max-height: 760px) {
+  .shop-panel > .hint,
+  .shop-desc {
+    display: none;
+  }
+  .shop-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .shop-card,
+  .shop-card.selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    padding: 8px;
+  }
+  .shop-info {
+    flex: none;
+  }
+  .shop-name {
+    font-size: 15px;
+    line-height: 1.2;
+  }
+  .shop-mul {
+    display: block;
+    width: max-content;
+    margin: 3px auto 0;
+  }
+  .shop-card .shop-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .shop-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Short portrait phones: the four game-over stats on one row. */
+@media (orientation: portrait) and (max-height: 760px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .stats div span {
+    font-size: 11px;
+  }
 }

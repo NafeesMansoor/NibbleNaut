@@ -6,7 +6,7 @@ All notable changes to Fish Fight. Versions follow [semantic versioning](https:/
 
 ### Fixed
 - Rotating a phone no longer zooms the game: mobile browsers can no longer enlarge text on rotation (`text-size-adjust`), pinch and double-tap zoom are disabled, and the game canvas re-measures itself whenever its size changes (including late or missed rotation events), so it never stays stretched.
-- More compact menus on short landscape screens.
+- Every screen now fits the display without scrolling, in portrait and landscape, like a mobile game. On short landscape screens the menu, pause and game-over screens use two columns, the shop shows a grid of compact fish cards, and How to play splits into columns. Small portrait phones get a compact shop grid and one-row game-over stats. Whatever still doesn't fit is scaled down smoothly (to no less than 55%) instead of scrolling.
 
 ## [2.1.0] - 2026-10-20
 

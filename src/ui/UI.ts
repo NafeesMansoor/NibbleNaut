@@ -91,6 +91,9 @@ const SOUND_OFF = '<svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 9
 
 type ScreenId = 'menu' | 'pause' | 'over' | 'none';
 
+/** Smallest scale a panel shrinks to before the screen scrolls instead (keeps text readable). */
+const MIN_FIT = 0.55;
+
 /** DOM overlay: menus, HUD, banners and the reward celebration. */
 export class UI {
   private screens: Record<Exclude<ScreenId, 'none'>, HTMLElement> = {
@@ -125,6 +128,7 @@ export class UI {
     this.settings = { ...settings };
     this.touchMode = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     $('dash-hint').hidden = this.touchMode;
+    this.setupFit();
     $('menu-version').textContent = `v${APP_VERSION}`;
     $('settings-version').textContent = `v${APP_VERSION}`;
     $('lang-toggle').addEventListener('click', (e) => {
@@ -219,6 +223,47 @@ export class UI {
     $('btn-mute').innerHTML = this.settings.muted ? SOUND_OFF : SOUND_ON;
   }
 
+  /**
+   * Like a mobile game, every screen fits the display without scrolling. Each visible panel is
+   * scaled down (never up) to fit the space inside its screen. Layout size is unaffected by the
+   * transform, so the ResizeObserver doesn't loop; negative margins give back the space the
+   * unscaled box would take. Below MIN_FIT the panel stops shrinking and the screen scrolls.
+   */
+  private setupFit(): void {
+    const panels = [...document.querySelectorAll<HTMLElement>('.screen > .panel')];
+    const fit = (): void => {
+      for (const panel of panels) {
+        const screen = panel.parentElement!;
+        if (screen.hidden) continue;
+        const cs = getComputedStyle(screen);
+        const availW = screen.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const availH = screen.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+        const w = panel.offsetWidth;
+        const h = panel.offsetHeight;
+        if (!w || !h) continue;
+        const scale = Math.max(MIN_FIT, Math.min(1, availW / w, availH / h));
+        if (scale > 0.995) {
+          panel.style.transform = '';
+          panel.style.margin = '';
+        } else {
+          panel.style.transform = `scale(${scale.toFixed(3)})`;
+          panel.style.margin = `${(-(h * (1 - scale)) / 2).toFixed(1)}px ${(-(w * (1 - scale)) / 2).toFixed(1)}px`;
+        }
+      }
+    };
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(fit);
+      for (const p of panels) ro.observe(p);
+    }
+    window.addEventListener('resize', fit);
+    window.addEventListener('orientationchange', () => setTimeout(fit, 250));
+    window.visualViewport?.addEventListener('resize', fit);
+    void document.fonts?.ready.then(fit);
+    this.fit = fit;
+  }
+
+  private fit: () => void = () => {};
+
   get modalOpen(): boolean {
     return !this.settingsModal.hidden || !this.howModal.hidden || !this.shopModal.hidden;
   }
@@ -290,6 +335,7 @@ export class UI {
   private show(id: ScreenId): void {
     for (const [k, el] of Object.entries(this.screens)) el.hidden = k !== id;
     if (id !== 'over') this.stopPreview();
+    requestAnimationFrame(() => this.fit());
   }
 
   setPlaying(playing: boolean): void {
