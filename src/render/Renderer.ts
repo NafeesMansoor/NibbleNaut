@@ -48,6 +48,9 @@ export class Renderer {
   w = 1;
   h = 1;
   private dpr = 1;
+  /** Whole-pixel CSS size at the last measurement, compared each frame by syncSize(). */
+  private clientW = -1;
+  private clientH = -1;
   private decor = new Decor();
   private backdrop = new Backdrop();
   private ocean = new OceanFx();
@@ -61,7 +64,19 @@ export class Renderer {
     this.resize();
   }
 
+  /**
+   * Re-measures the canvas if its on-screen size or the pixel ratio changed. Called every frame:
+   * on phones the resize/orientationchange events can fire before the rotated layout settles,
+   * which would otherwise leave a stretched (zoomed-looking) picture.
+   */
+  syncSize(): void {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if (this.canvas.clientWidth !== this.clientW || this.canvas.clientHeight !== this.clientH || dpr !== this.dpr) this.resize();
+  }
+
   resize(): void {
+    this.clientW = this.canvas.clientWidth;
+    this.clientH = this.canvas.clientHeight;
     const rect = this.canvas.getBoundingClientRect();
     this.w = Math.max(1, rect.width);
     this.h = Math.max(1, rect.height);
@@ -118,6 +133,7 @@ export class Renderer {
     this.viewFor(s.x, s.y, zoomFor(s.size, this.w, this.h));
 
   render(world: World, fx: Effects, opts: RenderOpts): void {
+    this.syncSize();
     const { ctx, w, h, camera: cam } = this;
     const t = world.time;
     const kind = world.ocean;

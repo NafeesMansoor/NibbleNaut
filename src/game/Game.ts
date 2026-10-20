@@ -91,6 +91,8 @@ export class Game {
 
     window.addEventListener('resize', () => this.renderer.resize());
     window.addEventListener('orientationchange', () => setTimeout(() => this.renderer.resize(), 200));
+    // Mobile browser bars and rotation change the visual viewport without always firing 'resize'.
+    window.visualViewport?.addEventListener('resize', () => this.renderer.resize());
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) this.pause();
     });

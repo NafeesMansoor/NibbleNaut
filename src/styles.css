@@ -29,6 +29,10 @@ body {
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
+  /* Stop mobile browsers enlarging text when the phone turns to landscape, and stop double-tap zoom. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
 }
 
 [hidden] {
@@ -1251,6 +1255,25 @@ h2 {
   }
   .final-score b {
     font-size: 38px;
+  }
+  /* Short landscape phones: keep the menu compact so it doesn't look zoomed in. */
+  .tagline {
+    font-size: 15px;
+    margin-bottom: 0;
+  }
+  .btn {
+    font-size: 15px;
+    padding: 8px 14px;
+  }
+  .btn.big {
+    font-size: 19px;
+    padding: 10px 16px;
+  }
+  .bank {
+    padding: 5px 12px;
+  }
+  h2 {
+    font-size: 24px;
   }
 }
 

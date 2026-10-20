@@ -2,6 +2,12 @@
 
 All notable changes to Fish Fight. Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [2.1.1] - 2026-10-20
+
+### Fixed
+- Rotating a phone no longer zooms the game: mobile browsers can no longer enlarge text on rotation (`text-size-adjust`), pinch and double-tap zoom are disabled, and the game canvas re-measures itself whenever its size changes (including late or missed rotation events), so it never stays stretched.
+- More compact menus on short landscape screens.
+
 ## [2.1.0] - 2026-10-20
 
 Major version bump approved by the project owner (from 1.2.0; 1.3.0 was never released).
