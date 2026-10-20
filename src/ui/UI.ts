@@ -2,6 +2,7 @@ import { CONFIG, type RewardTier } from '../config';
 import { STARTER_FISH, type PlayerFishDef } from '../game/playerFish';
 import { drawFish, type FishLook } from '../render/fishArt';
 import type { Species } from '../game/species';
+import { TriviaDeck, type Trivia } from '../game/trivia';
 import type { World } from '../game/World';
 import { stageInfo } from '../systems/growth';
 import { nextTierGoal, rewardText } from '../systems/rewards';
@@ -108,7 +109,11 @@ export class UI {
   private last = { score: -1, time: -1, size: -1, stage: '', growth: -1, chip: '', dash: -1 };
   readonly touchMode: boolean;
 
+  private trivia = new TriviaDeck();
+  private readonly cb: UICallbacks;
+
   constructor(cb: UICallbacks, settings: Settings) {
+    this.cb = cb;
     this.settings = { ...settings };
     this.touchMode = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     $('dash-hint').hidden = this.touchMode;
@@ -264,6 +269,7 @@ export class UI {
     this.setPlaying(false);
     this.show('menu');
     $('menu-best').textContent = Math.floor(best).toLocaleString();
+    this.fillTrivia($('menu-trivia'), this.trivia.next(), true);
     const card = $('menu-reward');
     if (pending) {
       card.hidden = false;
@@ -278,6 +284,7 @@ export class UI {
 
   showPause(): void {
     this.show('pause');
+    this.fillTrivia($('pause-trivia'), this.trivia.next());
     $('btn-resume').focus({ preventScroll: true });
   }
 
@@ -298,6 +305,7 @@ export class UI {
     $('over-points').innerHTML = `<b>+${Math.floor(s.pointsEarned).toLocaleString()}</b> points banked · total <b>${Math.floor(s.pointsBank).toLocaleString()}</b>`;
     this.previewLook = s.fish.look;
     this.fillFactCards(s);
+    this.fillTrivia($('over-trivia'), this.trivia.next());
 
     const card = $('over-reward');
     this.fillRewardCard(card, s.tier, s.tier === 'normal' ? 'Next game' : `${rewardText(s.tier).label} score · Reward unlocked`);
@@ -312,6 +320,36 @@ export class UI {
     if (s.tier !== 'normal') this.confetti(s.tier === 'plenty' ? 140 : 60);
     $('btn-again').textContent = s.tier === 'normal' ? 'Play Again' : 'Play Next Game';
     queueMicrotask(() => $('btn-again').focus({ preventScroll: true }));
+  }
+
+  /** A "Did you know?" Bay of Bengal fact. `cycle` adds a button that shows the next fact. */
+  private fillTrivia(box: HTMLElement, t: Trivia, cycle = false): void {
+    box.innerHTML = '';
+    const el = (tag: string, cls: string, text: string, parent: HTMLElement = box): HTMLElement => {
+      const e = document.createElement(tag);
+      e.className = cls;
+      e.textContent = text;
+      parent.appendChild(e);
+      return e;
+    };
+    const head = el('div', 'tv-head', '');
+    el('span', 'tv-kicker', 'Did you know? · Bay of Bengal', head);
+    el('span', 'tv-tag', t.tag, head);
+    el('div', 'tv-figure', t.figure);
+    el('div', 'tv-label', t.label);
+    el('p', 'tv-text', t.text);
+    if (cycle) {
+      const next = el('button', 'tv-next', 'Next fact ›') as HTMLButtonElement;
+      next.type = 'button';
+      next.addEventListener('click', () => {
+        this.cb.onClick();
+        this.fillTrivia(box, this.trivia.next(), true);
+        (box.querySelector('.tv-next') as HTMLElement | null)?.focus({ preventScroll: true });
+      });
+    }
+    box.classList.remove('tv-in');
+    void box.offsetWidth; // restart the fade-in
+    box.classList.add('tv-in');
   }
 
   /** "Meet your fish" cards: the player's species, then its predator (or favourite meal). */

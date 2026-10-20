@@ -2,6 +2,11 @@
 
 All notable changes to Fish Fight. Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [1.2.0] - 2026-10-20
+
+### Added
+- "Did you know?" Bay of Bengal trivia: 30 facts, each with a headline figure (area, depth, the Sundarbans, the Bengal Fan, hilsa, cyclones, dolphins, turtles and more). Shown on the home menu (with a "Next fact" button), the pause screen and the game-over screen, in shuffled order so every fact appears before any repeats.
+
 ## [1.1.0] - 2026-10-20
 
 ### Changed

@@ -435,6 +435,102 @@ h2 {
   color: var(--ink-soft);
 }
 
+/* ---------- Bay of Bengal trivia ---------- */
+.trivia {
+  position: relative;
+  border-radius: 16px;
+  padding: 12px 14px;
+  text-align: left;
+  background: linear-gradient(135deg, rgba(90, 209, 236, 0.16), rgba(124, 240, 160, 0.08));
+  border: 1px solid rgba(90, 209, 236, 0.35);
+}
+
+.trivia:empty {
+  display: none;
+}
+
+.trivia.tv-in {
+  animation: tv-in 0.35s ease-out;
+}
+
+@keyframes tv-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.trivia .tv-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+  color: #8fe6f7;
+}
+
+.trivia .tv-tag {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ink-soft);
+  letter-spacing: 0.6px;
+}
+
+.trivia .tv-figure {
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--gold);
+}
+
+.trivia .tv-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  opacity: 0.85;
+}
+
+.trivia .tv-text {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.trivia .tv-next {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.trivia .tv-next:hover,
+.trivia .tv-next:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trivia.tv-in {
+    animation: none;
+  }
+}
+
 /* ---------- Game-over fish facts ---------- */
 .fact-cards {
   display: flex;
