@@ -50,6 +50,20 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 
 **Rollback.** Never redeploy an older build under its old version: browsers that already have the newer worker will not go back. Instead revert the change, bump the patch version (e.g. 1.0.4 → 1.0.5), and release that. Players' saves are unaffected. Before migrating, a save from an older format is copied to `fishfight.save.backup-v<N>`, and a corrupt save to `fishfight.save.backup-corrupt`.
 
+## Icons and mascot
+
+The mascot (a cheerful orange-and-yellow fish with blue eyes, a smiling open mouth and bright blue fins) is drawn once in `tools/mascot.mjs`. `node tools/make-icons.mjs` regenerates `public/favicon.svg`, `public/mascot.svg` (home screen), the PWA icons in `public/icons/` (192, 512, maskable 512, Apple touch 180) and `store/icon-1024.png` for store listings. It renders with a local Chrome; commit the outputs.
+
+## Installing, and the app stores
+
+Settings has an **Install** button: on Chrome/Edge/Android it opens the browser's install dialog; where there is none (iPhone Safari) it shows the steps from How to play → *Install the game*. Both hide once the game runs as an installed app.
+
+The game is built to go to the stores without changing gameplay code. Everything platform-specific is in `src/pwa/install.ts`:
+- **Google Play:** wrap the PWA as a Trusted Web Activity (e.g. Bubblewrap or PWABuilder) and add Digital Asset Links on the site. Inside the TWA, `isStoreApp()` is true and the install UI hides.
+- **App Store:** wrap it in a native shell such as Capacitor (or PWABuilder's iOS package). With Capacitor, `isStoreApp()` is true.
+- **Assets:** `store/icon-1024.png` (opaque, no transparency, as Apple requires) plus the manifest icons.
+- **Progress:** a store app has its own storage, separate from the browser. Players move progress with **Settings → Copy / Paste progress code**.
+
 ## Languages
 
 English and Bangla (বাংলা), switched in **Settings** and saved with the other settings. UI text lives in `src/i18n/en.ts` and `src/i18n/bn.ts` (TypeScript checks both have every key; static HTML uses `data-i18n` attributes). Fish and fun facts carry their own `bn` fields in `src/game/species.ts`, `src/game/playerFish.ts` and `src/game/trivia.ts`. Bangla uses the bundled Hind Siliguri font and Bangla digits.

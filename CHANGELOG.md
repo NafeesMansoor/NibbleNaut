@@ -2,6 +2,14 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.2.0] - 2026-10-21
+
+### Added
+- New app icon and mascot: a cheerful orange-and-yellow fish with big blue eyes, a smiling open mouth and bright blue fins, on a sunny ocean background. Used for the PWA icons (including maskable and Apple touch icons), the browser tab, and swimming on the home screen. A 1024×1024 store-listing icon is included for Google Play and the App Store. `tools/make-icons.mjs` regenerates them all.
+- Five new fish in Upgrade Fish (11 in all): Blue-green Chromis (1,500, ×1.1), Coral Hawkfish (5,000, ×1.35), White-spotted Puffer (12,000, ×1.75), Mahi-mahi (32,000, ×2.25) and the Whale Shark (250,000, ×4). English and Bangla. The shop list now scrolls inside its panel.
+- How to play → "Install the game": steps for iPhone/iPad, Android and computers, with the player's own device highlighted.
+- Settings → Install: opens the browser's install dialog where available (Chrome, Edge, Android), otherwise shows the install steps. Shows "Installed" in an installed app and hides in a future store build.
+
 ## [3.1.0] - 2026-10-21
 
 ### Changed

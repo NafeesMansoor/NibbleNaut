@@ -8,6 +8,7 @@ import { stageInfo } from '../systems/growth';
 import { nextTierGoal, rewardText } from '../systems/rewards';
 import type { Settings } from '../systems/save';
 import { digits, getLang, loc, num, t, type Lang } from '../i18n/i18n';
+import { canPromptInstall, isInstalled, isStoreApp, onInstallChange, platform, promptInstall } from '../pwa/install';
 import { APP_VERSION } from '../version';
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string): T => {
@@ -135,6 +136,19 @@ export class UI {
     this.setupFit();
     $('menu-version').textContent = `v${APP_VERSION}`;
     $('settings-version').textContent = `v${APP_VERSION}`;
+    $('btn-install').addEventListener('click', () => {
+      cb.onClick();
+      if ($('btn-install').dataset.mode === 'prompt') {
+        void promptInstall().then(() => this.refreshInstall());
+      } else {
+        // No install dialog in this browser (e.g. iPhone Safari): show the steps instead.
+        this.settingsModal.hidden = true;
+        this.refreshInstall();
+        this.howModal.hidden = false;
+        requestAnimationFrame(() => $('how-install').scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
+      }
+    });
+    onInstallChange(() => this.refreshInstall());
     $('btn-copy-code').addEventListener('click', () => {
       cb.onClick();
       const code = cb.exportProgress();
@@ -173,7 +187,10 @@ export class UI {
     click('btn-resume', () => cb.onResume());
     click('btn-end', () => cb.onEndRun());
     click('btn-pause', () => cb.onPause());
-    click('btn-how', () => (this.howModal.hidden = false));
+    click('btn-how', () => {
+      this.refreshInstall();
+      this.howModal.hidden = false;
+    });
     click('btn-how-close', () => (this.howModal.hidden = true));
     click('btn-settings', () => this.openSettings());
     click('btn-pause-settings', () => this.openSettings());
@@ -236,7 +253,33 @@ export class UI {
     this.settingsModal.hidden = false;
   }
 
+  /**
+   * Install button (Settings) and instructions (How to play). Hidden in a store build; shows
+   * "Installed" in an installed PWA; otherwise the browser's own install dialog when it offers one,
+   * or the step-by-step instructions (iPhone Safari never offers one).
+   */
+  private refreshInstall(): void {
+    const installed = isInstalled();
+    $('install-setting').hidden = isStoreApp();
+    $('how-install').hidden = installed;
+    const mine = platform();
+    for (const li of $('how-install').querySelectorAll<HTMLElement>('li[data-platform]')) li.classList.toggle('mine', li.dataset.platform === mine);
+    const btn = $<HTMLButtonElement>('btn-install');
+    if (installed) {
+      btn.textContent = t('install.done');
+      btn.disabled = true;
+      btn.dataset.mode = 'done';
+    } else {
+      const prompt = canPromptInstall();
+      btn.textContent = t(prompt ? 'install.button' : 'install.how');
+      btn.disabled = false;
+      btn.dataset.mode = prompt ? 'prompt' : 'how';
+      btn.classList.toggle('primary', prompt);
+    }
+  }
+
   private syncSettingsInputs(): void {
+    this.refreshInstall();
     $<HTMLInputElement>('set-volume').value = String(this.settings.volume);
     $<HTMLInputElement>('set-mute').checked = this.settings.muted;
     $<HTMLInputElement>('set-outlines').checked = this.settings.dangerOutlines;

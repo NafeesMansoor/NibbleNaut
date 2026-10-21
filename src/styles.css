@@ -1414,17 +1414,25 @@ h2 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  /* How to play: rules on the left; controls and install steps on the right. */
   .how {
-    width: min(820px, 100%);
+    width: min(860px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 18px;
+    align-items: start;
   }
-  .how ul {
-    display: block;
-    columns: 2;
-    column-gap: 24px;
+  .how > h2,
+  .how > #btn-how-close {
+    grid-column: 1 / -1;
   }
-  .how ul li {
-    break-inside: avoid;
-    margin-bottom: 8px;
+  .how > ul {
+    grid-column: 1;
+    grid-row: 2 / span 2;
+  }
+  .how > .controls,
+  .how > .install-how {
+    grid-column: 2;
   }
 }
 
@@ -1787,4 +1795,110 @@ h2 {
 
 .backup .hint {
   font-size: 12px;
+}
+
+/* The NibbleNaut mascot between the points and best-score badges. */
+.menu-stats {
+  align-items: center;
+}
+
+.menu-mascot {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  margin: -10px 0 -14px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+  animation: mascot-swim 2.8s ease-in-out infinite;
+}
+
+@keyframes mascot-swim {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(5deg);
+  }
+}
+
+@media (max-width: 360px) {
+  .menu-mascot {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-mascot {
+    animation: none;
+  }
+}
+
+/* ---------- Install: Settings button and How-to-play section ---------- */
+.install-btn {
+  font-size: 15px;
+  padding: 8px 14px;
+}
+
+.install-btn:disabled {
+  opacity: 1;
+  cursor: default;
+  color: #9ff5bb;
+  background: rgba(124, 240, 160, 0.12);
+  border-color: rgba(124, 240, 160, 0.4);
+}
+
+.install-how {
+  text-align: left;
+  padding-top: 8px;
+  border-top: 1px solid var(--panel-edge);
+}
+
+.install-how h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+}
+
+.install-how ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.install-how li {
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+}
+
+/* The steps for the player's own device stand out. */
+.install-how li.mine {
+  color: var(--ink);
+  background: rgba(255, 210, 63, 0.12);
+  border-color: rgba(255, 210, 63, 0.5);
+}
+
+.install-how .hint {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+/* ---------- Shop: the catalogue scrolls inside the panel; header and Done stay put ---------- */
+.shop-panel {
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px - var(--safe-top) - var(--safe-bottom));
+}
+
+.shop-list {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 2px;
 }

@@ -41,6 +41,21 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     look: { shape: 'round', body: '#ff8a1f', belly: '#ffc27a', fin: '#1d1d1d', tail: '#ffe9a8', stripe: '#ffffff', stripes: 2, stripeEdge: '#1d1d1d' },
   },
   {
+    id: 'chromis',
+    bn: {
+      name: 'নীল-সবুজ ক্রোমিস',
+      description: 'ঝিকমিকে নীল-সবুজ প্রবালের মাছ। প্রথম বদলের জন্য দারুণ।',
+      about: 'শাখা-প্রবালের ওপর বড় ঝলমলে ঝাঁকে থাকে, বিপদ এলেই প্রবালের ভেতরে ঢুকে পড়ে।',
+    },
+    name: 'Blue-green Chromis',
+    sci: 'Chromis viridis',
+    cost: 1500,
+    feedMul: 1.1,
+    description: 'A shimmering blue-green reef fish. A great first upgrade.',
+    about: 'Lives in big sparkling schools above branching corals, and darts down into them when danger comes.',
+    look: { shape: 'round', body: '#4fdcc8', belly: '#b9fff4', fin: '#22b5a6', tail: '#7ff0e0' },
+  },
+  {
     id: 'sunny',
     bn: {
       name: 'তিন-ফোঁটা এঞ্জেল মাছ',
@@ -54,6 +69,21 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     description: 'A sunshine-yellow angelfish with a taste for snacks.',
     about: 'Bright yellow with blue lips. It grazes on sponges and sea squirts along reef walls.',
     look: { shape: 'tall', body: '#ffd400', belly: '#fff06a', fin: '#f2a900', tail: '#ffe14d', band: '#ffe86b' },
+  },
+  {
+    id: 'hawkfish',
+    bn: {
+      name: 'প্রবাল বাজপাখি মাছ',
+      description: 'প্রবালের ওপর বসে থাকে, গায়ে লাল ফুটকি, ঝাঁপিয়ে পড়তে ওস্তাদ।',
+      about: 'এর বাতাসের থলি নেই, তাই মোটা পাখনায় ভর দিয়ে প্রবালের ডালে বসে থাকে আর পাশ দিয়ে চিংড়ি গেলেই ঝাঁপিয়ে ধরে।',
+    },
+    name: 'Coral Hawkfish',
+    sci: 'Cirrhitichthys oxycephalus',
+    cost: 5000,
+    feedMul: 1.35,
+    description: 'Perches on coral, red-spotted and quick to pounce.',
+    about: 'It has no swim bladder, so it rests on coral branches on its thick fins and pounces on passing shrimp.',
+    look: { shape: 'round', body: '#fff1ea', belly: '#ffffff', fin: '#ff7a5c', spots: '#e8402b' },
   },
   {
     id: 'lion',
@@ -71,6 +101,21 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     look: { shape: 'round', body: '#e8402b', belly: '#ff7a52', fin: '#c22a1a', spots: '#5fd0ff' },
   },
   {
+    id: 'puffer',
+    bn: {
+      name: 'সাদা-ফুটকি পটকা মাছ',
+      description: 'ফুটকি-ফুটকি, গোলগাল, আর চমকে ভরা।',
+      about: 'ভয় পেলে পানি গিলে বলের মতো ফুলে ওঠে। ঠোঁটের মতো শক্ত দাঁত দিয়ে খোলস আর প্রবাল চিবিয়ে খায়।',
+    },
+    name: 'White-spotted Puffer',
+    sci: 'Arothron hispidus',
+    cost: 12000,
+    feedMul: 1.75,
+    description: 'Spotty, round and full of surprises.',
+    about: 'When scared it gulps water and puffs up like a ball. Its strong beak-like teeth crunch shells and coral.',
+    look: { shape: 'round', body: '#8a7a5c', belly: '#f4ead2', fin: '#6e6046', spots: '#fff8e8' },
+  },
+  {
     id: 'blade',
     bn: {
       name: 'দৈত্য ট্রেভালি',
@@ -84,6 +129,21 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     description: 'A sleek silver hunter that turns every meal into big points.',
     about: 'One of the strongest fish on the reef. It hunts in packs and can grow to 1.7 metres long.',
     look: { shape: 'long', body: '#a9bfd2', belly: '#f1f7fc', fin: '#3a4f66', stripe: '#8ea6bc', stripes: 5 },
+  },
+  {
+    id: 'mahi',
+    bn: {
+      name: 'মাহি-মাহি',
+      description: 'ঝলমলে সবুজ-সোনালি দ্রুতগামী মাছ।',
+      about: 'সাগরের সবচেয়ে দ্রুত মাছগুলোর একটা। সবুজ, নীল আর সোনালি রঙে ঝলমল করে, উড়ুক্কু মাছ শিকার করে।',
+    },
+    name: 'Mahi-mahi',
+    sci: 'Coryphaena hippurus',
+    cost: 32000,
+    feedMul: 2.25,
+    description: 'A dazzling green-and-gold speedster.',
+    about: 'One of the fastest fish in the sea. It shines green, blue and gold and hunts flying fish.',
+    look: { shape: 'long', body: '#1fb37a', belly: '#ffe04a', fin: '#2a7de1', spots: '#1a5fb4' },
   },
   {
     id: 'hammer',
@@ -114,6 +174,21 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     description: 'The legendary giant of the reef. Triple points for every bite.',
     about: 'The largest wrasse on Earth, over 2 metres long and living for more than 30 years. It even eats poisonous crown-of-thorns starfish.',
     look: { shape: 'round', body: '#2fae9a', belly: '#9fe3cf', fin: '#1f7f8f', tail: '#2a8fa0', stripe: '#1a6a78', stripes: 5 },
+  },
+  {
+    id: 'whaleshark',
+    bn: {
+      name: 'তিমি হাঙর',
+      description: 'নিরীহ দানব। প্রতি কামড়ে চারগুণ পয়েন্ট!',
+      about: 'পৃথিবীর সবচেয়ে বড় মাছ, প্রায় ১২ মিটার লম্বা। পানি ছেঁকে ছোট্ট খাবার খায়, মানুষের জন্য নিরীহ।',
+    },
+    name: 'Whale Shark',
+    sci: 'Rhincodon typus',
+    cost: 250000,
+    feedMul: 4,
+    description: 'The gentle giant. Quadruple points for every bite!',
+    about: 'The largest fish on Earth, about 12 metres long. It filters tiny food from the water and is harmless to people.',
+    look: { shape: 'shark', body: '#36577a', belly: '#e1eaf1', fin: '#284460', spots: '#eaf2f8' },
   },
 ];
 
