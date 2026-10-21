@@ -115,13 +115,12 @@ export class Renderer {
     this.camera.y = v.y;
   }
 
-  /** The clamped visible area for a camera aimed at (x, y) with the given zoom. */
+  /** The visible area for a camera aimed at (x, y) with the given zoom (clamped vertically only). */
   viewFor(x: number, y: number, zoom: number): { x: number; y: number; halfW: number; halfH: number } {
-    const W = CONFIG.world.width;
     const H = CONFIG.world.height;
     const hw = this.w / 2 / zoom;
     const hh = this.h / 2 / zoom;
-    const cx = W < hw * 2 ? W / 2 : clamp(x, hw, W - hw);
+    const cx = x;
     const minY = hh - 140; // a peek above the surface
     const maxY = H - CONFIG.world.seabedHeight + 110 - hh; // show only a strip of sand
     const cy = maxY < minY ? (minY + maxY) / 2 : clamp(y, minY, maxY);

@@ -105,12 +105,30 @@ describe('world', () => {
       expect(w.food.length).toBeLessThan(400);
       for (const f of w.fish) {
         expect(Number.isFinite(f.x) && Number.isFinite(f.y)).toBe(true);
-        expect(f.x).toBeGreaterThanOrEqual(0);
-        expect(f.x).toBeLessThanOrEqual(w.width);
         expect(f.y).toBeGreaterThanOrEqual(0);
         expect(f.y).toBeLessThanOrEqual(w.seabedY);
       }
       for (const f of w.food) expect(f.y).toBeLessThanOrEqual(w.seabedY);
+    }
+  });
+
+  it('the sea is endless: the player swims past the old edges and fish keep spawning nearby', () => {
+    for (const dir of [-1, 1]) {
+      const w = new World({ startSize: 10, ocean: 'plenty', rng: seededRng(3) });
+      const p = w.player;
+      p.protectTime = 1e9;
+      p.x = dir < 0 ? -40000 : w.width + 40000;
+      w.fish.length = 0;
+      const startX = p.x;
+      for (let i = 0; i < 600; i++) {
+        w.update(1 / 60, { moveX: dir, moveY: 0, dash: false });
+        w.setView(p.x, p.y, 450, 260);
+      }
+      expect(dir < 0 ? p.x < startX - 1000 : p.x > startX + 1000).toBe(true);
+      const near = w.fish.filter((f) => Math.abs(f.x - p.x) < 3000);
+      expect(near.length).toBeGreaterThan(5);
+      // Ocean of Plenty zones follow along: the nearest is never more than half a tile away.
+      expect(Math.min(...w.zones.map((z) => Math.abs(z.x - p.x)))).toBeLessThanOrEqual(w.width / 2);
     }
   });
 });

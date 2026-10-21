@@ -2,7 +2,7 @@
 
 *An Adventure in the Bay of Bengal* · **Eat. Grow. Explore. Survive.**
 
-> Formerly **Fish Fight** (renamed in 3.0.1). Internal identifiers keep the old name on purpose so existing players lose nothing: the save key `fishfight.save`, the `fishfight.triviaSeen` and `fishfight.updatedFrom` keys, the service-worker cache prefix `fish-fight-v`, and the repository/URL `fish-fight`. Don't rename them.
+> Formerly **Fish Fight** (renamed in 3.0.1). Internal identifiers keep the old name on purpose so existing players lose nothing: the save key `fishfight.save`, the `fishfight.triviaSeen` and `fishfight.updatedFrom` keys, and the service-worker cache prefix `fish-fight-v`. Don't rename them. The repository was renamed from `fish-fight` to `NibbleNaut` in 3.4.0; a small stand-in repository named `fish-fight` keeps the old address (`nafeesmansoor.github.io/fish-fight/`) forwarding players here and retires the old offline copy.
 
 A colorful 2D underwater survival-and-growth game set in the Bay of Bengal for desktop and mobile browsers. You start as a small fish, eat smaller fish and food to grow, and avoid bigger predators. A strong score earns a better start in your next game. An unbelievably amazing score unlocks **The Ocean of Plenty**.
 
@@ -42,7 +42,7 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 2. Add a `## [X.Y.Z] - YYYY-MM-DD` entry to `CHANGELOG.md`.
 3. `npm run release`. A major bump also needs `ALLOW_MAJOR=1 npm run release`.
 4. Commit as `vX.Y.Z: summary`, tag `vX.Y.Z`, push with `--tags`. CI repeats the checks.
-5. Pushing to `main` deploys the game from this repo to GitHub Pages (`.github/workflows/pages.yml`): **https://nafeesmansoor.github.io/fish-fight/**. The service worker (update checker) and the install manifest are served from there, so every Fish Fight release reaches players without any other site having to redeploy. `https://www.nafees.info/apps/pwa/FishFight/` forwards to it. Then verify the live site (docs/PWA.md §9).
+5. Pushing to `main` deploys the game from this repo to GitHub Pages (`.github/workflows/pages.yml`): **https://nafeesmansoor.github.io/NibbleNaut/**. The service worker (update checker) and the install manifest are served from there, so every Fish Fight release reaches players without any other site having to redeploy. `https://www.nafees.info/apps/pwa/FishFight/` forwards to it. Then verify the live site (docs/PWA.md §9).
 
 **How updates reach players.** The build writes `dist/sw.js` with the version and the full list of files to precache, so every release changes the service worker and browsers notice. The new version downloads in the background and waits. On the main menu it applies at once. On the game-over screen players get an "Update now" button. During a match they are only told to finish first, so a match is never interrupted. After the reload they see "Fish Fight updated successfully." If a download fails, the old version keeps running and the browser retries later. The game checks for updates on launch, when the player returns to it, and at most once an hour.
 
@@ -50,9 +50,15 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 
 **Rollback.** Never redeploy an older build under its old version: browsers that already have the newer worker will not go back. Instead revert the change, bump the patch version (e.g. 1.0.4 → 1.0.5), and release that. Players' saves are unaffected. Before migrating, a save from an older format is copied to `fishfight.save.backup-v<N>`, and a corrupt save to `fishfight.save.backup-corrupt`.
 
+## Custom domain (planned)
+
+To serve the game at `https://nabeeha.mansoor.info`: add a DNS `CNAME` record `nabeeha` → `nafeesmansoor.github.io`, then set the custom domain in the repo's **Settings → Pages** (GitHub adds the `CNAME` and HTTPS). Two things to plan for, because a new domain is a new site to the browser:
+- **Progress:** browser storage doesn't carry over to a new domain. Players move it with **Settings → Copy / Paste progress code** (or ship a hand-off release that does it automatically).
+- **Installed copies:** GitHub redirects the `github.io` address to the domain at the server, so installed copies would stop receiving updates. Release a hand-off version first that points players to the new domain, then switch.
+
 ## Icons and mascot
 
-The mascot (a glossy orange fish with crimson-magenta fins, a huge shiny blue eye and a round "O" mouth) is drawn once in `tools/mascot.mjs`. `node tools/make-icons.mjs` regenerates `public/favicon.svg`, `public/mascot.svg` (home screen), the PWA icons in `public/icons/` (192, 512, maskable 512, Apple touch 180) and `store/icon-1024.png` for store listings. It renders with a local Chrome; commit the outputs.
+The mascot (a glossy orange-yellow fish with rainbow blue-violet fins, a huge shiny blue eye and a big smile) is drawn once in `tools/mascot.mjs`. `node tools/make-icons.mjs` regenerates `public/favicon.svg`, `public/mascot.svg` (home screen), the PWA icons in `public/icons/` (192, 512, maskable 512, Apple touch 180) and `store/icon-1024.png` for store listings. It renders with a local Chrome; commit the outputs.
 
 ## Installing, and the app stores
 

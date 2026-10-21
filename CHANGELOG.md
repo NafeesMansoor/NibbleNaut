@@ -2,6 +2,13 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.4.0] - 2026-10-21
+
+### Changed
+- The sea is now endless: swim left or right forever. The reef, sand and scenery repeat seamlessly, fish and food keep spawning around you, the camera no longer stops at the old edges, and Ocean of Plenty feeding zones follow along.
+- Mascot and icons recoloured and made more colourful: a sunny orange-yellow fish with rainbow fins (cyan to blue to violet, with crisp navy edges), a teal-violet eye, a pink-violet stripe, rosy cheeks and a big smile, keeping the pose from the owner's reference. The background gets pink and yellow coral, a pink fish and sparkles.
+- The project is now `NibbleNaut` everywhere: the GitHub repository is renamed from `fish-fight`, and the game is served at `https://nafeesmansoor.github.io/NibbleNaut/`. The old address forwards here, and browser players keep their progress (same site).
+
 ## [3.3.0] - 2026-10-21
 
 ### Changed

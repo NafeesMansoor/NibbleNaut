@@ -1,6 +1,6 @@
 name: Deploy to GitHub Pages
 
-# Publishes the built game to https://nafeesmansoor.github.io/fish-fight/ on every push to main.
+# Publishes the built game to https://nafeesmansoor.github.io/NibbleNaut/ on every push to main.
 on:
   push:
     branches: [main]

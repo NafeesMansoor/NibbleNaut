@@ -314,9 +314,8 @@ export class Game {
 
     if (this.state === 'playing' || this.state === 'dying' || this.state === 'menu' || this.state === 'over') {
       if (this.state === 'menu') {
-        // Drift the invisible reference point back and forth so the menu ocean keeps moving.
+        // Drift the invisible reference point through the endless sea so the menu ocean keeps moving.
         w.player.x += 40 * dt * this.menuDir;
-        if (w.player.x > w.width - 1500 || w.player.x < 1500) this.menuDir *= -1;
       }
       const controls = this.state === 'playing' ? this.controls() : this.idle;
       w.update(dt, controls);

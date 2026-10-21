@@ -102,7 +102,7 @@ export class SpawnManager {
     for (let attempt = 0; attempt < 12; attempt++) {
       const x = w.viewX + (w.rng() * 2 - 1) * w.viewHalfW * m;
       const y = w.viewY + (w.rng() * 2 - 1) * w.viewHalfH * m;
-      if (x < r || x > w.width - r || y < minY || y > maxY) continue;
+      if (y < minY || y > maxY) continue;
       const margin = r + 60;
       if (Math.abs(x - w.viewX) < w.viewHalfW + margin && Math.abs(y - w.viewY) < w.viewHalfH + margin) continue;
       return { x, y };
@@ -138,7 +138,7 @@ export class SpawnManager {
       for (let i = 0; i < n && w.fish.length < s.fishTarget + 6; i++) {
         const fs = clamp(size * randRange(w.rng, 0.85, 1.15), species.minSize, species.maxSize);
         const spread = radiusFor(fs) * 4;
-        const fx = clamp(pos.x + (w.rng() * 2 - 1) * spread, 0, w.width);
+        const fx = pos.x + (w.rng() * 2 - 1) * spread;
         const fy = clamp(pos.y + (w.rng() * 2 - 1) * spread, 40, w.seabedY - 10);
         w.fish.push(new Fish(w.newFishId(), species, fx, fy, fs, angle + (w.rng() - 0.5) * 0.3));
       }
@@ -164,7 +164,7 @@ export class SpawnManager {
       x = w.viewX + (w.rng() * 2 - 1) * w.viewHalfW * m;
       y = w.viewY + (w.rng() * 2 - 1) * w.viewHalfH * m;
     }
-    if (x < 20 || x > w.width - 20 || y < 60 || y > w.seabedY - 12) return false;
+    if (y < 60 || y > w.seabedY - 12) return false;
     const p = w.player;
     const keepOut = p.radius * 2.5;
     if (Math.abs(x - p.x) < keepOut && Math.abs(y - p.y) < keepOut) return false;

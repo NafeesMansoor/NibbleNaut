@@ -135,7 +135,9 @@ export class Food {
 
 export interface FeedingZone {
   id: number;
+  /** Current position: the repeat of `baseX` nearest the player. */
   x: number;
+  baseX: number;
   y: number;
   radius: number;
 }

@@ -42,6 +42,10 @@ export interface WorldOptions {
  * Everything the presentation layer needs to react to is emitted as `events`.
  */
 export class World {
+  /**
+   * The sea is endless to the left and right. `width` is only the distance after which the
+   * scenery and the Ocean of Plenty feeding zones repeat.
+   */
   readonly width = CONFIG.world.width;
   readonly height = CONFIG.world.height;
   readonly seabedY = CONFIG.world.height - CONFIG.world.seabedHeight;
@@ -97,6 +101,8 @@ export class World {
       this.stats.time += dt;
       this.updatePlayer(dt, controls);
     }
+    // Zones repeat every `width`: each one sits at its copy nearest the player.
+    for (const z of this.zones) z.x = z.baseX + Math.round((p.x - z.baseX) / this.width) * this.width;
     for (const f of this.fish) updateFishAI(this, f, dt);
     this.updateFood(dt);
     resolveCollisions(this);
@@ -123,16 +129,12 @@ export class World {
     return e;
   }
 
-  /** Keeps a body of the given radius inside the swimmable water column. */
+  /** Keeps a body between the surface and the seabed. There are no side walls: the sea is endless. */
   clampToWater(b: { x: number; y: number; radius: number }): boolean {
-    const minX = b.radius;
-    const maxX = this.width - b.radius;
     const minY = b.radius * 0.6;
     const maxY = this.seabedY - b.radius * 0.4;
-    const nx = clamp(b.x, minX, maxX);
     const ny = clamp(b.y, minY, Math.max(minY, maxY));
-    const hit = nx !== b.x || ny !== b.y;
-    b.x = nx;
+    const hit = ny !== b.y;
     b.y = ny;
     return hit;
   }
@@ -192,10 +194,7 @@ export class World {
     const prevSize = p.size;
     p.size = Math.abs(p.targetSize - p.size) < 0.01 ? p.targetSize : damp(p.size, p.targetSize, CONFIG.size.growRate, dt);
     if (p.size !== prevSize) p.radius = radiusFor(p.size);
-    if (this.clampToWater(p)) {
-      if (p.x <= p.radius || p.x >= this.width - p.radius) p.vx *= 0.3;
-      if (p.y <= p.radius * 0.6 || p.y >= this.seabedY - p.radius * 0.4) p.vy *= 0.3;
-    }
+    if (this.clampToWater(p)) p.vy *= 0.3;
 
     if (Math.abs(p.vx) > 4) p.facing = p.vx < 0 ? -1 : 1;
     const sp = Math.hypot(p.vx, p.vy);
@@ -239,7 +238,7 @@ export class World {
       // Spread zones across the width; keep one close to the start so the bonus is felt early.
       const x = i === 0 ? this.player.x + 900 : randRange(this.rng, margin, this.width - margin);
       const y = i === 0 ? this.player.y - 300 : randRange(this.rng, margin, this.seabedY - cfg.zoneRadius);
-      this.zones.push({ id: i, x, y, radius: cfg.zoneRadius });
+      this.zones.push({ id: i, x, baseX: x, y, radius: cfg.zoneRadius });
     }
   }
 }

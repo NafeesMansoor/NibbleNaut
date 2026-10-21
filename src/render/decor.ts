@@ -2,7 +2,8 @@ import { CONFIG } from '../config';
 import { pickWeighted, randRange, seededRng, type Rng } from '../core/math';
 
 /**
- * Reef scenery along the seabed, generated once from a fixed seed. Two rows give depth:
+ * Reef scenery along the seabed, generated once from a fixed seed. The sea is endless: the scenery
+ * is one tile `CONFIG.world.width` long that repeats seamlessly to the left and right. Two rows give depth:
  * the back row stands on the sand line and is softened by water haze; the front row sits in the
  * sand in the foreground. Everything is lit from above (lighter tops, darker bases).
  */
@@ -69,16 +70,20 @@ const PEBBLES = ['#b9b2a6', '#9a9389', '#c7bfb2'];
 export class Decor {
   readonly back: Item[] = [];
   readonly front: Item[] = [];
-  /** Sand surface heights sampled every `sandStep` world units. */
+  /** Sand surface heights sampled every `sandStep` world units across one tile (periodic). */
   readonly sand: number[] = [];
   readonly sandStep = 80;
+  private readonly period = CONFIG.world.width;
 
   constructor(seed = 7) {
     const rng = seededRng(seed);
     const W = CONFIG.world.width;
     const base = CONFIG.world.height - CONFIG.world.seabedHeight;
-    for (let x = 0; x <= W + this.sandStep; x += this.sandStep) {
-      this.sand.push(base + 14 + Math.sin(x * 0.0021) * 10 + Math.sin(x * 0.007 + 1) * 6 + rng() * 4);
+    // Whole numbers of waves per tile, so the sand meets itself seamlessly where tiles join.
+    const k1 = (Math.PI * 2 * 4) / W;
+    const k2 = (Math.PI * 2 * 13) / W;
+    for (let x = 0; x < W; x += this.sandStep) {
+      this.sand.push(base + 14 + Math.sin(x * k1) * 10 + Math.sin(x * k2 + 1) * 6 + rng() * 4);
     }
 
     let x = 20;
@@ -119,28 +124,48 @@ export class Decor {
     }
   }
 
+  /** Sand height at sample index `i` (any integer: the samples repeat every tile). */
+  private sandSample(i: number): number {
+    const n = this.sand.length;
+    return this.sand[((i % n) + n) % n];
+  }
+
   sandAt(x: number): number {
-    const i = Math.max(0, Math.min(this.sand.length - 2, Math.floor(x / this.sandStep)));
-    const t = x / this.sandStep - i;
-    return this.sand[i] + (this.sand[i + 1] - this.sand[i]) * Math.max(0, Math.min(1, t));
+    const f = x / this.sandStep;
+    const i = Math.floor(f);
+    const a = this.sandSample(i);
+    return a + (this.sandSample(i + 1) - a) * (f - i);
   }
 
   drawBack(ctx: CanvasRenderingContext2D, x0: number, x1: number, y0: number, y1: number, t: number, zoom: number): void {
-    drawItems(ctx, this.back, x0, x1, y0, y1, t, zoom);
+    this.tiled(ctx, this.back, x0, x1, y0, y1, t, zoom);
   }
 
   drawFront(ctx: CanvasRenderingContext2D, x0: number, x1: number, y0: number, y1: number, t: number, zoom: number): void {
-    drawItems(ctx, this.front, x0, x1, y0, y1, t, zoom);
+    this.tiled(ctx, this.front, x0, x1, y0, y1, t, zoom);
+  }
+
+  /** Draws every repeat of the tile that overlaps [x0, x1] (with a margin for wide items). */
+  private tiled(ctx: CanvasRenderingContext2D, items: Item[], x0: number, x1: number, y0: number, y1: number, t: number, zoom: number): void {
+    const W = this.period;
+    const margin = 600;
+    for (let k = Math.floor((x0 - margin) / W); k <= Math.floor((x1 + margin) / W); k++) {
+      const off = k * W;
+      ctx.save();
+      ctx.translate(off, 0);
+      drawItems(ctx, items, x0 - off, x1 - off, y0, y1, t, zoom);
+      ctx.restore();
+    }
   }
 
   /** Sand band: textured fill, then shading so it darkens with distance into the foreground. */
   drawSand(ctx: CanvasRenderingContext2D, x0: number, x1: number, texture: CanvasPattern | null, fallback: string, plenty: boolean): void {
     const H = CONFIG.world.height;
-    const i0 = Math.max(0, Math.floor(x0 / this.sandStep) - 1);
-    const i1 = Math.min(this.sand.length - 1, Math.ceil(x1 / this.sandStep) + 1);
+    const i0 = Math.floor(x0 / this.sandStep) - 1;
+    const i1 = Math.ceil(x1 / this.sandStep) + 1;
     ctx.beginPath();
     ctx.moveTo(i0 * this.sandStep, H + 50);
-    for (let i = i0; i <= i1; i++) ctx.lineTo(i * this.sandStep, this.sand[i]);
+    for (let i = i0; i <= i1; i++) ctx.lineTo(i * this.sandStep, this.sandSample(i));
     ctx.lineTo(i1 * this.sandStep, H + 50);
     ctx.closePath();
     ctx.fillStyle = texture ?? fallback;
