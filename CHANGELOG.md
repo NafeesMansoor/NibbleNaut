@@ -2,11 +2,19 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.3.0] - 2026-10-21
+
+### Changed
+- New icon and mascot in a glossy 3D cartoon style (from the owner's reference): a close-up orange fish with crimson-magenta fins, a huge shiny blue eye and a round "O" mouth, in a deep-blue sea with bubbles, coral and little purple fish. Used for all PWA icons, the browser tab, the home screen and the 1024×1024 store icon.
+
+### Added
+- Four more fish in Upgrade Fish after the Humphead Wrasse (15 in all): Great Barracuda (150,000, ×3.25), Giant Grouper (190,000, ×3.5), Indo-Pacific Sailfish (220,000, ×3.75) and, after the Whale Shark, the Tiger Shark (320,000, ×4.5). English and Bangla.
+
 ## [3.2.0] - 2026-10-21
 
 ### Added
 - New app icon and mascot: a cheerful orange-and-yellow fish with big blue eyes, a smiling open mouth and bright blue fins, on a sunny ocean background. Used for the PWA icons (including maskable and Apple touch icons), the browser tab, and swimming on the home screen. A 1024×1024 store-listing icon is included for Google Play and the App Store. `tools/make-icons.mjs` regenerates them all.
-- Five new fish in Upgrade Fish (11 in all): Blue-green Chromis (1,500, ×1.1), Coral Hawkfish (5,000, ×1.35), White-spotted Puffer (12,000, ×1.75), Mahi-mahi (32,000, ×2.25) and the Whale Shark (250,000, ×4). English and Bangla. The shop list now scrolls inside its panel.
+- Five new fish in Upgrade Fish (11 at the time): Blue-green Chromis (1,500, ×1.1), Coral Hawkfish (5,000, ×1.35), White-spotted Puffer (12,000, ×1.75), Mahi-mahi (32,000, ×2.25) and the Whale Shark (250,000, ×4). English and Bangla. The shop list now scrolls inside its panel.
 - How to play → "Install the game": steps for iPhone/iPad, Android and computers, with the player's own device highlighted.
 - Settings → Install: opens the browser's install dialog where available (Chrome, Edge, Android), otherwise shows the install steps. Shows "Installed" in an installed app and hides in a future store build.
 

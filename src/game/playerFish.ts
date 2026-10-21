@@ -176,6 +176,51 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     look: { shape: 'round', body: '#2fae9a', belly: '#9fe3cf', fin: '#1f7f8f', tail: '#2a8fa0', stripe: '#1a6a78', stripes: 5 },
   },
   {
+    id: 'barracuda',
+    bn: {
+      name: 'বড় ব্যারাকুডা',
+      description: 'ধারালো দাঁতের রুপালি টর্পেডো।',
+      about: 'পানিতে প্রায় স্থির ভেসে থাকে, তারপর চোখের পলকে আক্রমণ করে। লম্বা রুপালি শরীর হঠাৎ গতির জন্যই তৈরি।',
+    },
+    name: 'Great Barracuda',
+    sci: 'Sphyraena barracuda',
+    cost: 150000,
+    feedMul: 3.25,
+    description: 'A silver torpedo with fang-like teeth.',
+    about: 'It hangs almost still in the water, then strikes in a flash. Its long silver body is built for sudden speed.',
+    look: { shape: 'long', body: '#a9bccb', belly: '#f0f5f8', fin: '#4f6578', stripe: '#3c4e5e', stripes: 6 },
+  },
+  {
+    id: 'giantgrouper',
+    bn: {
+      name: 'দৈত্য গ্রুপার',
+      description: 'প্রবাল-গুহার রাজা, গায়ে উজ্জ্বল হলুদ ফুটকি।',
+      about: 'প্রবালপ্রাচীরের সবচেয়ে বড় হাড়ওয়ালা মাছ, ২.৭ মিটার পর্যন্ত লম্বা। এক গ্রাসে শিকার আস্ত গিলে ফেলে, আর এখন এর সুরক্ষা দরকার।',
+    },
+    name: 'Giant Grouper',
+    sci: 'Epinephelus lanceolatus',
+    cost: 190000,
+    feedMul: 3.5,
+    description: 'The king of the reef caves, with bright yellow spots.',
+    about: 'The biggest bony fish of coral reefs, up to 2.7 metres long. It can swallow its prey whole in one gulp, and today it needs protection.',
+    look: { shape: 'round', body: '#6f6c3e', belly: '#c9c48a', fin: '#f2c94c', tail: '#e8b93a', spots: '#f6d860' },
+  },
+  {
+    id: 'sailfish',
+    bn: {
+      name: 'ইন্দো-প্যাসিফিক পালতোলা মাছ',
+      description: 'পিঠে বিশাল পাল নিয়ে দারুণ দ্রুত সাঁতারু।',
+      about: 'সাগরের সবচেয়ে দ্রুত মাছগুলোর একটা। পালের মতো বিশাল পাখনা তুলে ছোট মাছদের এক জায়গায় জড়ো করে, তারপর ঝাঁপিয়ে পড়ে।',
+    },
+    name: 'Indo-Pacific Sailfish',
+    sci: 'Istiophorus platypterus',
+    cost: 220000,
+    feedMul: 3.75,
+    description: 'A super-fast swimmer with a giant sail on its back.',
+    about: 'One of the fastest fish in the sea. It raises its huge sail-like fin to herd small fish into a tight ball, then darts in.',
+    look: { shape: 'long', body: '#1f4f9e', belly: '#e8f1fb', fin: '#3aa0ff', stripe: '#7fd3ff', stripes: 5 },
+  },
+  {
     id: 'whaleshark',
     bn: {
       name: 'তিমি হাঙর',
@@ -189,6 +234,21 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     description: 'The gentle giant. Quadruple points for every bite!',
     about: 'The largest fish on Earth, about 12 metres long. It filters tiny food from the water and is harmless to people.',
     look: { shape: 'shark', body: '#36577a', belly: '#e1eaf1', fin: '#284460', spots: '#eaf2f8' },
+  },
+  {
+    id: 'tigershark',
+    bn: {
+      name: 'বাঘা হাঙর',
+      description: 'ডোরাকাটা সাগরের রাজা। প্রতি কামড়ে সাড়ে চারগুণ পয়েন্ট!',
+      about: 'ছোটবেলার ডোরার জন্যই এমন নাম। সবচেয়ে বড় শিকারি হাঙরদের একটা, প্রায় সবকিছুই খায় আর রাতে উপকূলে টহল দেয়।',
+    },
+    name: 'Tiger Shark',
+    sci: 'Galeocerdo cuvier',
+    cost: 320000,
+    feedMul: 4.5,
+    description: 'The striped ruler of the sea. ×4.5 points for every bite!',
+    about: 'Named for the stripes it has when young. One of the biggest hunting sharks, it eats almost anything and patrols the coast at night.',
+    look: { shape: 'shark', body: '#7d8a96', belly: '#eef2f5', fin: '#5b6772', stripe: '#4c5862', stripes: 5 },
   },
 ];
 

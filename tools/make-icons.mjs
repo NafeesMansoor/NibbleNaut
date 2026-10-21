@@ -37,7 +37,7 @@ function png(svg, size, out) {
 const icon = mascotSvg({ background: true });
 png(icon, 192, join(root, 'public/icons/icon-192.png'));
 png(icon, 512, join(root, 'public/icons/icon-512.png'));
-png(mascotSvg({ background: true, scale: 0.78 }), 512, join(root, 'public/icons/maskable-512.png'));
+png(mascotSvg({ background: true, scale: 0.8 }), 512, join(root, 'public/icons/maskable-512.png'));
 png(icon, 180, join(root, 'public/icons/apple-touch-icon.png'));
 png(icon, 1024, join(root, 'store/icon-1024.png'));
 rmSync(work, { recursive: true, force: true });

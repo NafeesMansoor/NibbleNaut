@@ -52,7 +52,7 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 
 ## Icons and mascot
 
-The mascot (a cheerful orange-and-yellow fish with blue eyes, a smiling open mouth and bright blue fins) is drawn once in `tools/mascot.mjs`. `node tools/make-icons.mjs` regenerates `public/favicon.svg`, `public/mascot.svg` (home screen), the PWA icons in `public/icons/` (192, 512, maskable 512, Apple touch 180) and `store/icon-1024.png` for store listings. It renders with a local Chrome; commit the outputs.
+The mascot (a glossy orange fish with crimson-magenta fins, a huge shiny blue eye and a round "O" mouth) is drawn once in `tools/mascot.mjs`. `node tools/make-icons.mjs` regenerates `public/favicon.svg`, `public/mascot.svg` (home screen), the PWA icons in `public/icons/` (192, 512, maskable 512, Apple touch 180) and `store/icon-1024.png` for store listings. It renders with a local Chrome; commit the outputs.
 
 ## Installing, and the app stores
 
