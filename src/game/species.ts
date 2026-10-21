@@ -50,7 +50,7 @@ export const SPECIES: Species[] = [
     speedMul: 1.1, hunter: false, weight: 3, schooling: true,
   },
   {
-    id: 'mackerel', bn: { name: 'ভারতীয় ম্যাকেরেল', about: 'দল বেঁধে সাঁতার কাটে আর বেশির ভাগ প্ল্যাংকটন খায়। একসাথে থাকলে খাবার খোঁজা সহজ হয়, আর শিকারিও আলাদা করে একটাকে ধরতে পারে না।' }, name: 'Indian Mackerel', sci: 'Rastrelliger kanagurta',
+    id: 'mackerel', bn: { name: 'বড়মুখো ম্যাকেরেল', about: 'দল বেঁধে সাঁতার কাটে আর বেশির ভাগ প্ল্যাংকটন খায়। একসাথে থাকলে খাবার খোঁজা সহজ হয়, আর শিকারিও আলাদা করে একটাকে ধরতে পারে না।' }, name: 'Bigmouth Mackerel', sci: 'Rastrelliger kanagurta',
     about: 'A speedy school swimmer that feeds mostly on plankton. Swimming together helps it find food and makes it hard for predators to single one out.',
     minSize: 3, maxSize: 9, shape: 'long', body: '#3f8fc0', belly: '#eaf3fa', fin: '#e9c24a', band: '#e9c24a', spots: '#24577d',
     speedMul: 1.12, hunter: false, weight: 2.5, schooling: true,

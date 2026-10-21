@@ -2,6 +2,11 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.0.2] - 2026-10-21
+
+### Changed
+- The Indian Mackerel is now called the Bigmouth Mackerel (বড়মুখো ম্যাকেরেল), in the game and in its fun fact.
+
 ## [3.0.1] - 2026-10-21
 
 Major version approved by the project owner (from 2.1.1; the version number 3.0.1 was requested).
