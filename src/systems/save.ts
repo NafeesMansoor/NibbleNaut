@@ -102,6 +102,9 @@ export class MemoryStorage implements StorageLike {
   }
 }
 
+/** Marks a progress code (and its format version) so random pasted text is rejected. */
+const PROGRESS_CODE_PREFIX = 'NIBBLENAUT1:';
+
 export class SaveSystem {
   private data: SaveData;
 
@@ -148,6 +151,38 @@ export class SaveSystem {
 
   get(): Readonly<SaveData> {
     return this.data;
+  }
+
+  /**
+   * Progress as a short text code, for moving it to another browser or a re-added home-screen icon
+   * (on iPhone each home-screen web app has its own storage).
+   */
+  exportCode(): string {
+    return PROGRESS_CODE_PREFIX + btoa(encodeURIComponent(JSON.stringify(this.data)));
+  }
+
+  /**
+   * Replaces progress with the one in `code`. The current save is kept under a backup key first.
+   * Returns false (and changes nothing) if the code isn't a valid progress code.
+   */
+  importCode(code: string): boolean {
+    const trimmed = code.trim().replace(/\s+/g, '');
+    if (!trimmed.startsWith(PROGRESS_CODE_PREFIX)) return false;
+    let raw: unknown;
+    try {
+      raw = JSON.parse(decodeURIComponent(atob(trimmed.slice(PROGRESS_CODE_PREFIX.length))));
+    } catch {
+      return false;
+    }
+    if (!raw || typeof raw !== 'object') return false;
+    try {
+      this.storage.setItem(`${SAVE_KEY}.backup-before-import`, JSON.stringify(this.data));
+    } catch {
+      // Storage blocked: the import still applies for this session.
+    }
+    const next = migrate(raw);
+    this.update((d) => Object.assign(d, next));
+    return true;
   }
 
   /** Applies a change and writes it through immediately, so a refresh never loses it. */

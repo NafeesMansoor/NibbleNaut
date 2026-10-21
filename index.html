@@ -56,29 +56,35 @@
       <section id="screen-menu" class="screen">
         <div class="panel menu-panel">
           <div class="menu-main">
-          <h1 class="logo"><span class="logo-fish" data-i18n="logo.fish">Nibble</span><span class="logo-fight" data-i18n="logo.fight">Naut</span></h1>
-          <p class="subtitle" data-i18n="menu.subtitle">An Adventure in the Bay of Bengal</p>
-          <p class="tagline" data-i18n="menu.tagline">Eat. Grow. Explore. Survive.</p>
-          <div class="bank" aria-label="Your points" data-i18n-aria="menu.pointsAria">
-            <span class="bank-coin" aria-hidden="true">★</span>
-            <span class="bank-label" data-i18n="menu.points">Points</span>
-            <b id="menu-points">0</b>
-          </div>
-          <div id="menu-reward" class="reward-card" hidden></div>
-          <button class="btn primary big" id="btn-play">Play</button>
-          <button class="btn fish-btn" id="btn-shop">
-            <canvas id="menu-fish" class="fish-thumb" aria-hidden="true"></canvas>
-            <span class="fish-btn-text">
-              <b id="menu-fish-name">Clark's Anemonefish</b>
-              <small id="menu-fish-mul">×1 feeding points</small>
-            </span>
-            <span class="fish-btn-cta" data-i18n="menu.upgrade">Upgrade fish ›</span>
-          </button>
-          <div class="menu-row">
-            <button class="btn ghost" id="btn-how" data-i18n="menu.how">How to play</button>
-            <button class="btn ghost" id="btn-settings" data-i18n="menu.settings">Settings</button>
-          </div>
-          <div class="menu-best"><span data-i18n="menu.best">Best score</span> <b id="menu-best">0</b></div>
+            <div class="menu-stats">
+              <div class="stat-pill coin" aria-label="Your points" data-i18n-aria="menu.pointsAria">
+                <span class="stat-ico" aria-hidden="true">★</span>
+                <span class="stat-text"><small data-i18n="menu.points">Points</small><b id="menu-points">0</b></span>
+              </div>
+              <div class="stat-pill trophy">
+                <span class="stat-ico" aria-hidden="true">🏆</span>
+                <span class="stat-text"><small data-i18n="menu.best">Best score</small><b id="menu-best">0</b></span>
+              </div>
+            </div>
+            <div class="menu-title">
+              <h1 class="logo"><span class="logo-fish" data-i18n="logo.fish">Nibble</span><span class="logo-fight" data-i18n="logo.fight">Naut</span></h1>
+              <p class="subtitle" data-i18n="menu.subtitle">An Adventure in the Bay of Bengal</p>
+              <ul class="slogan" id="menu-slogan"></ul>
+            </div>
+            <div id="menu-reward" class="reward-card" hidden></div>
+            <button class="btn primary big play-btn" id="btn-play">Play</button>
+            <button class="btn fish-btn" id="btn-shop">
+              <canvas id="menu-fish" class="fish-thumb" aria-hidden="true"></canvas>
+              <span class="fish-btn-text">
+                <b id="menu-fish-name">Clark's Anemonefish</b>
+                <small id="menu-fish-mul">×1 feeding points</small>
+              </span>
+              <span class="fish-btn-cta" data-i18n="menu.upgrade">Upgrade fish ›</span>
+            </button>
+            <div class="menu-row">
+              <button class="btn ghost icon-label" id="btn-how"><span class="ico" aria-hidden="true">❓</span><span data-i18n="menu.how">How to play</span></button>
+              <button class="btn ghost icon-label" id="btn-settings"><span class="ico" aria-hidden="true">⚙️</span><span data-i18n="menu.settings">Settings</span></button>
+            </div>
           </div>
           <div class="trivia" id="menu-trivia" aria-live="polite"></div>
           <div class="menu-foot">
@@ -148,6 +154,14 @@
           <label class="setting check"><input type="checkbox" id="set-mute" /> <span data-i18n="settings.mute">Mute all sound</span></label>
           <label class="setting check"><input type="checkbox" id="set-outlines" /> <span data-i18n="settings.outlines">Red outlines on dangerous fish</span></label>
           <label class="setting check"><input type="checkbox" id="set-trivia" /> <span data-i18n="settings.trivia">Show Bay of Bengal fun facts</span></label>
+          <div class="backup">
+            <div class="backup-title" data-i18n="settings.backup">Progress backup</div>
+            <div class="backup-row">
+              <button type="button" class="btn ghost" id="btn-copy-code" data-i18n="settings.copyCode">Copy progress code</button>
+              <button type="button" class="btn ghost" id="btn-paste-code" data-i18n="settings.pasteCode">Paste progress code</button>
+            </div>
+            <p class="hint" data-i18n="settings.backupHint">Moving to a new device or re-adding the home-screen icon? Copy the code here, then paste it there.</p>
+          </div>
           <button class="btn primary" id="btn-settings-close" data-i18n="common.done">Done</button>
           <p class="hint settings-about"><b>NibbleNaut</b> <span id="settings-version"></span><br /><span data-i18n="menu.subtitle">An Adventure in the Bay of Bengal</span></p>
         </div>

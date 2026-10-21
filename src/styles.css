@@ -337,20 +337,20 @@ h2 {
 
 .logo {
   margin: 0;
-  font-size: clamp(52px, 13vw, 76px);
+  font-size: clamp(52px, 14vw, 80px);
   line-height: 0.95;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .logo-fish {
   color: var(--orange);
-  text-shadow: 0 4px 0 #b84600;
+  text-shadow: 0 2px 0 #d65a00, 0 5px 0 #8f3900, 0 9px 14px rgba(0, 0, 0, 0.35);
 }
 
 .logo-fight {
   color: #fff;
-  text-shadow: 0 4px 0 #1b6aa3;
+  text-shadow: 0 2px 0 #9fd8ff, 0 5px 0 #1b5f96, 0 9px 14px rgba(0, 0, 0, 0.35);
 }
 
 .subtitle {
@@ -423,15 +423,6 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-}
-
-.menu-best {
-  color: var(--ink-soft);
-  font-size: 15px;
-}
-
-.menu-best b {
-  color: #fff;
 }
 
 .credit {
@@ -1490,4 +1481,310 @@ h2 {
   .stats div span {
     font-size: 11px;
   }
+}
+
+/* ---------- Home screen: game-style layout ---------- */
+.menu-panel {
+  gap: 10px;
+  background: linear-gradient(180deg, rgba(12, 82, 138, 0.86) 0%, rgba(5, 36, 70, 0.92) 100%);
+  border: 2px solid rgba(143, 230, 247, 0.35);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04), 0 22px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.menu-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 4px 14px 4px 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.stat-ico {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  color: #8a5a00;
+  background: linear-gradient(180deg, #ffe88f, #f5b70f);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+}
+
+.stat-pill.trophy .stat-ico {
+  background: linear-gradient(180deg, #d6f3ff, #63bdf2);
+}
+
+.stat-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.05;
+  text-align: left;
+}
+
+.stat-text small {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.stat-text b {
+  font-size: 19px;
+  color: #fff;
+}
+
+.stat-pill.coin b {
+  color: var(--gold);
+}
+
+.menu-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2px 0 2px;
+}
+
+.menu-title .logo {
+  animation: logo-bob 3.2s ease-in-out infinite;
+}
+
+@keyframes logo-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(1deg);
+  }
+}
+
+.menu-title .subtitle {
+  margin-top: 8px;
+}
+
+.slogan {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.slogan li {
+  padding: 2px 9px 3px;
+  border-radius: 999px;
+  font-size: 12px;
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.slogan li:nth-child(1) { background: rgba(255, 138, 31, 0.28); border-color: rgba(255, 170, 90, 0.6); }
+.slogan li:nth-child(2) { background: rgba(61, 220, 132, 0.24); border-color: rgba(120, 235, 170, 0.55); }
+.slogan li:nth-child(3) { background: rgba(79, 209, 255, 0.24); border-color: rgba(140, 225, 255, 0.55); }
+.slogan li:nth-child(4) { background: rgba(255, 111, 174, 0.24); border-color: rgba(255, 160, 200, 0.55); }
+
+#menu-reward {
+  position: relative;
+  padding: 9px 12px 10px 56px;
+}
+
+#menu-reward::before {
+  content: '🎁';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 30px;
+}
+
+#menu-reward .rc-title {
+  font-size: 18px;
+}
+
+#menu-reward .rc-desc {
+  font-size: 13px;
+}
+
+.play-btn {
+  position: relative;
+  overflow: hidden;
+  font-size: 27px;
+  letter-spacing: 1px;
+  padding: 15px 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffc266 0%, #ff8f1f 48%, #ff6300 100%);
+  box-shadow: 0 6px 0 #b84600, 0 0 26px rgba(255, 150, 40, 0.45);
+  animation: play-pulse 1.8s ease-in-out infinite;
+}
+
+.play-btn::before {
+  content: '';
+  display: inline-block;
+  margin-right: 12px;
+  border-left: 17px solid #fff;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  vertical-align: -1px;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.25));
+}
+
+/* A glossy sheen sweeping across the button. */
+.play-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -40%;
+  width: 30%;
+  background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+  transform: skewX(-20deg);
+  animation: play-sheen 3.2s ease-in-out infinite;
+}
+
+@keyframes play-pulse {
+  0%,
+  100% {
+    box-shadow: 0 6px 0 #b84600, 0 0 18px rgba(255, 150, 40, 0.35);
+  }
+  50% {
+    box-shadow: 0 6px 0 #b84600, 0 0 34px rgba(255, 170, 60, 0.7);
+  }
+}
+
+@keyframes play-sheen {
+  0%,
+  55% {
+    left: -40%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
+.menu-panel .fish-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.menu-panel .fish-thumb {
+  animation: tv-bob 2.6s ease-in-out infinite;
+}
+
+.menu-panel .fish-btn-cta {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffe27a, var(--gold));
+  color: #3a2a00;
+  font-size: 13px;
+  box-shadow: 0 3px 0 #b8860b;
+}
+
+.icon-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.icon-label .ico {
+  font-size: 18px;
+  line-height: 1;
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .menu-title .logo {
+    font-size: 42px;
+  }
+  .stat-ico {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
+  .stat-text b {
+    font-size: 16px;
+  }
+  /* The reward's title is enough here; its description is on the game-over screen. */
+  #menu-reward .rc-desc {
+    display: none;
+  }
+  #menu-reward {
+    padding-top: 6px;
+    padding-bottom: 7px;
+  }
+  .play-btn {
+    font-size: 21px;
+    padding: 10px 16px;
+  }
+  .slogan {
+    margin-top: 5px;
+  }
+  .slogan li {
+    font-size: 12px;
+    padding: 2px 9px 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-title .logo,
+  .play-btn,
+  .play-btn::after,
+  .menu-panel .fish-thumb {
+    animation: none;
+  }
+}
+
+/* ---------- Settings: progress backup ---------- */
+.backup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--panel-edge);
+  text-align: left;
+}
+
+.backup-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.backup-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.backup-row .btn {
+  font-size: 14px;
+  padding: 9px 8px;
+}
+
+.backup .hint {
+  font-size: 12px;
 }

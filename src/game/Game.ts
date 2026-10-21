@@ -74,6 +74,13 @@ export class Game {
           this.audio.unlock();
           this.audio.click();
         },
+        exportProgress: () => this.save.exportCode(),
+        importProgress: (code) => {
+          if (!this.save.importCode(code)) return false;
+          // Reload so every screen, setting and the language pick up the restored progress.
+          window.location.reload();
+          return true;
+        },
       },
       settings,
     );

@@ -2,6 +2,14 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.1.0] - 2026-10-21
+
+### Changed
+- Redesigned home screen with a game feel: points and best score as coin and trophy badges, a chunky bobbing NibbleNaut logo with the subtitle right under it, the slogan as four colourful chips (Eat · Grow · Explore · Survive), the next-game reward as a gift banner, a big glossy pulsing Play button, a "your fish" card with a gold Upgrade button, and icon buttons for How to play and Settings. Works in English and Bangla, portrait and landscape.
+
+### Added
+- Settings → Progress backup: "Copy progress code" and "Paste progress code" move all progress to another device or browser, or to a re-added home-screen icon (each iPhone home-screen app has its own storage). Pasting asks first and keeps the previous save under a backup key.
+
 ## [3.0.2] - 2026-10-21
 
 ### Changed

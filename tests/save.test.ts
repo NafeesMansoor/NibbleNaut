@@ -24,6 +24,28 @@ describe('save system', () => {
     expect(migrate({ settings: { trivia: false } }).settings.trivia).toBe(false);
   });
 
+  it('moves progress between devices with a progress code, and rejects junk', () => {
+    const from = new SaveSystem(new MemoryStorage());
+    from.update((d) => {
+      d.points = 11400;
+      d.lifetimePoints = 20000;
+      d.bestScore = 2638;
+      d.ownedFish = ['nemo', 'sunny', 'lion'];
+      d.selectedFish = 'lion';
+      d.settings.lang = 'bn';
+    });
+    const code = from.exportCode();
+    const storage = new MemoryStorage();
+    const to = new SaveSystem(storage);
+    expect(to.importCode('hello')).toBe(false);
+    expect(to.importCode('NIBBLENAUT1:%%%')).toBe(false);
+    expect(to.get().points).toBe(0);
+    expect(to.importCode(`  ${code}\n`)).toBe(true);
+    expect(to.get()).toEqual(from.get());
+    expect(new SaveSystem(storage).get()).toEqual(from.get());
+    expect(storage.getItem(`${SAVE_KEY}.backup-before-import`)).not.toBeNull();
+  });
+
   it('keeps working when storage throws', () => {
     const broken = { getItem: () => { throw new Error('blocked'); }, setItem: () => { throw new Error('full'); } };
     const save = new SaveSystem(broken);

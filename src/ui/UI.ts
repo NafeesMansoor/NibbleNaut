@@ -63,6 +63,10 @@ export interface UICallbacks {
   onOpenShop(): void;
   onBuyFish(id: string): void;
   onSelectFish(id: string): void;
+  /** Progress as a text code (Settings → Progress backup). */
+  exportProgress(): string;
+  /** Applies a pasted progress code; false if it isn't valid. */
+  importProgress(code: string): boolean;
 }
 
 const formatMul = (m: number): string => `×${num(m)}`;
@@ -131,6 +135,24 @@ export class UI {
     this.setupFit();
     $('menu-version').textContent = `v${APP_VERSION}`;
     $('settings-version').textContent = `v${APP_VERSION}`;
+    $('btn-copy-code').addEventListener('click', () => {
+      cb.onClick();
+      const code = cb.exportProgress();
+      const fallback = (): void => void window.prompt(t('settings.copyPrompt'), code);
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(() => this.toast(t('settings.backup'), t('settings.copied'), null, 5), fallback);
+      else fallback();
+    });
+    $('btn-paste-code').addEventListener('click', () => {
+      cb.onClick();
+      const code = window.prompt(t('settings.pastePrompt'));
+      if (!code) return;
+      if (!code.trim().startsWith('NIBBLENAUT1:')) {
+        window.alert(t('settings.pasteBad'));
+        return;
+      }
+      if (!window.confirm(t('settings.pasteConfirm'))) return;
+      if (!cb.importProgress(code)) window.alert(t('settings.pasteBad'));
+    });
     $('lang-toggle').addEventListener('click', (e) => {
       const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('button[data-lang]');
       if (!btn || btn.dataset.lang === this.settings.lang) return;
@@ -348,6 +370,7 @@ export class UI {
     this.setPlaying(false);
     this.show('menu');
     $('menu-best').textContent = num(Math.floor(best));
+    this.renderSlogan();
     this.fillTrivia($('menu-trivia'), this.trivia.next(), true);
     const card = $('menu-reward');
     if (pending) {
@@ -359,6 +382,27 @@ export class UI {
       $('btn-play').textContent = t('menu.play');
     }
     queueMicrotask(() => $('btn-play').focus({ preventScroll: true }));
+  }
+
+  /** "Eat. Grow. Explore. Survive." as four colourful chips, in the current language. */
+  private renderSlogan(): void {
+    const box = $('menu-slogan');
+    const tagline = t('menu.tagline');
+    box.setAttribute('aria-label', tagline);
+    box.innerHTML = '';
+    const icons = ['😋', '🌱', '🧭', '🛡️'];
+    tagline
+      .split(/[.।]/)
+      .map((w) => w.trim())
+      .filter(Boolean)
+      .forEach((word, i) => {
+        const li = document.createElement('li');
+        const ico = document.createElement('span');
+        ico.setAttribute('aria-hidden', 'true');
+        ico.textContent = icons[i] ?? '⭐';
+        li.append(ico, ` ${word}`);
+        box.appendChild(li);
+      });
   }
 
   /** New fun fact on the pause screen (after a language switch). */
