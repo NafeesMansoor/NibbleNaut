@@ -44,7 +44,7 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 2. Add a `## [X.Y.Z] - YYYY-MM-DD` entry to `CHANGELOG.md`.
 3. `npm run release`. A major bump also needs `ALLOW_MAJOR=1 npm run release`.
 4. Commit as `vX.Y.Z: summary`, tag `vX.Y.Z`, push with `--tags`. CI repeats the checks.
-5. Pushing to `main` deploys the game from this repo to GitHub Pages (`.github/workflows/pages.yml`): **https://nafeesmansoor.github.io/NibbleNaut/**. The service worker (update checker) and the install manifest are served from there, so every Fish Fight release reaches players without any other site having to redeploy. `https://www.nafees.info/apps/pwa/FishFight/` forwards to it. Then verify the live site (docs/PWA.md §9).
+5. Pushing to `main` deploys the game from this repo to GitHub Pages (`.github/workflows/pages.yml`): **https://nabeeha.mansoor.info**. The service worker (update checker) and the install manifest are served from there, so every Fish Fight release reaches players without any other site having to redeploy. `https://www.nafees.info/apps/pwa/FishFight/` forwards to it. Then verify the live site (docs/PWA.md §9).
 
 **How updates reach players.** The build writes `dist/sw.js` with the version and the full list of files to precache, so every release changes the service worker and browsers notice. The new version downloads in the background and waits. On the main menu it applies at once. On the game-over screen players get an "Update now" button. During a match they are only told to finish first, so a match is never interrupted. After the reload they see "Fish Fight updated successfully." If a download fails, the old version keeps running and the browser retries later. The game checks for updates on launch, when the player returns to it, and at most once an hour.
 
@@ -52,11 +52,11 @@ The rules are in [docs/PWA.md](docs/PWA.md); the release log is [CHANGELOG.md](C
 
 **Rollback.** Never redeploy an older build under its old version: browsers that already have the newer worker will not go back. Instead revert the change, bump the patch version (e.g. 1.0.4 → 1.0.5), and release that. Players' saves are unaffected. Before migrating, a save from an older format is copied to `fishfight.save.backup-v<N>`, and a corrupt save to `fishfight.save.backup-corrupt`.
 
-## Custom domain (planned)
+## Home address
 
-To serve the game at `https://nabeeha.mansoor.info`: add a DNS `CNAME` record `nabeeha` → `nafeesmansoor.github.io`, then set the custom domain in the repo's **Settings → Pages** (GitHub adds the `CNAME` and HTTPS). Two things to plan for, because a new domain is a new site to the browser:
-- **Progress:** browser storage doesn't carry over to a new domain. Players move it with **Settings → Copy / Paste progress code** (or ship a hand-off release that does it automatically).
-- **Installed copies:** GitHub redirects the `github.io` address to the domain at the server, so installed copies would stop receiving updates. Release a hand-off version first that points players to the new domain, then switch.
+The game lives at **https://nabeeha.mansoor.info**: a DNS `CNAME` record `nabeeha` → `nafeesmansoor.github.io` (Cloudflare, *DNS only*, so GitHub can issue the HTTPS certificate) and the repo's **Settings → Pages → Custom domain**. GitHub redirects `https://nafeesmansoor.github.io/NibbleNaut/` there.
+
+Browser storage belongs to one site, so players' progress at the old `github.io` address is handed over by `src/pwa/handoff.ts` (3.5.0+): the game running at the old address passes the progress code to the new home in the URL fragment, and the new home imports it (asking first if that device already has progress). Installed home-screen copies show the code and the steps instead. The `fish-fight` stand-in repo does the same for anyone still arriving at `…/fish-fight/`, and is the place to send a player whose progress is still at the old address.
 
 ## Icons and mascot
 

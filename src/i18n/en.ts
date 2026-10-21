@@ -82,6 +82,13 @@ export const EN = {
   'install.android': '<b>Android (Chrome):</b> tap the <b>⋮</b> menu, then <b>Install app</b> or <b>Add to Home screen</b>. Or use <b>Settings → Install</b>.',
   'install.desktop': '<b>Computer (Chrome / Edge):</b> click the install icon in the address bar, or use <b>Settings → Install</b>.',
   'install.after': 'Then open it from your home screen: it plays full screen and works offline.',
+  'handoff.confirm': 'Bring your progress from the old NibbleNaut address? This replaces the progress on this device.',
+  'moved.title': 'NibbleNaut has a new home!',
+  'moved.body': 'The game now lives at nabeeha.mansoor.info. To keep playing full screen: copy your progress code, open the new address in your browser and add it to your home screen, then paste the code in Settings → Paste progress code. After that you can delete this old icon.',
+  'moved.copy': 'Copy progress code',
+  'moved.copied': 'Copied!',
+  'moved.open': 'Open the new home',
+  'moved.later': 'Not now',
   'common.done': 'Done',
 
   'shop.title': 'Upgrade Fish',

@@ -427,6 +427,28 @@ export class UI {
     queueMicrotask(() => $('btn-play').focus({ preventScroll: true }));
   }
 
+  /**
+   * Installed copy at the old address: explain the move and hand over the progress code (it can't
+   * simply redirect, because a home-screen app can't leave its own site in full screen).
+   */
+  showMoved(url: string, code: string): void {
+    const modal = $('screen-moved');
+    $<HTMLTextAreaElement>('moved-code').value = code;
+    $<HTMLAnchorElement>('btn-moved-open').href = url;
+    const copy = $('btn-moved-copy');
+    copy.onclick = () => {
+      this.cb.onClick();
+      const done = (): void => void (copy.textContent = t('moved.copied'));
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(code).then(done, () => $<HTMLTextAreaElement>('moved-code').select());
+      else $<HTMLTextAreaElement>('moved-code').select();
+    };
+    $('btn-moved-later').onclick = () => {
+      this.cb.onClick();
+      modal.hidden = true;
+    };
+    modal.hidden = false;
+  }
+
   /** "Eat. Grow. Explore. Survive." as four colourful chips, in the current language. */
   private renderSlogan(): void {
     const box = $('menu-slogan');

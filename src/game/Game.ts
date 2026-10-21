@@ -9,6 +9,8 @@ import { FishShop } from '../systems/shop';
 import type { SaveSystem, Settings } from '../systems/save';
 import { UI, type GameOverSummary, type ShopView } from '../ui/UI';
 import { applyStatic, digits, loc, num, setLang, t } from '../i18n/i18n';
+import { handoffUrl, isOldHome, newHomeReady } from '../pwa/handoff';
+import { isInstalled } from '../pwa/install';
 import { speciesById, type Species } from './species';
 import { World, type Controls } from './World';
 
@@ -95,6 +97,7 @@ export class Game {
       onUpdated: (_from, to) => this.ui.toast(t('toast.updatedTitle'), t('toast.updatedBody', { v: digits(to) }), null, 5),
     });
     void this.updates.start();
+    void this.handOffIfMoved();
 
     window.addEventListener('resize', () => this.renderer.resize());
     window.addEventListener('orientationchange', () => setTimeout(() => this.renderer.resize(), 200));
@@ -119,6 +122,28 @@ export class Game {
     w.player.alive = false;
     w.player.y -= 120;
     return w;
+  }
+
+  /**
+   * At the old address, once the new home serves the game: send the player there with their
+   * progress (browser), or show the move screen with their progress code (installed app).
+   */
+  private async handOffIfMoved(): Promise<void> {
+    if (!isOldHome() || !(await newHomeReady())) return;
+    const code = this.save.exportCode();
+    const url = handoffUrl(code);
+    if (isInstalled()) {
+      this.ui.showMoved(url, code);
+      return;
+    }
+    // Retire this address's offline copy so it can't keep serving the old site, then go home.
+    try {
+      const reg = await navigator.serviceWorker?.getRegistration();
+      await reg?.unregister();
+    } catch {
+      // Not critical: the redirect below still happens.
+    }
+    window.location.replace(url);
   }
 
   private applySettings(s: Settings): void {

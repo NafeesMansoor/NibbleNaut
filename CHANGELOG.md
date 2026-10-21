@@ -2,6 +2,11 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.5.0] - 2026-10-21
+
+### Added
+- Moving home to **https://nabeeha.mansoor.info**. Progress travels with the player: at the old address, once the new home serves the game, the game forwards browser players there carrying their progress code in the link (never sent to a server), and the new home imports it automatically on a fresh device or asks first on a device that already has progress. Installed home-screen copies show a "NibbleNaut has a new home!" screen with the progress code, a Copy button and the steps to re-add the icon. English and Bangla.
+
 ## [3.4.1] - 2026-10-21
 
 ### Changed

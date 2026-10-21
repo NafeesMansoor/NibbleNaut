@@ -1,6 +1,7 @@
 name: Deploy to GitHub Pages
 
-# Publishes the built game to https://nafeesmansoor.github.io/NibbleNaut/ on every push to main.
+# Publishes the built game on every push to main. It is served at https://nabeeha.mansoor.info
+# (the repo's Pages custom domain); https://nafeesmansoor.github.io/NibbleNaut/ redirects there.
 on:
   push:
     branches: [main]
