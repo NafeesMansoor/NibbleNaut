@@ -10,6 +10,8 @@ A colorful 2D underwater survival-and-growth game set in the Bay of Bengal for d
 
 **Story, game design and code: Nabeeha Mansoor**
 
+**Contributor:** [Nafees Mansoor](https://github.com/NafeesMansoor)
+
 The full design brief is in [docs/Fish_Fight_Game_Design_Document.md](docs/Fish_Fight_Game_Design_Document.md).
 
 ---
