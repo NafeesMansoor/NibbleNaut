@@ -1,8 +1,8 @@
-# Fish Fight PWA: Version Control, Service Worker Updates, and Release Management
+# NibbleNaut (formerly Fish Fight) PWA: Version Control, Service Worker Updates, and Release Management
 
 ## 1. Standing Rules
 
-Treat version control and PWA update management as mandatory parts of Fish Fight development, not optional maintenance tasks.
+Treat version control and PWA update management as mandatory parts of NibbleNaut development, not optional maintenance tasks.
 
 - Follow semantic versioning: `MAJOR.MINOR.PATCH`.
 - Bump the version on every push that changes the deployed application.
@@ -15,7 +15,7 @@ Treat version control and PWA update management as mandatory parts of Fish Fight
 - Never increase the major version without asking me first.
 - Keep the Git history understandable, with versioned commits that double as a release log.
 
-These rules apply to Fish Fight whether it is deployed through GitHub Pages, another static host, or a hosting platform with automated deployments.
+These rules apply to NibbleNaut whether it is deployed through GitHub Pages, another static host, or a hosting platform with automated deployments.
 
 ## 2. Version Bump on Every Push
 
@@ -94,7 +94,7 @@ Implement the following update lifecycle.
 
 ### Step 1: Check for updates on launch
 
-When Fish Fight launches:
+When NibbleNaut launches:
 
 1. Register the service worker.
 2. Check for a newer service worker using `registration.update()`.
@@ -122,13 +122,13 @@ After the new worker has installed successfully:
 - Activate it according to the chosen update strategy.
 - Use `self.skipWaiting()` where appropriate to avoid unnecessarily prolonged waiting.
 - Use `clients.claim()` after activation when the new worker is ready to control eligible open clients.
-- Delete obsolete Fish Fight caches only after the new cache is successfully installed and activated.
+- Delete obsolete NibbleNaut caches only after the new cache is successfully installed and activated.
 
-Only delete caches owned by Fish Fight. Never delete unrelated caches belonging to other applications on the same origin.
+Only delete caches owned by NibbleNaut. Never delete unrelated caches belonging to other applications on the same origin.
 
 ### Step 4: Handle the update safely
 
-Fish Fight is an interactive game, so an update must not unexpectedly terminate an active match.
+NibbleNaut is an interactive game, so an update must not unexpectedly terminate an active match.
 
 Implement an update-aware application lifecycle:
 
@@ -148,7 +148,7 @@ Provide a small, unobtrusive notification when an update is ready.
 
 Suggested message:
 
-**Fish Fight update ready**
+**NibbleNaut update ready**
 
 A new version is available. Finish your current match to update.
 
@@ -156,11 +156,11 @@ Offer an appropriate action such as `Update Now` when it is safe to reload. Othe
 
 After the update is applied, show a brief confirmation such as:
 
-**Fish Fight updated successfully.**
+**NibbleNaut updated successfully.**
 
 Do not display an update notification when no update is available.
 
-## 5. Caching Strategy for Fish Fight
+## 5. Caching Strategy for NibbleNaut
 
 Choose caching strategies according to the type of resource.
 
@@ -182,7 +182,7 @@ The offline experience must not depend on a successful network request after the
 
 ## 6. Preserve Game Progress and Player Data
 
-Fish Fight must distinguish application files from player data.
+NibbleNaut must distinguish application files from player data.
 
 Application caches may be replaced during an update. Player data must be stored separately.
 
@@ -265,7 +265,7 @@ Do not report a deployment as successfully updated until the deployed applicatio
 
 ## 10. Implementation Requirements for the Coding Agent
 
-Before changing code, inspect the existing Fish Fight repository and identify:
+Before changing code, inspect the existing NibbleNaut repository and identify:
 
 - The current application structure and entry point.
 - Whether a service worker already exists.
@@ -282,7 +282,7 @@ Do not create duplicate service workers, competing cache systems, or a second ve
 
 Preserve the existing game design and functionality. Make the smallest coherent set of changes necessary to implement reliable release versioning and update management.
 
-If there is no existing service worker, implement one appropriate to Fish Fight's actual hosting configuration.
+If there is no existing service worker, implement one appropriate to NibbleNaut's actual hosting configuration.
 
 If the current architecture cannot safely support immediate activation, prefer a controlled update flow that preserves active gameplay rather than forcing an unsafe reload.
 
@@ -303,4 +303,4 @@ The work is complete only when:
 - Release verification and rollback considerations are documented.
 - The Git history and changelog clearly identify each version.
 
-**Standing instruction:** Apply these rules to all future Fish Fight releases. Do not remove, weaken, or bypass the version bump, cache invalidation, or update-safety requirements without my explicit approval.
+**Standing instruction:** Apply these rules to all future NibbleNaut releases. Do not remove, weaken, or bypass the version bump, cache invalidation, or update-safety requirements without my explicit approval.

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { PLAYER_FISH } from '../src/game/playerFish';
-import { GOLDEN, SPECIES } from '../src/game/species';
+import { BONUS_FISH, SPECIES } from '../src/game/species';
 import { TRIVIA } from '../src/game/trivia';
 import { BN } from '../src/i18n/bn';
 import { EN, type MessageKey } from '../src/i18n/en';
@@ -21,7 +21,7 @@ describe('i18n', () => {
   });
 
   it('every fish and fun fact has Bangla text', () => {
-    for (const s of [...SPECIES, GOLDEN]) expect(s.bn?.name && s.bn.about, s.id).toBeTruthy();
+    for (const s of [...SPECIES, ...BONUS_FISH]) expect(s.bn?.name && s.bn.about, s.id).toBeTruthy();
     for (const f of PLAYER_FISH) expect(f.bn?.name && f.bn.description && f.bn.about, f.id).toBeTruthy();
     for (const f of TRIVIA) expect(f.bn?.figure && f.bn.label && f.bn.text, f.figure).toBeTruthy();
   });

@@ -1,5 +1,5 @@
 /**
- * Central balance configuration for Fish Fight.
+ * Central balance configuration for NibbleNaut.
  *
  * Every tunable number lives here so playtesting changes never require hunting through the
  * code. Sizes are abstract gameplay units (not pixels); world positions are world units, and
@@ -110,7 +110,10 @@ export const CONFIG = {
     peerRange: [0.85, 1.15] as [number, number],
     threatRange: [1.25, 2.3] as [number, number],
     minFishSize: 2.5,
-    goldenChance: 0.025,
+    /** Chance that a spawn is a bonus fish (Golden Ilish, Silver Rupchanda or Lakkha). */
+    bonusChance: 0.07,
+    /** At most this many bonus fish around at once. */
+    maxBonusFish: 3,
     schoolChance: 0.4,
     schoolSize: [4, 7] as [number, number],
     /** Brief invulnerability at the start of every game. */
@@ -143,6 +146,7 @@ export const CONFIG = {
   score: {
     fishBase: 10,
     fishPerSize: 5,
+    /** Bonus points for a bonus fish without its own `bonus` value. */
     goldenBonus: 500,
     food: { plankton: 2, shrimp: 8, bubble: 12 } as Record<FoodKind, number>,
     zoneMultiplier: 2,
@@ -176,5 +180,9 @@ export const CONFIG = {
   },
 };
 
+/**
+ * Storage key for player progress. It keeps the game's former name (Fish Fight) on purpose:
+ * changing it would make every existing player's points, fish and settings disappear.
+ */
 export const SAVE_KEY = 'fishfight.save';
 export const SAVE_VERSION = 2;

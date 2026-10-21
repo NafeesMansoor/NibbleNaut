@@ -36,6 +36,10 @@ export interface Species {
   weight: number;
   /** Tends to spawn in schools. */
   schooling?: boolean;
+  /** Never eats the player, whatever its size (the filter-feeding whale shark). */
+  harmless?: boolean;
+  /** Bonus fish only: extra points for catching it. */
+  bonus?: number;
 }
 
 export const SPECIES: Species[] = [
@@ -44,6 +48,12 @@ export const SPECIES: Species[] = [
     about: 'Travels in big flashing schools over the reef, picking plankton out of the open water.',
     minSize: 2.5, maxSize: 7, shape: 'long', body: '#2f7fe0', belly: '#e6f3ff', fin: '#5fa8ff', tail: '#ffd23f', band: '#ffd23f',
     speedMul: 1.1, hunter: false, weight: 3, schooling: true,
+  },
+  {
+    id: 'mackerel', bn: { name: 'ভারতীয় ম্যাকেরেল', about: 'দল বেঁধে সাঁতার কাটে আর বেশির ভাগ প্ল্যাংকটন খায়। একসাথে থাকলে খাবার খোঁজা সহজ হয়, আর শিকারিও আলাদা করে একটাকে ধরতে পারে না।' }, name: 'Indian Mackerel', sci: 'Rastrelliger kanagurta',
+    about: 'A speedy school swimmer that feeds mostly on plankton. Swimming together helps it find food and makes it hard for predators to single one out.',
+    minSize: 3, maxSize: 9, shape: 'long', body: '#3f8fc0', belly: '#eaf3fa', fin: '#e9c24a', band: '#e9c24a', spots: '#24577d',
+    speedMul: 1.12, hunter: false, weight: 2.5, schooling: true,
   },
   {
     id: 'demoiselle', bn: { name: 'নীল ড্যামসেল', about: 'ঝকঝকে নীল রঙের ছোট্ট মাছ, নিজের প্রবালের জায়গাটুকু সাহস করে পাহারা দেয়।' }, name: 'Blue Demoiselle', sci: 'Chrysiptera cyanea',
@@ -82,6 +92,12 @@ export const SPECIES: Species[] = [
     speedMul: 0.9, hunter: true, weight: 2,
   },
   {
+    id: 'snapper', bn: { name: 'ম্যানগ্রোভ লাল স্ন্যাপার', about: 'পাথর, প্রবাল আর ম্যানগ্রোভের শিকড়ের কাছে লুকিয়ে থাকে, পাশ দিয়ে শিকার গেলেই হঠাৎ আক্রমণ করে — ওত পেতে শিকারের দারুণ উদাহরণ।' }, name: 'Mangrove Red Snapper', sci: 'Lutjanus argentimaculatus',
+    about: 'A reef ambusher: it hides near rocks, reefs and mangrove roots and strikes suddenly at passing prey.',
+    minSize: 14, maxSize: 38, shape: 'round', body: '#c8463a', belly: '#f3b49b', fin: '#9e2f26', tail: '#b23a2f',
+    speedMul: 0.95, hunter: true, weight: 1.6,
+  },
+  {
     id: 'dolphinfish', bn: { name: 'মাহি-মাহি (ডলফিন মাছ)', about: 'সবুজ, নীল আর সোনালি রঙের ঝলমলে দ্রুতগামী মাছ, উড়ুক্কু মাছ শিকার করে।' }, name: 'Common Dolphinfish', sci: 'Coryphaena hippurus',
     about: 'Also known as mahi-mahi: a dazzling green, blue and gold speedster that hunts flying fish.',
     minSize: 20, maxSize: 55, shape: 'long', body: '#1fb37a', belly: '#ffe04a', fin: '#2a7de1', spots: '#1a5fb4',
@@ -99,9 +115,15 @@ export const SPECIES: Species[] = [
     minSize: 100, maxSize: 200, shape: 'shark', body: '#5d6873', belly: '#e6e9ec', fin: '#3d4650',
     speedMul: 1, hunter: true, weight: 1,
   },
+  {
+    id: 'whaleshark', bn: { name: 'তিমি হাঙর', about: 'পৃথিবীর সবচেয়ে বড় মাছ, ১২ মিটার বা তারও বেশি লম্বা হয়। এত বিশাল হয়েও এরা পানি ছেঁকে ছোট্ট জীব, মাছের ডিম আর ছোট মাছ খায়। এরা তিমি নয়, আর মানুষের জন্য সাধারণত নিরীহ। এই খেলায় তোমাকে কখনো খাবে না!' }, name: 'Whale Shark', sci: 'Rhincodon typus',
+    about: 'The gentle giant and largest fish on Earth, around 12 metres or more. It filters tiny organisms, fish eggs and small fish from the water. Not a whale, and generally harmless to people. It will never eat you!',
+    minSize: 110, maxSize: 200, shape: 'shark', body: '#36577a', belly: '#e1eaf1', fin: '#284460', spots: '#eaf2f8',
+    speedMul: 0.7, hunter: false, harmless: true, weight: 0.8,
+  },
 ];
 
-/** Rare bonus fish. Flees fast; worth a big score bonus. */
+/** Bonus fish: rare, flee fast, glow, and are worth extra points (`bonus`). */
 export const GOLDEN: Species = {
   id: 'golden',
   bn: { name: 'সোনালি ইলিশ', about: 'ইলিশ বাংলাদেশের জাতীয় মাছ। প্রতি বছর বঙ্গোপসাগর থেকে বড় বড় নদী বেয়ে উজানে যায় ডিম পাড়তে।' },
@@ -116,10 +138,52 @@ export const GOLDEN: Species = {
   fin: '#ffaa00',
   speedMul: 1.5,
   hunter: false,
-  weight: 0,
+  weight: 1,
+  bonus: 500,
 };
 
-export const speciesById = (id: string): Species | undefined => (id === GOLDEN.id ? GOLDEN : SPECIES.find((s) => s.id === id));
+export const RUPCHANDA: Species = {
+  id: 'rupchanda',
+  bn: { name: 'রুপালি রূপচাঁদা', about: 'রূপচাঁদা বঙ্গোপসাগরের সবচেয়ে প্রিয় মাছগুলোর একটা: চ্যাপ্টা, গোল আর আয়নার মতো চকচকে রুপালি। ঝাঁক বেঁধে চলে আর ছোট জলজ প্রাণী খায়।' },
+  name: 'Silver Rupchanda',
+  sci: 'Pampus argenteus',
+  about: 'The silver pomfret (rupchanda) is one of the Bay of Bengal\'s best-loved fish: flat, round and shiny as a mirror. It travels in schools and eats tiny sea creatures.',
+  minSize: 3,
+  maxSize: 200,
+  shape: 'tall',
+  body: '#dfe8f0',
+  belly: '#ffffff',
+  fin: '#b4c3d1',
+  spots: '#f7fbff',
+  speedMul: 1.45,
+  hunter: false,
+  weight: 1.4,
+  bonus: 300,
+};
+
+export const LAKKHA: Species = {
+  id: 'lakkha',
+  bn: { name: 'লাক্ষা', about: 'লাক্ষা বা চারআঙুলে থ্রেডফিন বড় আর দামি মাছ। বুকের নিচে সুতোর মতো লম্বা পাখনা দিয়ে ঘোলা পানিতে খাবার হাতড়ে খোঁজে।' },
+  name: 'Lakkha',
+  sci: 'Eleutheronema tetradactylum',
+  about: 'The fourfinger threadfin (lakkha) is a big, prized fish. Long thread-like fins under its chest help it feel for food in muddy water.',
+  minSize: 3,
+  maxSize: 200,
+  shape: 'long',
+  body: '#d8c690',
+  belly: '#f6efd6',
+  fin: '#e0a640',
+  band: '#efe2b0',
+  speedMul: 1.5,
+  hunter: false,
+  weight: 1.1,
+  bonus: 400,
+};
+
+/** All bonus fish, picked by `weight` when a bonus fish spawns. */
+export const BONUS_FISH: Species[] = [GOLDEN, RUPCHANDA, LAKKHA];
+
+export const speciesById = (id: string): Species | undefined => BONUS_FISH.find((s) => s.id === id) ?? SPECIES.find((s) => s.id === id);
 
 export function pickSpecies(size: number, rng: Rng): Species {
   let total = 0;

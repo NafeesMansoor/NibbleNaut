@@ -24,8 +24,9 @@ export const newRunStats = (startSize: number, startStage: number): RunStats => 
   eaten: {},
 });
 
-export const pointsForFish = (preySize: number, golden: boolean): number =>
-  Math.round(CONFIG.score.fishBase + preySize * CONFIG.score.fishPerSize) + (golden ? CONFIG.score.goldenBonus : 0);
+/** Points for eating a fish; `bonus` is the bonus fish's extra (0 for ordinary fish). */
+export const pointsForFish = (preySize: number, bonus = 0): number =>
+  Math.round(CONFIG.score.fishBase + preySize * CONFIG.score.fishPerSize) + bonus;
 
 export const pointsForFood = (kind: FoodKind, inZone: boolean): number =>
   CONFIG.score.food[kind] * (inZone ? CONFIG.score.zoneMultiplier : 1);

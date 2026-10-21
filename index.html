@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#0b3d66" />
-    <meta name="description" content="Fish Fight — Eat. Grow. Survive. Rule the Ocean. Story, game design and code by Nabeeha Mansoor." />
+    <meta name="description" content="NibbleNaut — An Adventure in the Bay of Bengal. Eat. Grow. Explore. Survive. Story, game design and code by Nabeeha Mansoor." />
     <meta name="author" content="Nabeeha Mansoor" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="manifest" href="./manifest.webmanifest" />
@@ -12,12 +12,12 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Fish Fight" />
-    <title>Fish Fight</title>
+    <meta name="apple-mobile-web-app-title" content="NibbleNaut" />
+    <title>NibbleNaut</title>
   </head>
   <body>
     <div id="app">
-      <canvas id="game" aria-label="Fish Fight game area" data-i18n-aria="app.gameArea"></canvas>
+      <canvas id="game" aria-label="NibbleNaut game area" data-i18n-aria="app.gameArea"></canvas>
 
       <div id="hud" class="hud" hidden>
         <div class="hud-left card">
@@ -56,8 +56,9 @@
       <section id="screen-menu" class="screen">
         <div class="panel menu-panel">
           <div class="menu-main">
-          <h1 class="logo"><span class="logo-fish" data-i18n="logo.fish">Fish</span> <span class="logo-fight" data-i18n="logo.fight">Fight</span></h1>
-          <p class="tagline" data-i18n="menu.tagline">Eat. Grow. Survive. Rule the Ocean.</p>
+          <h1 class="logo"><span class="logo-fish" data-i18n="logo.fish">Nibble</span><span class="logo-fight" data-i18n="logo.fight">Naut</span></h1>
+          <p class="subtitle" data-i18n="menu.subtitle">An Adventure in the Bay of Bengal</p>
+          <p class="tagline" data-i18n="menu.tagline">Eat. Grow. Explore. Survive.</p>
           <div class="bank" aria-label="Your points" data-i18n-aria="menu.pointsAria">
             <span class="bank-coin" aria-hidden="true">★</span>
             <span class="bank-label" data-i18n="menu.points">Points</span>
@@ -148,7 +149,7 @@
           <label class="setting check"><input type="checkbox" id="set-outlines" /> <span data-i18n="settings.outlines">Red outlines on dangerous fish</span></label>
           <label class="setting check"><input type="checkbox" id="set-trivia" /> <span data-i18n="settings.trivia">Show Bay of Bengal fun facts</span></label>
           <button class="btn primary" id="btn-settings-close" data-i18n="common.done">Done</button>
-          <p class="hint">Fish Fight <span id="settings-version"></span></p>
+          <p class="hint settings-about"><b>NibbleNaut</b> <span id="settings-version"></span><br /><span data-i18n="menu.subtitle">An Adventure in the Bay of Bengal</span></p>
         </div>
       </section>
 
@@ -180,7 +181,7 @@
         </div>
       </section>
     </div>
-    <noscript>Fish Fight needs JavaScript to run.</noscript>
+    <noscript>NibbleNaut needs JavaScript to run.</noscript>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

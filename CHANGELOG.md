@@ -1,6 +1,19 @@
 # Changelog
 
-All notable changes to Fish Fight. Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
+All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
+
+## [3.0.1] - 2026-10-21
+
+Major version approved by the project owner (from 2.1.1; the version number 3.0.1 was requested).
+
+### Changed
+- **Fish Fight is now NibbleNaut** — *An Adventure in the Bay of Bengal* · *Eat. Grow. Explore. Survive.* New name, subtitle and slogan on the home screen, in Settings, the page title, the installed-app name and update notices, in English and Bangla (নিবলনট · বঙ্গোপসাগরে এক অভিযান · খাও। বড় হও। ঘুরে দেখো। টিকে থাকো।).
+- Existing players keep everything: points, owned and selected fish, best score, settings, language and seen facts. The storage keys, offline-cache prefix, app identity and web address are unchanged; installed copies update in place and just show the new name.
+- More bonus fish: they appear almost three times as often (7% of spawns, up to three at once), and there are now three kinds: Golden Ilish (+500), Lakkha (+400) and Silver Rupchanda (+300). The floating text says "BONUS!".
+
+### Added
+- New fish from the Bay of Bengal: Indian Mackerel (schools), Mangrove Red Snapper (an ambush hunter) and the Whale Shark, a gentle giant that never eats you and gets no danger outline.
+- 15 new fun facts (45 in all), with Bangla: Bangladesh's 740 marine fish species, fresh-to-salty water, mangrove nurseries, the hilsa's two homes, sea animals at risk, whale sharks, giant trevally, Indian mackerel, blacktip sharks, snappers and groupers, Irrawaddy dolphins, Bryde's whales, olive ridley hatchlings, cuttlefish and octopuses, and jellyfish. Two new topics with their own colours: Amazing fish and Sea animals.
 
 ## [2.1.1] - 2026-10-20
 

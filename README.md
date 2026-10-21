@@ -1,8 +1,10 @@
-# Fish Fight
+# NibbleNaut
 
-**Eat. Grow. Survive. Rule the Ocean.**
+*An Adventure in the Bay of Bengal* · **Eat. Grow. Explore. Survive.**
 
-A colorful 2D underwater survival-and-growth game for desktop and mobile browsers. You start as a small fish, eat smaller fish and food to grow, and avoid bigger predators. A strong score earns a better start in your next game. An unbelievably amazing score unlocks **The Ocean of Plenty**.
+> Formerly **Fish Fight** (renamed in 3.0.1). Internal identifiers keep the old name on purpose so existing players lose nothing: the save key `fishfight.save`, the `fishfight.triviaSeen` and `fishfight.updatedFrom` keys, the service-worker cache prefix `fish-fight-v`, and the repository/URL `fish-fight`. Don't rename them.
+
+A colorful 2D underwater survival-and-growth game set in the Bay of Bengal for desktop and mobile browsers. You start as a small fish, eat smaller fish and food to grow, and avoid bigger predators. A strong score earns a better start in your next game. An unbelievably amazing score unlocks **The Ocean of Plenty**.
 
 ## Credits
 
@@ -30,7 +32,7 @@ npm run release    # tests + build + release checks (run before every push that 
 
 ## Installing and offline play
 
-Fish Fight is a Progressive Web App. In Chrome/Edge use "Install app"; on iPhone/iPad use Share → Add to Home Screen. After the first visit the whole game works offline. Progress (points, fish, best score, settings) lives in `localStorage`, separate from the app caches, so updates never touch it.
+NibbleNaut is a Progressive Web App. In Chrome/Edge use "Install app"; on iPhone/iPad use Share → Add to Home Screen. After the first visit the whole game works offline. Progress (points, fish, best score, settings) lives in `localStorage`, separate from the app caches, so updates never touch it.
 
 ## Releasing
 
@@ -106,7 +108,7 @@ The design document's roadmap, Phases 1 to 3:
 - **Phase 1 – Minimum playable game.** Scrolling reef ocean, one player fish (Nemo Jr.), eight AI species from minnows to the Leviathan, eat-or-be-eaten, continuous growth with four stages (Small, Medium, Large, Ocean Titan), food spawning, score and timer, game over and instant restart.
 - **Phase 2 – AI and game feel.** Fish flee from anything that can eat them. Hunters chase smaller fish, give up after 3.5 s, and at most 2 may hunt you at once. Minnows swim in schools that scatter. Eat bursts, floating points, growth pulse, stage-up banners, danger outlines, edge arrows, a red danger vignette and a heartbeat cue. Dash ability. Keyboard, mouse and touch controls.
 - **Phase 3 – Next-game rewards.** All five tiers, one-time pending reward stored in `localStorage`, reward card on the menu, reward chip in the HUD, celebration with confetti and a fanfare, and an animated Ocean of Plenty preview on the game-over screen.
-- **Extras:** rare golden fish (+500 points), synthesized sound effects and ambience, settings (volume, mute, danger outlines), auto-pause when the tab is hidden or loses focus, and a live ocean behind the menu.
+- **Extras:** bonus fish (Golden Ilish +500, Lakkha +400, Silver Rupchanda +300; up to three around at once), synthesized sound effects and ambience, settings (volume, mute, danger outlines), auto-pause when the tab is hidden or loses focus, and a live ocean behind the menu.
 
 ## Not yet implemented (Phases 4–6)
 
@@ -165,7 +167,7 @@ The simulation (`World`) has no DOM or canvas access, so it runs headless in tes
 - **Contact rule.** Any fish at least 1.2× your size eats you on contact. Only some fish of the hunter species actively chase.
 - **Simultaneous contacts.** Each frame, you eat first, then predators check against your updated size.
 - **Amazing speed boost** lasts 10 s, so it's noticeable at the start of a game. The brief's 5 s value is for the future speed power-up.
-- **Score.** Fish = 10 + 5 × size, food 2–12, stage-up +250, golden fish +500, survival 1 pt/s (kept low so hunting beats hiding).
+- **Score.** Fish = 10 + 5 × size, food 2–12, stage-up +250, bonus fish +300 to +500, survival 1 pt/s (kept low so hunting beats hiding).
 
 ## Known limitations
 

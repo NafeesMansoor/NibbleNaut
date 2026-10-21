@@ -1,7 +1,7 @@
 import { CONFIG, type FoodKind } from '../config';
 import { clamp, compact, pickWeighted, randInt, randRange } from '../core/math';
 import { Fish, Food } from '../game/entities';
-import { GOLDEN, pickSpecies } from '../game/species';
+import { BONUS_FISH, pickSpecies } from '../game/species';
 import type { World } from '../game/World';
 import { radiusFor } from './growth';
 
@@ -115,10 +115,12 @@ export class SpawnManager {
     const p = w.player;
     const ref = p.size;
 
-    if (w.rng() < s.goldenChance) {
-      const size = Math.max(GOLDEN.minSize, ref * randRange(w.rng, 0.45, 0.7));
+    if (w.rng() < s.bonusChance && w.fish.filter((f) => f.golden).length < s.maxBonusFish) {
+      const kind = pickWeighted(w.rng, Object.fromEntries(BONUS_FISH.map((b) => [b.id, b.weight])));
+      const bonus = BONUS_FISH.find((b) => b.id === kind) ?? BONUS_FISH[0];
+      const size = Math.max(bonus.minSize, ref * randRange(w.rng, 0.45, 0.7));
       const pos = this.offscreenPoint(w, radiusFor(size));
-      if (pos) w.fish.push(new Fish(w.newFishId(), GOLDEN, pos.x, pos.y, size, w.rng() * Math.PI * 2, true));
+      if (pos) w.fish.push(new Fish(w.newFishId(), bonus, pos.x, pos.y, size, w.rng() * Math.PI * 2, true));
       return;
     }
 

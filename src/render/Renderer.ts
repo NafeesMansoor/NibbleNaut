@@ -302,7 +302,7 @@ export class Renderer {
     const ctx = this.ctx;
     const p = world.player;
     const zoom = this.camera.zoom;
-    const threat = p.alive && canEat(f.size, p.size);
+    const threat = p.alive && !f.species.harmless && canEat(f.size, p.size);
     const chasing = f.state === 'chase' && f.target === p;
     let outline: string | null = null;
     let width = 2 / zoom;
@@ -403,7 +403,7 @@ export class Renderer {
     let danger = 0;
     const range = Math.min(this.halfW, this.halfH) * 1.3;
     for (const f of world.fish) {
-      if (!f.alive || !canEat(f.size, p.size)) continue;
+      if (!f.alive || f.species.harmless || !canEat(f.size, p.size)) continue;
       const d = Math.hypot(f.x - p.x, f.y - p.y) - f.radius - p.radius;
       const chasing = f.state === 'chase' && f.target === p;
       const k = clamp(1 - d / range, 0, 1) * (chasing ? 1 : 0.45);

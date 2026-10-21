@@ -1,6 +1,7 @@
 import { APP_VERSION } from '../version';
 
 const CHECK_INTERVAL_MS = 60 * 60 * 1000;
+/** Legacy key name kept from "Fish Fight" so an update in flight still shows its confirmation. */
 const UPDATED_FROM_KEY = 'fishfight.updatedFrom';
 
 export interface UpdateHooks {
@@ -61,7 +62,7 @@ export class UpdateManager {
       // updateViaCache 'none': the browser always revalidates sw.js instead of trusting the HTTP cache.
       this.reg = await sw.register('./sw.js', { updateViaCache: 'none' });
     } catch (err) {
-      console.warn('Fish Fight: service worker registration failed; the game runs without offline support.', err);
+      console.warn('NibbleNaut: service worker registration failed; the game runs without offline support.', err);
       return;
     }
     const reg = this.reg;

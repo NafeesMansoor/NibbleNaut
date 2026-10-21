@@ -1,11 +1,12 @@
 /** English UI text. Keys are shared with bn.ts; TypeScript checks both tables have every key. */
 export const EN = {
-  'app.gameArea': 'Fish Fight game area',
-  'logo.fish': 'Fish',
-  'logo.fight': 'Fight',
+  'app.gameArea': 'NibbleNaut game area',
+  'logo.fish': 'Nibble',
+  'logo.fight': 'Naut',
   'lang.label': 'Language',
 
-  'menu.tagline': 'Eat. Grow. Survive. Rule the Ocean.',
+  'menu.subtitle': 'An Adventure in the Bay of Bengal',
+  'menu.tagline': 'Eat. Grow. Explore. Survive.',
   'menu.pointsAria': 'Your points',
   'menu.points': 'Points',
   'menu.play': 'Play',
@@ -89,12 +90,12 @@ export const EN = {
   'flash.reward': '{label} REWARD<small>{desc}</small>',
   'flash.stage': '{name}!<small>+{points} growth bonus</small>',
 
-  'fx.golden': 'GOLDEN! +{n}',
+  'fx.golden': 'BONUS! +{n}',
   'fx.stage': '{name}! +{n}',
 
-  'toast.updatedTitle': 'Fish Fight updated successfully.',
+  'toast.updatedTitle': 'NibbleNaut updated successfully.',
   'toast.updatedBody': 'Now running v{v}.',
-  'toast.readyTitle': 'Fish Fight update ready',
+  'toast.readyTitle': 'NibbleNaut update ready',
   'toast.readyBody': 'A new version is available.',
   'toast.readyBodyMatch': 'A new version is available. Finish your current match to update.',
   'toast.updateNow': 'Update now',
@@ -138,6 +139,8 @@ export const EN = {
   'trivia.tag.Weather': 'Weather',
   'trivia.tag.Ocean floor': 'Ocean floor',
   'trivia.tag.Fishing': 'Fishing',
+  'trivia.tag.Amazing fish': 'Amazing fish',
+  'trivia.tag.Sea animals': 'Sea animals',
 } as const;
 
 export type MessageKey = keyof typeof EN;

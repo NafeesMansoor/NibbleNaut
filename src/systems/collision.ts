@@ -41,7 +41,7 @@ export function resolveCollisions(w: World): void {
       if (!f.alive || !canEat(p.size, f.size) || !overlapsToEat(p, f)) continue;
       f.alive = false;
       p.grow(massFromFish(f.size, g.fishMassAbsorb));
-      const points = Math.round(pointsForFish(f.size, f.golden) * p.feedMul);
+      const points = Math.round(pointsForFish(f.size, f.golden ? (f.species.bonus ?? CONFIG.score.goldenBonus) : 0) * p.feedMul);
       w.addScore(points);
       w.stats.fishEaten++;
       if (f.golden) w.stats.goldenEaten++;
@@ -51,7 +51,7 @@ export function resolveCollisions(w: World): void {
 
     if (p.protectTime <= 0) {
       for (const f of w.fish) {
-        if (!f.alive || !canEat(f.size, p.size) || !overlapsToEat(f, p)) continue;
+        if (!f.alive || f.species.harmless || !canEat(f.size, p.size) || !overlapsToEat(f, p)) continue;
         p.alive = false;
         p.vx = p.vy = 0;
         f.ateThisFrame = true;

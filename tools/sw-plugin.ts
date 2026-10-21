@@ -23,7 +23,7 @@ function listFiles(dir: string, root = dir): string[] {
  */
 export function serviceWorker(version: string, publicDir = 'public'): Plugin {
   return {
-    name: 'fish-fight-service-worker',
+    name: 'nibblenaut-service-worker',
     apply: 'build',
     generateBundle(_options, bundle) {
       const files = new Set<string>(['index.html']);

@@ -1,7 +1,7 @@
 {
-  "name": "Fish Fight",
-  "short_name": "Fish Fight",
-  "description": "Eat. Grow. Survive. Rule the Ocean. Story, game design and code by Nabeeha Mansoor.",
+  "name": "NibbleNaut",
+  "short_name": "NibbleNaut",
+  "description": "An Adventure in the Bay of Bengal. Eat. Grow. Explore. Survive. Story, game design and code by Nabeeha Mansoor.",
   "id": "./",
   "start_url": "./",
   "scope": "./",

@@ -1,10 +1,12 @@
 /*
- * Fish Fight service worker.
+ * NibbleNaut service worker.
  * GENERATED at build time from src/pwa/sw.template.js by tools/sw-plugin.ts — edit the template,
  * never dist/sw.js. The version and precache list below are filled in by the build, so every
  * release changes this script's bytes and browsers detect the update.
  */
 const VERSION = '__APP_VERSION__';
+// Prefix kept from the game's former name (Fish Fight): installed copies recognise and clean up
+// their own older caches by it, so renaming it would strand them.
 const CACHE_PREFIX = 'fish-fight-v';
 const CACHE = CACHE_PREFIX + VERSION;
 const PRECACHE = __PRECACHE__;
@@ -35,7 +37,7 @@ self.addEventListener('message', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
-      // Only Fish Fight's own, older caches. Other apps on this origin are left alone.
+      // Only this game's own, older caches. Other apps on this origin are left alone.
       const keys = await caches.keys();
       await Promise.all(keys.filter((k) => k.startsWith(CACHE_PREFIX) && k !== CACHE).map((k) => caches.delete(k)));
       await self.clients.claim();

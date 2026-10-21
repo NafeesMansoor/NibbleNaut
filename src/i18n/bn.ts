@@ -2,12 +2,13 @@ import type { MessageKey } from './en';
 
 /** বাংলা UI text. Friendly, informal Bangla (তুমি) for young players. */
 export const BN: Record<MessageKey, string> = {
-  'app.gameArea': 'ফিশ ফাইট খেলার জায়গা',
-  'logo.fish': 'ফিশ',
-  'logo.fight': 'ফাইট',
+  'app.gameArea': 'নিবলনট খেলার জায়গা',
+  'logo.fish': 'নিবল',
+  'logo.fight': 'নট',
   'lang.label': 'ভাষা',
 
-  'menu.tagline': 'খাও। বড় হও। টিকে থাকো। সাগর জয় করো।',
+  'menu.subtitle': 'বঙ্গোপসাগরে এক অভিযান',
+  'menu.tagline': 'খাও। বড় হও। ঘুরে দেখো। টিকে থাকো।',
   'menu.pointsAria': 'তোমার পয়েন্ট',
   'menu.points': 'পয়েন্ট',
   'menu.play': 'খেলো',
@@ -91,12 +92,12 @@ export const BN: Record<MessageKey, string> = {
   'flash.reward': '{label} পুরস্কার<small>{desc}</small>',
   'flash.stage': '{name}!<small>বড় হওয়ার বোনাস +{points}</small>',
 
-  'fx.golden': 'সোনালি! +{n}',
+  'fx.golden': 'বোনাস! +{n}',
   'fx.stage': '{name}! +{n}',
 
-  'toast.updatedTitle': 'ফিশ ফাইট নতুন সংস্করণে আপডেট হয়েছে।',
+  'toast.updatedTitle': 'নিবলনট নতুন সংস্করণে আপডেট হয়েছে।',
   'toast.updatedBody': 'এখন চলছে v{v}।',
-  'toast.readyTitle': 'ফিশ ফাইটের আপডেট তৈরি',
+  'toast.readyTitle': 'নিবলনটের আপডেট তৈরি',
   'toast.readyBody': 'নতুন সংস্করণ এসেছে।',
   'toast.readyBodyMatch': 'নতুন সংস্করণ এসেছে। আপডেট করতে এই খেলাটা শেষ করো।',
   'toast.updateNow': 'এখনই আপডেট করো',
@@ -140,4 +141,6 @@ export const BN: Record<MessageKey, string> = {
   'trivia.tag.Weather': 'আবহাওয়া',
   'trivia.tag.Ocean floor': 'সাগরতল',
   'trivia.tag.Fishing': 'মাছ ধরা',
+  'trivia.tag.Amazing fish': 'আশ্চর্য মাছ',
+  'trivia.tag.Sea animals': 'সামুদ্রিক প্রাণী',
 };
