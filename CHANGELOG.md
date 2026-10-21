@@ -2,6 +2,11 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.4.1] - 2026-10-21
+
+### Changed
+- Credits: Nafees Mansoor added as a contributor (README and package metadata).
+
 ## [3.4.0] - 2026-10-21
 
 ### Changed
