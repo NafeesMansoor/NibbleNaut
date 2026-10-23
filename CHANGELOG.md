@@ -2,6 +2,12 @@
 
 All notable changes to NibbleNaut (formerly Fish Fight). Versions follow [semantic versioning](https://semver.org/); see `docs/PWA.md` for the release rules.
 
+## [3.6.0] - 2026-10-23
+
+### Added
+- Shop fish can now have perks: **Medium start** (the game begins medium-sized; a bigger reward start still wins) and **extra speed** (faster swimming and dashing). Perks show as badges in Upgrade Fish and compactly on the home screen.
+- Five new top-tier fish, all with a medium start, climbing to the ×5 maximum (20 fish in all): Yellowfin Tuna (360,000, ×4.6, +15% speed), Cobia (410,000, ×4.7), Spanish Mackerel / Surma (460,000, ×4.8, +20% speed), Wahoo (520,000, ×4.9, +25% speed) and Black Marlin (600,000, ×5, +30% speed). English and Bangla.
+
 ## [3.5.0] - 2026-10-21
 
 ### Added

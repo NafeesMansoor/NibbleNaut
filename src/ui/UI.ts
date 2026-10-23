@@ -72,6 +72,15 @@ export interface UICallbacks {
 
 const formatMul = (m: number): string => `×${num(m)}`;
 
+/** Extra perks of a shop fish ("Medium start", "+25% speed"), in the current language. */
+const fishPerks = (f: PlayerFishDef, short = false): string[] => {
+  const perks: string[] = [];
+  const speed = num(Math.round(((f.speedMul ?? 1) - 1) * 100));
+  if ((f.startSize ?? 0) > CONFIG.size.normalStart) perks.push(t(short ? 'shop.perkMediumShort' : 'shop.perkMedium'));
+  if ((f.speedMul ?? 1) > 1) perks.push(short ? `⚡+${speed}%` : t('shop.perkSpeed', { n: speed }));
+  return perks;
+};
+
 /** Player fish / species text in the current language. */
 const fishText = (f: PlayerFishDef) => loc({ name: f.name, description: f.description, about: f.about }, f.bn);
 const speciesText = (s: Species) => loc({ name: s.name, about: s.about }, s.bn);
@@ -344,7 +353,9 @@ export class UI {
     this.mascot = fish.look;
     $('menu-points').textContent = num(Math.floor(points));
     $('menu-fish-name').textContent = fishText(fish).name;
-    $('menu-fish-mul').textContent = t('menu.feedMul', { mul: formatMul(fish.feedMul) });
+    // Compact on the home screen: "×4.6 · Medium · ⚡+15%" (full wording in the shop).
+    const perks = fishPerks(fish, true);
+    $('menu-fish-mul').textContent = perks.length ? [formatMul(fish.feedMul), ...perks].join(' · ') : t('menu.feedMul', { mul: formatMul(fish.feedMul) });
     drawThumb($<HTMLCanvasElement>('menu-fish'), fish.look, 64, 40);
   }
 
@@ -362,7 +373,10 @@ export class UI {
       const info = document.createElement('div');
       info.className = 'shop-info';
       const text = fishText(fish);
-      info.innerHTML = `<div class="shop-name">${text.name} <span class="shop-mul">${t('shop.mul', { mul: formatMul(fish.feedMul) })}</span></div><div class="shop-desc">${text.description}</div>`;
+      const perks = fishPerks(fish)
+        .map((p) => `<span class="shop-perk">${p}</span>`)
+        .join('');
+      info.innerHTML = `<div class="shop-name">${text.name} <span class="shop-mul">${t('shop.mul', { mul: formatMul(fish.feedMul) })}</span>${perks}</div><div class="shop-desc">${text.description}</div>`;
       const btn = document.createElement('button');
       btn.className = 'btn shop-btn';
       btn.dataset.fish = fish.id;

@@ -1,8 +1,9 @@
+import { CONFIG } from '../src/config';
 import { describe, expect, it } from 'vitest';
 import { SAVE_KEY } from '../src/config';
 import { seededRng } from '../src/core/math';
 import { Fish, Food } from '../src/game/entities';
-import { fishById, PLAYER_FISH, STARTER_FISH } from '../src/game/playerFish';
+import { fishById, PLAYER_FISH, STARTER_FISH, startSizeFor } from '../src/game/playerFish';
 import { SPECIES } from '../src/game/species';
 import { World } from '../src/game/World';
 import { RewardLedger } from '../src/systems/rewards';
@@ -94,5 +95,27 @@ describe('advanced fish feeding points', () => {
     const dragon = eatOnce('dragon');
     expect(dragon / base).toBeGreaterThan(2.8);
     expect(dragon / base).toBeLessThan(3.1);
+  });
+});
+
+describe('perks of the top-tier fish', () => {
+  it('no fish earns more than ×5 points', () => {
+    for (const f of PLAYER_FISH) expect(f.feedMul).toBeLessThanOrEqual(5);
+    expect(PLAYER_FISH[PLAYER_FISH.length - 1].feedMul).toBe(5);
+  });
+
+  it('a medium-start fish begins medium-sized, unless a reward gives more', () => {
+    const marlin = fishById('marlin')!;
+    expect(startSizeFor(CONFIG.size.normalStart, marlin)).toBe(CONFIG.size.mediumStart);
+    expect(startSizeFor(CONFIG.size.normalStart, STARTER_FISH)).toBe(CONFIG.size.normalStart);
+    expect(startSizeFor(40, marlin)).toBe(40);
+    const w = new World({ startSize: startSizeFor(CONFIG.size.normalStart, marlin), ocean: 'normal', fish: marlin, rng: seededRng(2) });
+    expect(w.player.size).toBe(CONFIG.size.mediumStart);
+  });
+
+  it('a faster fish swims faster at the same size', () => {
+    const plain = new World({ startSize: 25, ocean: 'normal', fish: fishById('cobia')!, rng: seededRng(1) }).player;
+    const fast = new World({ startSize: 25, ocean: 'normal', fish: fishById('wahoo')!, rng: seededRng(1) }).player;
+    expect(fast.cruiseSpeed / plain.cruiseSpeed).toBeCloseTo(1.25, 5);
   });
 });

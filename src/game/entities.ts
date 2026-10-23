@@ -41,11 +41,14 @@ export class Player implements Body {
   readonly look: FishLook;
   /** Multiplier on points from food and fish; advanced fish from the shop earn more. */
   readonly feedMul: number;
+  /** Faster shop fish swim (and dash) quicker. */
+  readonly speedMul: number;
 
   constructor(size: number, fish: PlayerFishDef = STARTER_FISH) {
     this.name = fish.name;
     this.look = fish.look;
     this.feedMul = fish.feedMul;
+    this.speedMul = fish.speedMul ?? 1;
     this.size = size;
     this.targetSize = size;
     this.radius = radiusFor(size);
@@ -58,7 +61,7 @@ export class Player implements Body {
 
   /** Normal swimming speed, ignoring boosts and dashes. */
   get cruiseSpeed(): number {
-    return speedFor(this.size) * CONFIG.movement.playerSpeedMul;
+    return speedFor(this.size) * CONFIG.movement.playerSpeedMul * this.speedMul;
   }
 
   get speed(): number {

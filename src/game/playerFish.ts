@@ -1,3 +1,4 @@
+import { CONFIG } from '../config';
 import type { FishLook } from '../render/fishArt';
 
 /**
@@ -12,8 +13,12 @@ export interface PlayerFishDef {
   sci: string;
   /** Points needed to buy. 0 = owned from the start. */
   cost: number;
-  /** Multiplier on points for food and fish eaten. */
+  /** Multiplier on points for food and fish eaten (never above 5). */
   feedMul: number;
+  /** Size at the start of every game; a bigger reward start still wins. Default: a small fish. */
+  startSize?: number;
+  /** Multiplier on swimming and dash speed. Default 1. */
+  speedMul?: number;
   /** Short shop blurb. */
   description: string;
   /** A real-life fact about the species, shown on the game-over screen. */
@@ -250,8 +255,95 @@ export const PLAYER_FISH: PlayerFishDef[] = [
     about: 'Named for the stripes it has when young. One of the biggest hunting sharks, it eats almost anything and patrols the coast at night.',
     look: { shape: 'shark', body: '#7d8a96', belly: '#eef2f5', fin: '#5b6772', stripe: '#4c5862', stripes: 5 },
   },
+  {
+    id: 'tuna',
+    bn: {
+      name: 'হলুদ-পাখনা টুনা',
+      description: 'মাঝারি আকারে শুরু, গতির জন্য তৈরি, উজ্জ্বল হলুদ পাখনা।',
+      about: 'শক্তিশালী সমুদ্র-যাত্রী, পুরো মহাসাগর পাড়ি দিতে পারে। টর্পেডোর মতো শরীর আর কাস্তের মতো হলুদ পাখনা একে দারুণ দ্রুত করে।',
+    },
+    name: 'Yellowfin Tuna',
+    sci: 'Thunnus albacares',
+    cost: 360000,
+    feedMul: 4.6,
+    startSize: CONFIG.size.mediumStart,
+    speedMul: 1.15,
+    description: 'Starts medium-sized and built for speed, with bright yellow fins.',
+    about: 'A powerful ocean traveller that can cross whole oceans. Its torpedo body and sickle-shaped yellow fins make it super fast.',
+    look: { shape: 'long', body: '#1d3f7a', belly: '#e3edf5', fin: '#ffd23f', tail: '#2a4f8f', band: '#ffd23f' },
+  },
+  {
+    id: 'cobia',
+    bn: {
+      name: 'কোবিয়া',
+      description: 'মাঝারি আকারে শুরু: শক্তিশালী, হাঙরের মতো অভিযাত্রী।',
+      about: 'অনেকে একে ছোট হাঙর ভেবে ভুল করে। শাপলাপাতা মাছ, কচ্ছপ আর বড় মাছের পিছু পিছু ঘুরে বাড়তি খাবার খায়, আর ২ মিটার পর্যন্ত লম্বা হয়।',
+    },
+    name: 'Cobia',
+    sci: 'Rachycentron canadum',
+    cost: 410000,
+    feedMul: 4.7,
+    startSize: CONFIG.size.mediumStart,
+    description: 'Starts medium-sized: a strong, shark-like explorer.',
+    about: 'Often mistaken for a small shark, the cobia follows rays, turtles and big fish to snap up leftovers, and grows up to 2 metres long.',
+    look: { shape: 'long', body: '#5a4a3a', belly: '#efe6d6', fin: '#3a2e24', band: '#f2e8d4' },
+  },
+  {
+    id: 'surma',
+    bn: {
+      name: 'সুরমা (স্প্যানিশ ম্যাকেরেল)',
+      description: 'মাঝারি আকারে শুরু, বাতাসের মতো ছোটে।',
+      about: 'বাংলাদেশে একে সুরমা বলে। সরু ঢেউখেলানো ডোরার এই রুপালি দৌড়বিদ উপকূল ধরে দ্রুত ঝাঁকে শিকার করে।',
+    },
+    name: 'Spanish Mackerel (Surma)',
+    sci: 'Scomberomorus commerson',
+    cost: 460000,
+    feedMul: 4.8,
+    startSize: CONFIG.size.mediumStart,
+    speedMul: 1.2,
+    description: 'Starts medium-sized and races like the wind.',
+    about: 'Known as surma in Bangladesh, this silver racer with thin wavy bars hunts in fast schools along the coast.',
+    look: { shape: 'long', body: '#8fb3cc', belly: '#f1f6fa', fin: '#4b6b84', stripe: '#55748c', stripes: 8 },
+  },
+  {
+    id: 'wahoo',
+    bn: {
+      name: 'ওয়াহু',
+      description: 'মাঝারি আকারে শুরু: সাগরের সবচেয়ে দ্রুত মাছগুলোর একটা।',
+      about: 'হঠাৎ ঝড়ের গতিতে ছোটার জন্য বিখ্যাত ডোরাকাটা দৌড়বিদ। ক্ষুরধার দাঁতে তাড়া করা ছোট মাছ কেটে ফেলে।',
+    },
+    name: 'Wahoo',
+    sci: 'Acanthocybium solandri',
+    cost: 520000,
+    feedMul: 4.9,
+    startSize: CONFIG.size.mediumStart,
+    speedMul: 1.25,
+    description: 'Starts medium-sized: one of the fastest fish in the sea.',
+    about: 'A striped speedster famous for sudden sprints. Its razor-sharp teeth slice through the small fish it chases.',
+    look: { shape: 'long', body: '#2b6fb0', belly: '#e8f2fa', fin: '#1e4f80', stripe: '#163a62', stripes: 6 },
+  },
+  {
+    id: 'marlin',
+    bn: {
+      name: 'কালো মার্লিন',
+      description: 'সেরা মাছ: মাঝারি শুরু, সর্বোচ্চ গতি আর পাঁচগুণ পয়েন্ট!',
+      about: 'বর্শার মতো ঠোঁটওয়ালা বিশাল শিকারি, পৃথিবীর সবচেয়ে দ্রুত মাছগুলোর একটা। ঠোঁট দিয়ে মাছের ঝাঁকে আঘাত করে।',
+    },
+    name: 'Black Marlin',
+    sci: 'Istiompax indica',
+    cost: 600000,
+    feedMul: 5,
+    startSize: CONFIG.size.mediumStart,
+    speedMul: 1.3,
+    description: 'The ultimate fish: medium start, top speed and ×5 points!',
+    about: 'A giant hunter with a spear-like bill, among the fastest fish on Earth. It slashes through schools of fish with its bill.',
+    look: { shape: 'long', body: '#1c2f5c', belly: '#e6eef6', fin: '#2b5fd9', stripe: '#7fc3ff', stripes: 6 },
+  },
 ];
 
 export const STARTER_FISH = PLAYER_FISH[0];
+
+/** Start size for a game: the fish's own medium start, or the reward's start if that is bigger. */
+export const startSizeFor = (rewardStart: number, fish: PlayerFishDef): number => Math.max(rewardStart, fish.startSize ?? 0);
 
 export const fishById = (id: string): PlayerFishDef | undefined => PLAYER_FISH.find((f) => f.id === id);

@@ -11,6 +11,7 @@ import { UI, type GameOverSummary, type ShopView } from '../ui/UI';
 import { applyStatic, digits, loc, num, setLang, t } from '../i18n/i18n';
 import { handoffUrl, isOldHome, newHomeReady } from '../pwa/handoff';
 import { isInstalled } from '../pwa/install';
+import { startSizeFor } from './playerFish';
 import { speciesById, type Species } from './species';
 import { World, type Controls } from './World';
 
@@ -208,7 +209,8 @@ export class Game {
     this.activeReward = tier;
     const c = startConditionsFor(tier);
     const fish = this.shop.selected();
-    this.world = new World({ startSize: c.startSize, ocean: c.ocean, speedBoostSeconds: c.speedBoostSeconds, fish, view: this.renderer.startView });
+    const startSize = startSizeFor(c.startSize, fish);
+    this.world = new World({ startSize, ocean: c.ocean, speedBoostSeconds: c.speedBoostSeconds, fish, view: this.renderer.startView });
     this.ui.setPlayerFish(fish);
     this.fx.clear();
     this.renderer.snapCamera(this.world);
